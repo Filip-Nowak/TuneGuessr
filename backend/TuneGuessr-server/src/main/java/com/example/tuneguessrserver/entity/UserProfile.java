@@ -21,4 +21,7 @@ public class UserProfile {
     private User user;
     @OneToMany(mappedBy = "user")
     private List<Challenge> challengeList;
+    public void addChallenge(Challenge challenge){
+        challengeList.add(challenge);
+    }
 }

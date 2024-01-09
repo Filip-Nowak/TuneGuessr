@@ -22,4 +22,7 @@ public class Challenge {
     private String description;
     @OneToMany(mappedBy = "challenge")
     private List<Song> songs;
+    public void addSong(Song song){
+        songs.add(song);
+    }
 }
