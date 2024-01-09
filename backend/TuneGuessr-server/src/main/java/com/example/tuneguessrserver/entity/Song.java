@@ -15,7 +15,7 @@ public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private String link;
+    private String url;
     private String name;
     @ManyToOne
     private Challenge challenge;

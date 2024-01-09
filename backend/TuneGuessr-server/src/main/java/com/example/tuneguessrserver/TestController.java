@@ -4,13 +4,17 @@ import com.example.tuneguessrserver.entity.Challenge;
 import com.example.tuneguessrserver.entity.Song;
 import com.example.tuneguessrserver.entity.User;
 import com.example.tuneguessrserver.entity.UserProfile;
+import com.example.tuneguessrserver.model.UserModel;
 import com.example.tuneguessrserver.repository.ChallengeRepository;
 import com.example.tuneguessrserver.repository.UserProfileRepository;
 import com.example.tuneguessrserver.repository.UserRepository;
+import com.example.tuneguessrserver.service.UserService;
+import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -19,6 +23,7 @@ import java.util.List;
 @CrossOrigin
 @AllArgsConstructor
 public class TestController {
+    UserService userService;
     UserProfileRepository userProfileRepository;
     ChallengeRepository challengeRepository;
     @GetMapping("/")
@@ -28,28 +33,34 @@ public class TestController {
 
     @GetMapping("/test")
     public List<UserProfile> test2(){
-//        User user= User.builder()
-//                .email("email@xd.com")
-//                .password("password")
-//                .build();
-//        UserProfile userProfile=UserProfile.builder()
-//                .user(user)
-//                .nickname("user1")
-//                .build();
-//        userProfileRepository.save(userProfile);
-//        List<UserProfile> users=userProfileRepository.findAll();
-//        Challenge challenge=Challenge.builder()
-//                .description("this is description of example challenge")
-//                .name("my challenge")
-//                .user(userProfile)
-//                .build();
-////        Song song1= Song.builder()
-////                .link("url.to.song")
-////                .name("firstSong").build();
-////        challenge.addSong(song1);
-//        users.get(0).addChallenge(challenge);
-//        userProfileRepository.save(userProfile);
-//        List<Challenge> challengeList=challengeRepository.findAll();
+        User user= User.builder()
+                .email("email@xd.com")
+                .password("password")
+                .build();
+        UserProfile userProfile=UserProfile.builder()
+                .user(user)
+                .nickname("user1")
+                .build();
+        userProfileRepository.save(userProfile);
+        List<UserProfile> users=userProfileRepository.findAll();
+        Challenge challenge=Challenge.builder()
+                .description("this is description of example challenge")
+                .name("my challenge")
+                .user(userProfile)
+                .build();
+//        Song song1= Song.builder()
+//                .link("url.to.song")
+//                .name("firstSong").build();
+//        challenge.addSong(song1);
+        users.get(0).addChallenge(challenge);
+        userProfileRepository.save(userProfile);
+        List<Challenge> challengeList=challengeRepository.findAll();
         return null;
+    }
+    @GetMapping("/user/{nickname}")
+    public UserModel findUser(@PathVariable("nickname") String nickname){
+
+        UserModel userModel=userService.getProfileByNickname(nickname);
+        return userModel;
     }
 }
