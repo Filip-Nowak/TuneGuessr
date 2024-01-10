@@ -57,10 +57,5 @@ public class TestController {
         List<Challenge> challengeList=challengeRepository.findAll();
         return null;
     }
-    @GetMapping("/user/{nickname}")
-    public UserModel findUser(@PathVariable("nickname") String nickname){
 
-        UserModel userModel=userService.getProfileByNickname(nickname);
-        return userModel;
-    }
 }

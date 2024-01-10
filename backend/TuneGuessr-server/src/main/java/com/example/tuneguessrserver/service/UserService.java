@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -22,8 +23,7 @@ public class UserService {
         UserProfile profile=profileRepository.findByNickname(nickname);
         if(profile==null)
             return null;
-        UserModel model=parseUserToModel(profile);
-        return model;
+        return parseUserToModel(profile);
     }
     public UserModel parseUserToModel(UserProfile userProfile){
         UserModel user=UserModel.builder()
@@ -39,5 +39,20 @@ public class UserService {
         }
         user.setChallengelList(challengeList);
         return user;
+    }
+
+    public List<UserModel> searchUsers(String nickname) {
+        List<UserProfile> profiles=profileRepository.findByNicknameContains(nickname);
+        if(profiles!=null)
+            return parseUserToModel(profiles);
+        return null;
+    }
+
+    private List<UserModel> parseUserToModel(List<UserProfile> profiles) {
+        List<UserModel> models=new LinkedList<>();
+        for (UserProfile profile : profiles) {
+            models.add(parseUserToModel(profile));
+        }
+        return models;
     }
 }
