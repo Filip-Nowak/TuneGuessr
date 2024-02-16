@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class ChallengeController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     @GetMapping("challenge/search/{name}")
-    public ResponseEntity<List<ChallengeModel>> searchChallenge(@PathVariable String name){
+    public ResponseEntity<List<ChallengeModel>> searchChallenge(@PathVariable(required = false) String name){
         List<ChallengeModel> models = challengeService.searchChallengesByName(name);
         if(models!=null)
             return new ResponseEntity<>(models, HttpStatus.OK);
