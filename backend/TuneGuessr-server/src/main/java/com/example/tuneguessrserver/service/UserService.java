@@ -19,11 +19,9 @@ import java.util.List;
 public class UserService {
     private UserRepository userRepository;
     private UserProfileRepository profileRepository;
-    public UserModel getProfileByNickname(String nickname){
+    public UserProfile getProfileByNickname(String nickname){
         UserProfile profile=profileRepository.findByNickname(nickname);
-        if(profile==null)
-            return null;
-        return parseUserToModel(profile);
+        return profile;
     }
     public UserModel parseUserToModel(UserProfile userProfile){
         UserModel user=UserModel.builder()
@@ -55,4 +53,13 @@ public class UserService {
         }
         return models;
     }
+    public User getUserByEmail(String email){
+        User user = userRepository.findByEmail(email).orElse(null);
+        return user;
+    }
+
+    public void saveProfile(UserProfile userProfile) {
+        profileRepository.save(userProfile);
+    }
+
 }

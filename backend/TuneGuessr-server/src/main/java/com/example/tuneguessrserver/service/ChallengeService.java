@@ -15,11 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 public class ChallengeService {
     ChallengeRepository challengeRepository;
-    public ChallengeModel getChallengeByName(String name){
+    public Challenge getChallengeByName(String name){
         Challenge challenge=challengeRepository.findChallengeByName(name);
-        if(challenge!=null)
-            return parseChallengeToModel(challenge);
-        return null;
+        return challenge;
     }
 
     public ChallengeModel parseChallengeToModel(Challenge challenge) {
@@ -51,5 +49,9 @@ public class ChallengeService {
             models.add(parseChallengeToModel(challenge));
         }
         return models;
+    }
+
+    public void save(Challenge challenge) {
+        challengeRepository.save(challenge);
     }
 }
