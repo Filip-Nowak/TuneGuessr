@@ -5,23 +5,23 @@ import com.example.tuneguessrserver.entity.Song;
 import com.example.tuneguessrserver.entity.User;
 import com.example.tuneguessrserver.entity.UserProfile;
 import com.example.tuneguessrserver.model.UserModel;
+import com.example.tuneguessrserver.model.requests.TestRequest;
 import com.example.tuneguessrserver.repository.ChallengeRepository;
 import com.example.tuneguessrserver.repository.UserProfileRepository;
 import com.example.tuneguessrserver.repository.UserRepository;
 import com.example.tuneguessrserver.service.UserService;
+import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @CrossOrigin
 @AllArgsConstructor
+@RequestMapping("/api/test")
 public class TestController {
     UserService userService;
     UserProfileRepository userProfileRepository;
@@ -56,6 +56,10 @@ public class TestController {
         userProfileRepository.save(userProfile);
         List<Challenge> challengeList=challengeRepository.findAll();
         return null;
+    }
+    @PostMapping("/xd")
+    public String xd(@Valid @RequestBody TestRequest r){
+        return r.getTest();
     }
 
 }

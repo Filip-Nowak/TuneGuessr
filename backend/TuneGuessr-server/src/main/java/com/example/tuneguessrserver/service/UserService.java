@@ -59,7 +59,11 @@ public class UserService {
     }
 
     public void saveProfile(UserProfile userProfile) {
+
         profileRepository.save(userProfile);
+    }
+    private long generateProfileId() {
+        return profileRepository.count();
     }
 
 }
