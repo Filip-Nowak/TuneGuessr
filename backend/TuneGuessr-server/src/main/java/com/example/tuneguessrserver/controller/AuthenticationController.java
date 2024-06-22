@@ -30,7 +30,7 @@ public class AuthenticationController {
         } catch (RuntimeException e) {
             return ResponseEntity.ok(ResponseModel.builder()
                     .error(true)
-                    .message("email already exists").build());
+                    .message(e.getMessage()).build());
         }
         return ResponseEntity.ok(ResponseModel.builder()
                 .data(response)

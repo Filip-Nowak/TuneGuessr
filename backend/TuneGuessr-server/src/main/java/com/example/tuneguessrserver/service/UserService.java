@@ -7,6 +7,7 @@ import com.example.tuneguessrserver.model.ChallengeModel;
 import com.example.tuneguessrserver.model.UserModel;
 import com.example.tuneguessrserver.repository.UserProfileRepository;
 import com.example.tuneguessrserver.repository.UserRepository;
+import com.example.tuneguessrserver.security.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,8 @@ import java.util.List;
 public class UserService {
     private UserRepository userRepository;
     private UserProfileRepository profileRepository;
+    private JwtService jwtService;
+    private UserProfileRepository userProfileRepository;
     public UserProfile getProfileByNickname(String nickname){
         UserProfile profile=profileRepository.findByNickname(nickname);
         return profile;
@@ -64,6 +67,10 @@ public class UserService {
     }
     private long generateProfileId() {
         return profileRepository.count();
+    }
+    public UserProfile getProfileByToken(String token){
+        String email=jwtService.extractUserEmail(token);
+        return userProfileRepository.findProfileByEmail(email).orElse(null);
     }
 
 }

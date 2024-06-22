@@ -9,11 +9,13 @@ import com.example.tuneguessrserver.model.requests.TestRequest;
 import com.example.tuneguessrserver.repository.ChallengeRepository;
 import com.example.tuneguessrserver.repository.UserProfileRepository;
 import com.example.tuneguessrserver.repository.UserRepository;
+import com.example.tuneguessrserver.security.JwtService;
 import com.example.tuneguessrserver.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import org.apache.coyote.Request;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +28,8 @@ public class TestController {
     UserService userService;
     UserProfileRepository userProfileRepository;
     ChallengeRepository challengeRepository;
+    private JwtService jwtService;
+
     @GetMapping("/")
     public String test(){
         return "xd";
@@ -58,8 +62,10 @@ public class TestController {
         return null;
     }
     @PostMapping("/xd")
-    public String xd(@Valid @RequestBody TestRequest r){
-        return r.getTest();
+    public String xd(@RequestHeader (name="Authorization") String auth){
+        System.out.println(auth);
+        UserProfile userProfile=userService.getProfileByToken(auth.substring(7));
+        return userProfile.getUser().getEmail();
     }
 
 }

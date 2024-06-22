@@ -22,6 +22,8 @@ public class User implements UserDetails {
     private long id;
     private String email;
     private String password;
+    @OneToOne(cascade = CascadeType.ALL)
+    private UserProfile profile;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
@@ -66,4 +68,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    private boolean isVerified;
 }

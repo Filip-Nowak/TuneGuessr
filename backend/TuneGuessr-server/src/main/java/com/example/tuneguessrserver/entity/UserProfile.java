@@ -18,6 +18,7 @@ public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Column(unique = true)
     private String nickname;
     @OneToOne(cascade = CascadeType.ALL)
 

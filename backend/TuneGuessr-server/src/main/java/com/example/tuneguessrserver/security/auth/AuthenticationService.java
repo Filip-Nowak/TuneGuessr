@@ -29,6 +29,8 @@ public class AuthenticationService {
     public AuthenticationResponse register(RegisterRequest request) throws RuntimeException{
         if(userRepository.existsByEmail(request.getEmail())){
             throw new RuntimeException("Email already exists");
+        }else if(userProfileRepository.existsByNickname(request.getNickname())){
+            throw new RuntimeException("Nickname already exists");
         }
         var user= User.builder()
                 .email(request.getEmail())
