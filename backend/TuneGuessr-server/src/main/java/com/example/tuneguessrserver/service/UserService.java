@@ -68,7 +68,8 @@ public class UserService {
     private long generateProfileId() {
         return profileRepository.count();
     }
-    public UserProfile getProfileByToken(String token){
+    public UserProfile getProfileByHeader(String header){
+        String token=header.substring(7);
         String email=jwtService.extractUserEmail(token);
         return userProfileRepository.findProfileByEmail(email).orElse(null);
     }

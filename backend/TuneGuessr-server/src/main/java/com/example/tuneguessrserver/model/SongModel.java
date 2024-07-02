@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SongModel {
     private String name;
+    private String artist;
     private String url;
 }

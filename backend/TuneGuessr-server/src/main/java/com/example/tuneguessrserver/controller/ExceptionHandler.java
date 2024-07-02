@@ -17,8 +17,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler{
                 .map(fieldError -> fieldError.getField() + ":" + fieldError.getDefaultMessage())
                 .reduce("", (acc, err) -> acc + err + ";");
         return ResponseEntity.badRequest().body(ResponseModel.builder()
-                .error(true)
-                .message(message)
+                .errorMessage(message)
                 .build());
     }
 }

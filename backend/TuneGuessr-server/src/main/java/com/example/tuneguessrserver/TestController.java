@@ -64,7 +64,7 @@ public class TestController {
     @PostMapping("/xd")
     public String xd(@RequestHeader (name="Authorization") String auth){
         System.out.println(auth);
-        UserProfile userProfile=userService.getProfileByToken(auth.substring(7));
+        UserProfile userProfile=userService.getProfileByHeader(auth);
         return userProfile.getUser().getEmail();
     }
 

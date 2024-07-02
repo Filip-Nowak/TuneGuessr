@@ -17,6 +17,7 @@ public class Song {
     private long id;
     private String url;
     private String name;
+    private String artist;
     @ManyToOne
     private Challenge challenge;
 

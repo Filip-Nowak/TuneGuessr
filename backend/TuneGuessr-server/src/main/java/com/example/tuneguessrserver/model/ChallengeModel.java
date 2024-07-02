@@ -11,6 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class ChallengeModel {
+    private long id;
     private String name;
     private String description;
     private List<SongModel> songs;

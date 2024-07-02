@@ -29,8 +29,7 @@ public class AuthenticationController {
             response = authenticationService.register(request);
         } catch (RuntimeException e) {
             return ResponseEntity.ok(ResponseModel.builder()
-                    .error(true)
-                    .message(e.getMessage()).build());
+                    .errorMessage(e.getMessage()).build());
         }
         return ResponseEntity.ok(ResponseModel.builder()
                 .data(response)
@@ -47,8 +46,7 @@ public class AuthenticationController {
             response=authenticationService.authenticate(request);
         }catch (RuntimeException e){
             return ResponseEntity.ok(ResponseModel.builder()
-                    .error(true)
-                    .message("invalid credentials").build());
+                    .errorMessage("invalid credentials").build());
         }
         System.out.println(request);
         return ResponseEntity.ok(ResponseModel.builder()
