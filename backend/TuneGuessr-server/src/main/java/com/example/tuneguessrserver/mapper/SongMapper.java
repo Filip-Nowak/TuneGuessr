@@ -6,7 +6,7 @@ import com.example.tuneguessrserver.model.SongModel;
 public class SongMapper {
     public static SongModel toModel(Song song) {
         return SongModel.builder()
-                .name(song.getName())
+                .title(song.getName())
                 .artist(song.getArtist())
                 .url(song.getUrl())
                 .build();

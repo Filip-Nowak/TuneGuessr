@@ -15,6 +15,7 @@ public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    private int number;
     private String url;
     private String name;
     private String artist;
