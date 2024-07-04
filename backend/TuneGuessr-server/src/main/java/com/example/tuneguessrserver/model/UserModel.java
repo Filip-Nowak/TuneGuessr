@@ -1,6 +1,6 @@
 package com.example.tuneguessrserver.model;
 
-import com.example.tuneguessrserver.entity.Challenge;
+import com.example.tuneguessrserver.model.challange.ChallengeModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

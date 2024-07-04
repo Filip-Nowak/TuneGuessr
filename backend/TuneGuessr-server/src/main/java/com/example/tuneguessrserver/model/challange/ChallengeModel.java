@@ -1,5 +1,6 @@
-package com.example.tuneguessrserver.model;
+package com.example.tuneguessrserver.model.challange;
 
+import com.example.tuneguessrserver.model.SongModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

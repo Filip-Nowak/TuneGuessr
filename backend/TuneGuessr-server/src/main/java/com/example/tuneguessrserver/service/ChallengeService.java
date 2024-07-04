@@ -4,17 +4,14 @@ import com.example.tuneguessrserver.entity.Challenge;
 import com.example.tuneguessrserver.entity.Song;
 import com.example.tuneguessrserver.entity.UserProfile;
 import com.example.tuneguessrserver.mapper.ChallengeMapper;
-import com.example.tuneguessrserver.model.ChallengeModel;
-import com.example.tuneguessrserver.model.SongModel;
+import com.example.tuneguessrserver.model.challange.AddSongModel;
 import com.example.tuneguessrserver.model.challange.CreateChallengeModel;
 import com.example.tuneguessrserver.model.challange.SearchResultModel;
 import com.example.tuneguessrserver.repository.ChallengeRepository;
 import com.example.tuneguessrserver.repository.SongRepostitory;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,16 +20,13 @@ import java.util.List;
 public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final SongRepostitory songRepository;
-    public Challenge getChallengeByName(String name){
-        Challenge challenge=challengeRepository.findChallengeByName(name);
-        return challenge;
-    }
 
 
-    public List<SearchResultModel> searchChallengesByName(String name) {
+
+    public List<Challenge> searchChallengesByName(String name) {
         List<Challenge> challengeList=challengeRepository.findByNameContains(name);
         if(challengeList!=null)
-            return ChallengeMapper.toSearchResultModel(challengeList);
+            return challengeList;
         return null;
     }
 
@@ -51,11 +45,12 @@ public class ChallengeService {
 
     }
 
-    public Challenge getChallengeById(long id) {
-        return challengeRepository.findById(id).orElse(null);
+    public Challenge getChallengeById(long id) throws Exception {
+        return challengeRepository.findById(id).orElseThrow(() -> new Exception("Challenge not found"));
+
     }
 
-    public Challenge addSongToChallenge(Challenge challenge, SongModel songModel) {
+    public Challenge addSongToChallenge(Challenge challenge, AddSongModel songModel) {
         if(challenge.getSongs()==null)
             challenge.setSongs(new LinkedList<>());
         Song song=ChallengeMapper.toEntity(songModel);
@@ -70,5 +65,27 @@ public class ChallengeService {
     }
     public Song updateSong(Song song) {
         return songRepository.save(song);
+    }
+
+    public void checkIsChallengeOwner(Challenge challenge, UserProfile profile) throws Exception {
+        if(challenge.getUser().getId()!=profile.getId())
+            throw new Exception("You are not the owner of this challenge");
+    }
+
+
+    public Song getSongByNumber(Challenge challenge, long songId) throws Exception {
+        for(Song song:challenge.getSongs()){
+            if(song.getNumber()==songId)
+                return song;
+        }
+        throw new Exception("Song not found");
+
+    }
+
+    public void deleteSong(Challenge challenge, long songId) throws Exception {
+        Song song=getSongByNumber(challenge,songId);
+        challenge.getSongs().remove(song);
+        songRepository.delete(song);
+        save(challenge);
     }
 }

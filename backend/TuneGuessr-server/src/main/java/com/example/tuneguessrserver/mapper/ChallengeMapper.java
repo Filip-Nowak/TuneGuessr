@@ -2,8 +2,9 @@ package com.example.tuneguessrserver.mapper;
 
 import com.example.tuneguessrserver.entity.Challenge;
 import com.example.tuneguessrserver.entity.Song;
-import com.example.tuneguessrserver.model.ChallengeModel;
+import com.example.tuneguessrserver.model.challange.ChallengeModel;
 import com.example.tuneguessrserver.model.SongModel;
+import com.example.tuneguessrserver.model.challange.AddSongModel;
 import com.example.tuneguessrserver.model.challange.SearchResultModel;
 
 import java.util.ArrayList;
@@ -41,5 +42,17 @@ public class ChallengeMapper {
                 .artist(songModel.getArtist())
                 .url(songModel.getUrl())
                 .build();
+    }
+
+    public static Song toEntity(AddSongModel songModel) {
+        return Song.builder()
+                .name(songModel.getTitle())
+                .artist(songModel.getArtist())
+                .url(songModel.getUrl())
+                .build();
+    }
+
+    public static List<ChallengeModel> toModel(List<Challenge> challenges) {
+        return challenges.stream().map(ChallengeMapper::toModel).collect(Collectors.toList());
     }
 }

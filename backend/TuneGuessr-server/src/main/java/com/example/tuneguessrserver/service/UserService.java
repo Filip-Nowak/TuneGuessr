@@ -1,9 +1,8 @@
 package com.example.tuneguessrserver.service;
 
-import com.example.tuneguessrserver.entity.Challenge;
 import com.example.tuneguessrserver.entity.User;
 import com.example.tuneguessrserver.entity.UserProfile;
-import com.example.tuneguessrserver.model.ChallengeModel;
+import com.example.tuneguessrserver.model.challange.ChallengeModel;
 import com.example.tuneguessrserver.model.UserModel;
 import com.example.tuneguessrserver.repository.UserProfileRepository;
 import com.example.tuneguessrserver.repository.UserRepository;
