@@ -5,11 +5,13 @@ import './index.css';
 import { SuccessPage } from './components/SuccessPage.jsx';
 import { LoginPage } from './views/LoginPage.jsx';
 import { RegisterPage } from './views/RegisterPage.jsx';
+import { ErrorPage } from './views/ErrorPage.jsx';
 
 const router = createBrowserRouter([
 	{
 		path: '/',
 		element: <App />,
+		errorElement: <ErrorPage />,
 	},
 	{
 		path: '/login',
