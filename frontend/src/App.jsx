@@ -1,9 +1,16 @@
+import { Outlet } from 'react-router-dom';
+import { Sidebar } from './components/Sidebar';
+import { MobileNav } from './components/MobileNav';
+
 function App() {
 	return (
-		<>
-			<h1 className='text-3xl font-bold underline'>Hello world!</h1>
-			<a href='/test'>next page</a>
-		</>
+		<div className='flex'>
+			<MobileNav />
+			<Sidebar />
+			<Outlet />
+			<div className='h-screen bg-white'></div>
+			<div className='h-screen bg-orange-400'></div>
+		</div>
 	);
 }
 
