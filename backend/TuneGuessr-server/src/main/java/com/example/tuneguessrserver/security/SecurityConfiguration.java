@@ -27,6 +27,8 @@ public class SecurityConfiguration {
                 .permitAll()
                 .requestMatchers(HttpMethod.GET,"api/challenge/**")
                 .permitAll()
+                .requestMatchers(HttpMethod.GET,"api/user/**")
+                .permitAll()
                 .requestMatchers("api/test/**")
                 .permitAll()
                 .anyRequest()

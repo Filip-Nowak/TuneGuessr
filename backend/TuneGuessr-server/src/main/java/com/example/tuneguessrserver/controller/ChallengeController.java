@@ -73,7 +73,7 @@ public class ChallengeController {
                 .build());
     }
 
-    @PostMapping("/challenge/{id}")
+    @PostMapping("/challenge/{id}/song")
     public ResponseEntity<ResponseModel> addSongToChallenge(@RequestHeader(name = "Authorization") String header, @PathVariable long id, @RequestBody @Valid AddSongModel song) {
         Challenge challenge;
         try {
