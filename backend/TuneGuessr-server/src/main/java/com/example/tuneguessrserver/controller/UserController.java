@@ -1,36 +1,48 @@
 package com.example.tuneguessrserver.controller;
 
+import com.example.tuneguessrserver.entity.User;
+import com.example.tuneguessrserver.entity.UserProfile;
+import com.example.tuneguessrserver.model.ResponseModel;
 import com.example.tuneguessrserver.model.UserModel;
 import com.example.tuneguessrserver.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @AllArgsConstructor
 @RequestMapping("/api")
 public class UserController {
     private UserService userService;
     @GetMapping("/user/{nickname}")
-    public ResponseEntity<UserModel> getUser(@PathVariable String nickname){
-        //UserModel userModel=userService.getProfileByNickname(nickname);
-        //if(userModel==null)
-          //  return new ResponseEntity<>( HttpStatus.NOT_FOUND);
-        //return new ResponseEntity<>(userModel,HttpStatus.OK);
-        return null;
+    public ResponseEntity<ResponseModel> getUser(@PathVariable String nickname){
+        try {
+            UserModel user = userService.parseUserToModel(userService.getProfileByNickname(nickname));
+            return ResponseEntity.ok(ResponseModel.builder()
+                    .data(user)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.ok(ResponseModel.builder()
+                    .errorMessage(e.getMessage())
+                    .build());
+        }
     }
-
-    @GetMapping("/user/search/{nickname}")
-    public ResponseEntity<List<UserModel>> searchUsers(@PathVariable String nickname){
-        List<UserModel> userModels= userService.searchUsers(nickname);
-        if(userModels==null)
-            return new ResponseEntity<>( HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(userModels,HttpStatus.OK);
+    @GetMapping("/user")
+    public ResponseEntity<ResponseModel> getLoggedUser(@RequestHeader("Authorization") String header){
+        try {
+            UserProfile user = userService.getProfileByHeader(header);
+            UserModel userModel = userService.parseUserToModel(userService.getProfileByNickname(user.getNickname()));
+            return ResponseEntity.ok(ResponseModel.builder()
+                    .data(userModel)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.ok(ResponseModel.builder()
+                    .errorMessage(e.getMessage())
+                    .build());
+        }
     }
 }

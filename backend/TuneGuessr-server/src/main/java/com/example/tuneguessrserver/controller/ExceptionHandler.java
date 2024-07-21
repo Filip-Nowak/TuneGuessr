@@ -16,7 +16,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler{
         String message = ex.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> fieldError.getField() + ":" + fieldError.getDefaultMessage())
                 .reduce("", (acc, err) -> acc + err + ";");
-        return ResponseEntity.badRequest().body(ResponseModel.builder()
+        return ResponseEntity.ok().body(ResponseModel.builder()
                 .errorMessage(message)
                 .build());
     }

@@ -22,17 +22,19 @@ public class UserService {
     private JwtService jwtService;
     private UserProfileRepository userProfileRepository;
     public UserProfile getProfileByNickname(String nickname){
-        UserProfile profile=profileRepository.findByNickname(nickname);
+        UserProfile profile=profileRepository.findByNickname(nickname).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return profile;
     }
     public UserModel parseUserToModel(UserProfile userProfile){
         UserModel user=UserModel.builder()
+                .id(userProfile.getId())
                 .nickname(userProfile.getNickname())
                 .email(userProfile.getUser().getEmail())
                 .build();
         List<ChallengeModel> challengeList=new ArrayList<>();
         for(int i=0;i<userProfile.getChallengeList().size();i++){
             challengeList.add(ChallengeModel.builder()
+                            .id(userProfile.getChallengeList().get(i).getId())
                     .author(userProfile.getNickname())
                     .description(userProfile.getChallengeList().get(i).getDescription())
                     .name(userProfile.getChallengeList().get(i).getName()).build());
@@ -73,4 +75,8 @@ public class UserService {
         return userProfileRepository.findProfileByEmail(email).orElse(null);
     }
 
+    public UserModel getUserByNickname(String nickname) {
+        UserProfile profile= profileRepository.findByNickname(nickname).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return parseUserToModel(profile);
+    }
 }

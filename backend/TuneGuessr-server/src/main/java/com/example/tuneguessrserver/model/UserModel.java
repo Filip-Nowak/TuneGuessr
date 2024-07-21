@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class UserModel {
+    private long id;
     private String nickname;
     private String email;
     private List<ChallengeModel> challengelList;
