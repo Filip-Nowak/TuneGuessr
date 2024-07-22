@@ -1,5 +1,7 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { BACKEND_URL } from '../constants/API_END-POINT';
+import { useState } from 'react';
 
 export function LoginPage() {
 	const {
@@ -7,8 +9,36 @@ export function LoginPage() {
 		handleSubmit,
 		formState: { errors },
 	} = useForm();
+	const [errorMessage, setErrorMessage] = useState('');
+	const navigate = useNavigate();
 
-	const onSubmit = data => console.log(data);
+	const onSubmit = async ({ email, password }) => {
+		try {
+			const response = await fetch(`${BACKEND_URL}/auth/authenticate`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					password,
+					email,
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error('Network response was not ok ' + response.statusText);
+			}
+			const { data } = await response.json();
+
+			localStorage.setItem('token', data.token);
+			navigate('/');
+		} catch (error) {
+			setErrorMessage('Your password or email is wrong');
+			console.log('Fetch error', error);
+		}
+	};
+
+	// const onSubmit = data => console.log(data);
 
 	return (
 		<div className='flex justify-center items-center h-screen max-h-[800px] md:p-8 md:border rounded-xl border-purple-900 m-10'>
@@ -42,6 +72,9 @@ export function LoginPage() {
 						{errors.email && (
 							<span className='text-md text-red-600'>{errors.email.message}</span>
 						)}
+						{errorMessage && (
+							<span className='text-md text-red-600'>{errorMessage}</span>
+						)}
 					</div>
 
 					<div className='relative z-0 w-full mb-5 group'>
@@ -52,6 +85,8 @@ export function LoginPage() {
 							placeholder=' '
 							{...register('password', {
 								required: { value: true, message: 'Type password' },
+								minLength: { value: 6, message: 'Your password is too short' },
+								maxLength: { value: 40, message: 'Your password is too long' },
 							})}
 						/>
 						<label
@@ -62,6 +97,9 @@ export function LoginPage() {
 						</label>
 						{errors.password && (
 							<span className='text-md text-red-600'>{errors.password.message}</span>
+						)}
+						{errorMessage && (
+							<span className='text-md text-red-600'>{errorMessage}</span>
 						)}
 					</div>
 					<button className='mx-auto my-2 px-4 py-2 w-[80%] bg-black rounded-lg text-white'>

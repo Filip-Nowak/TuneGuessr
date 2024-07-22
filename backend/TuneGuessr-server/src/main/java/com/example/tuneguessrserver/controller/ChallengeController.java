@@ -25,6 +25,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@CrossOrigin
 public class ChallengeController {
     private final ChallengeService challengeService;
     private final UserService userService;

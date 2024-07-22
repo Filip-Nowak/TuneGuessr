@@ -6,7 +6,7 @@ import SETTINGS from '../assets/settings.svg';
 
 export function Sidebar() {
 	return (
-		<nav className='hidden md:block m-4 w-full max-w-64 bg-purple-700 rounded-xl'>
+		<nav className='hidden md:block fixed top-1/2 left-36 h-[95%] w-full max-w-64 bg-purple-700 rounded-xl -translate-x-1/2 -translate-y-1/2'>
 			<ul className='flex flex-col justify-center gap-8 px-6 w-full h-full'>
 				<li>
 					<Link className='flex items-center gap-5 p-4 w-full rounded-xl transition-colors duration-300 hover:bg-purple-800'>
@@ -27,7 +27,10 @@ export function Sidebar() {
 					</Link>
 				</li>
 				<li>
-					<Link className='flex items-center gap-5 p-4 w-full rounded-xl transition-colors duration-300 hover:bg-purple-800'>
+					<Link
+						to={'/settings'}
+						className='flex items-center gap-5 p-4 w-full rounded-xl transition-colors duration-300 hover:bg-purple-800'
+					>
 						<img className='w-8' src={SETTINGS} alt='Settings button' />
 						Settings
 					</Link>

@@ -4,10 +4,12 @@ import { MobileNav } from './components/MobileNav';
 
 function App() {
 	return (
-		<div className='flex'>
+		<div>
 			<MobileNav />
 			<Sidebar />
-			<Outlet />
+			<div className=' pl-72'>
+				<Outlet />
+			</div>
 			<div className='h-screen bg-white'></div>
 			<div className='h-screen bg-orange-400'></div>
 		</div>

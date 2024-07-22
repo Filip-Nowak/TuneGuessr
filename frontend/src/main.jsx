@@ -6,12 +6,19 @@ import { SuccessPage } from './components/SuccessPage.jsx';
 import { LoginPage } from './views/LoginPage.jsx';
 import { RegisterPage } from './views/RegisterPage.jsx';
 import { ErrorPage } from './views/ErrorPage.jsx';
+import { SettingsPage } from './components/SettingsPage.jsx';
 
 const router = createBrowserRouter([
 	{
 		path: '/',
 		element: <App />,
 		errorElement: <ErrorPage />,
+		children: [
+			{
+				path: '/settings',
+				element: <SettingsPage />,
+			},
+		],
 	},
 	{
 		path: '/login',

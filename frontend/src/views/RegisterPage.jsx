@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import { BACKEND_URL } from '../constants/API_END-POINT';
 
 export function RegisterPage() {
 	const [password, setPassword] = useState('');
@@ -9,8 +10,34 @@ export function RegisterPage() {
 		handleSubmit,
 		formState: { errors },
 	} = useForm();
+	const navigate = useNavigate();
 
-	const onSubmit = data => console.log(data);
+	const onSubmit = async ({ name, email, password }) => {
+		try {
+			const response = await fetch(`${BACKEND_URL}/auth/register`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					password,
+					email,
+					nickname: name,
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error('Network response was not ok ' + response.statusText);
+			}
+
+			const { data } = await response.json();
+
+			localStorage.setItem('token', data.token);
+			navigate('/');
+		} catch (error) {
+			console.error('Fetch error:', error);
+		}
+	};
 
 	return (
 		<div className='flex justify-center items-center h-screen max-h-[800px] md:p-8 md:border rounded-xl border-purple-900 m-10'>
@@ -30,6 +57,14 @@ export function RegisterPage() {
 							placeholder=' '
 							{...register('name', {
 								required: { value: true, message: 'Name must not be empty' },
+								minLength: {
+									value: 3,
+									message: 'The user name is between 3 and 20 characters long',
+								},
+								maxLength: {
+									value: 20,
+									message: 'The user name is between 3 and 20 characters long',
+								},
 							})}
 						/>
 						<label
@@ -77,6 +112,14 @@ export function RegisterPage() {
 								required: {
 									value: true,
 									message: 'Password input must not be empty',
+								},
+								minLength: {
+									value: 6,
+									message: 'Password must contain from 6 to 40 characters',
+								},
+								maxLength: {
+									value: 40,
+									message: 'Password must contain from 6 to 40 characters',
 								},
 							})}
 							onChange={e => {
