@@ -42,19 +42,21 @@
 
 ### response
 
+if registration was successful
+
 ```json
-/* if registration was successful */
-
 {
-    "errorMessage":null,
-    "data": null,
+  "errorMessage": null,
+  "data": null
 }
+```
 
+if problem concerns provided fields
 
-/* if problem concerns provided fields */
+```json
 {
-    "errorMessage":"password:Password must be between 6 and 40 characters;email:email is invalid",
-    "data":null,
+  "errorMessage": "password:Password must be between 6 and 40 characters;email:email is invalid",
+  "data": null
 }
 ```
 
@@ -79,21 +81,23 @@ if everything went well server will save user to database and send verification 
 
 ### response
 
+if credentials were valid
+
 ```json
-/* if credentials were valid */
-
 {
-    "errorMessage":null,
-    "data": {
-        "token":""
-    },
+  "errorMessage": null,
+  "data": {
+    "token": ""
+  }
 }
+```
 
+if credentials were invalid
 
-/* if credentials were invalid */
+```json
 {
-    "errorMessage":"invalid credentials",
-    "data":null,
+  "errorMessage": "invalid credentials",
+  "data": null
 }
 ```
 
@@ -105,33 +109,31 @@ if everything went well server will save user to database and send verification 
 
 ### response
 
+if no show params provided
+
 ```json
-    /*if no show params provided*/
-    {
-        "errorMessage":null,
-        "data":{
-            "id":0,
-            "author":"",
-            "songs":[],
-            "name":"",
-            "description":""
-        }
-    }
+{
+  "errorMessage": null,
+  "data": {
+    "id": 0,
+    "author": "",
+    "songs": [],
+    "name": "",
+    "description": ""
+  }
+}
+```
 
+if all fields aren't required you can add show params, e.g. resopnse of /api/challenge?show=id&show=name
 
-
-    /*
-        if all fields aren't required you can add show params
-        e.g. resopnse of
-        /api/challenge?show=id&show=name
-    */
-    {
-        "errorMessage":null,
-        "data":{
-            "id":0,
-            "name":""
-        }
-    }
+```json
+{
+  "errorMessage": null,
+  "data": {
+    "id": 0,
+    "name": ""
+  }
+}
 ```
 
 <br>
@@ -169,8 +171,9 @@ Returns list of matching challenges by name.You can also add show params to form
 
 ### body
 
+description is optional
+
 ```json
-//description is optional
 {
   "name": "",
   "description": ""
@@ -225,8 +228,9 @@ Returns list of matching challenges by name.You can also add show params to form
 
 ### response
 
+return song's challenge
+
 ```json
-//return song's challenge
 {
   "errorMessage": null,
   "data": {
@@ -257,8 +261,9 @@ Returns list of matching challenges by name.You can also add show params to form
 
 ### repsonse
 
+return modified song's challenge
+
 ```json
-//return modified song's challenge
 {
   "errorMessage": null,
   "data": {
@@ -281,8 +286,9 @@ deletes song by it's number in challenge
 
 ### response
 
+return deleted song's challenge
+
 ```json
-//return deleted song's challenge
 {
   "errorMessage": null,
   "data": {
