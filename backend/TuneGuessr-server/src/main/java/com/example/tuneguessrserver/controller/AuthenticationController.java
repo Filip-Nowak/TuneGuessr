@@ -22,15 +22,16 @@ public class AuthenticationController {
     public ResponseEntity<ResponseModel> register(
             @Valid @RequestBody RegisterRequest request
     ) {
-        AuthenticationResponse response;
+        System.out.println("start");
         try {
-            response = authenticationService.register(request);
+            authenticationService.register(request);
         } catch (RuntimeException e) {
             return ResponseEntity.ok(ResponseModel.builder()
                     .errorMessage(e.getMessage()).build());
         }
+        System.out.println("registering");
         return ResponseEntity.ok(ResponseModel.builder()
-                .data(response)
+                .data("email sent")
                 .build());
     }
 
@@ -44,12 +45,28 @@ public class AuthenticationController {
             response=authenticationService.authenticate(request);
         }catch (RuntimeException e){
             return ResponseEntity.ok(ResponseModel.builder()
-                    .errorMessage("invalid credentials").build());
+                    .errorMessage(e.getMessage()).build());
         }
         System.out.println(request);
         return ResponseEntity.ok(ResponseModel.builder()
                 .data(response)
                 .build());
 
+    }
+
+    @GetMapping("/confirm")
+    public ResponseEntity<ResponseModel> confirm(
+            @RequestParam String token
+    ) {
+        try {
+            authenticationService.confirmToken(token);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(ResponseModel.builder()
+                    .errorMessage(e.getMessage()).build());
+        }
+        return ResponseEntity.ok(ResponseModel.builder()
+                .data("confirmed")
+                .build());
     }
 }
