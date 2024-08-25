@@ -1,10 +1,8 @@
 package com.example.tuneguessrserver.controller;
 
+import com.example.tuneguessrserver.enums.AuthStatus;
 import com.example.tuneguessrserver.model.ResponseModel;
-import com.example.tuneguessrserver.security.auth.AuthenticationRequest;
-import com.example.tuneguessrserver.security.auth.AuthenticationResponse;
-import com.example.tuneguessrserver.security.auth.AuthenticationService;
-import com.example.tuneguessrserver.security.auth.RegisterRequest;
+import com.example.tuneguessrserver.security.auth.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,54 +17,38 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseModel> register(
-            @Valid @RequestBody RegisterRequest request
-    ) {
+    public ResponseEntity<ResponseModel> register(@Valid @RequestBody RegisterRequest request) {
         System.out.println("start");
         try {
             authenticationService.register(request);
         } catch (RuntimeException e) {
-            return ResponseEntity.ok(ResponseModel.builder()
-                    .errorMessage(e.getMessage()).build());
+            return ResponseEntity.ok(ResponseModel.builder().errorMessage(e.getMessage()).build());
         }
         System.out.println("registering");
-        return ResponseEntity.ok(ResponseModel.builder()
-                .data("email sent")
-                .build());
+        return ResponseEntity.ok(ResponseModel.builder().data("email sent").build());
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<ResponseModel> register(
-            @RequestBody AuthenticationRequest request
-    ) {
-        System.out.println("authenticating");
-        AuthenticationResponse response;
-        try{
-            response=authenticationService.authenticate(request);
-        }catch (RuntimeException e){
-            return ResponseEntity.ok(ResponseModel.builder()
-                    .errorMessage(e.getMessage()).build());
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody AuthenticationRequest request) {
+        try {
+            String token = authenticationService.authenticate(request);
+            AuthenticationResponse response = new AuthenticationResponse(AuthStatus.AUTHENTICATION_SUCCESS);
+            response.setToken(token);
+            return ResponseEntity.ok(response);
+        } catch (AuthError e) {
+            AuthenticationResponse response = new AuthenticationResponse(e.getErrors());
+            return ResponseEntity.ok(response);
         }
-        System.out.println(request);
-        return ResponseEntity.ok(ResponseModel.builder()
-                .data(response)
-                .build());
-
     }
 
     @GetMapping("/confirm")
-    public ResponseEntity<ResponseModel> confirm(
-            @RequestParam String token
-    ) {
+    public ResponseEntity<ResponseModel> confirm(@RequestParam String token) {
         try {
             authenticationService.confirmToken(token);
 
         } catch (RuntimeException e) {
-            return ResponseEntity.ok(ResponseModel.builder()
-                    .errorMessage(e.getMessage()).build());
+            return ResponseEntity.ok(ResponseModel.builder().errorMessage(e.getMessage()).build());
         }
-        return ResponseEntity.ok(ResponseModel.builder()
-                .data("confirmed")
-                .build());
+        return ResponseEntity.ok(ResponseModel.builder().data("confirmed").build());
     }
 }

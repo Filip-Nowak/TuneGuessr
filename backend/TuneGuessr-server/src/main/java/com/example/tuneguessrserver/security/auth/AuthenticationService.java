@@ -3,6 +3,7 @@ package com.example.tuneguessrserver.security.auth;
 import com.example.tuneguessrserver.entity.ConfirmationToken;
 import com.example.tuneguessrserver.entity.User;
 import com.example.tuneguessrserver.entity.UserProfile;
+import com.example.tuneguessrserver.enums.AuthStatus;
 import com.example.tuneguessrserver.repository.ConfirmationTokenRepository;
 import com.example.tuneguessrserver.repository.RoleRepository;
 import com.example.tuneguessrserver.repository.UserProfileRepository;
@@ -34,54 +35,55 @@ public class AuthenticationService {
     private final UserProfileRepository userProfileRepository;
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final EmailSender emailSender;
-    public void register(RegisterRequest request) throws RuntimeException{
-        if(userRepository.existsByEmail(request.getEmail())){
+
+    public void register(RegisterRequest request) throws RuntimeException {
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
-        }else if(userProfileRepository.existsByNickname(request.getNickname())){
+        } else if (userProfileRepository.existsByNickname(request.getNickname())) {
             throw new RuntimeException("Nickname already exists");
         }
-        var user= User.builder()
+        var user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .roles(List.of(roleRepository.findByName("USER")))
                 .build();
-        UserProfile profile=UserProfile.builder()
+        UserProfile profile = UserProfile.builder()
                 .nickname(request.getNickname())
                 .user(user)
                 .build();
         String token = UUID.randomUUID().toString();
-        user =userRepository.save(user);
+        user = userRepository.save(user);
         ConfirmationToken confirmationToken = new ConfirmationToken(
                 token,
                 user.getId()
         );
         userProfileRepository.save(profile);
         confirmationTokenRepository.save(confirmationToken);
-        emailSender.sendEmail(request.getEmail(),"Confirm your email","confirm your email: http://localhost:8080/api/auth/confirm?token="+token);
+        emailSender.sendEmail(request.getEmail(), "Confirm your email", "confirm your email: http://localhost:8080/api/auth/confirm?token=" + token);
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public String authenticate(AuthenticationRequest request) throws AuthError {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+            var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+            return jwtService.generateToken(user);
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
-
-        var user=userRepository.findByEmail(request.getEmail()).orElseThrow();
-        var jwtToken=jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        } catch (Exception e) {
+            throw new AuthError(List.of(AuthStatus.INVALID_CREDENTIALS));
+        }
     }
 
-    public void confirmToken(String token) throws RuntimeException{
+    public void confirmToken(String token) throws RuntimeException {
         ConfirmationToken confirmationToken = confirmationTokenRepository.findByToken(token);
-        if(confirmationToken==null){
+        if (confirmationToken == null) {
             throw new RuntimeException("Invalid token");
         }
-        if(confirmationToken.getConfirmedAt()!=null){
+        if (confirmationToken.getConfirmedAt() != null) {
             throw new RuntimeException("Token already confirmed");
         }
-        if(confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())){
+        if (confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("Token expired");
         }
         confirmationToken.setConfirmedAt(LocalDateTime.now());
