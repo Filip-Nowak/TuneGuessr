@@ -20,17 +20,12 @@ public class AuthenticationResponse {
     private int status;
     private String message;
     private List<AuthErrorModel> errors=new LinkedList<>();
-    public void addError(AuthErrorModel error){
-        errors.add(error);
-    }
     public AuthenticationResponse(int status){
         this.status = status;
         this.message = AuthStatus.getMessage(status);
 
     }
     public AuthenticationResponse(List<Integer> errors){
-        System.out.println("errors");
-        System.out.println(errors);
         if(errors.size()==1){
             this.status = errors.getFirst();
             this.message = AuthStatus.getMessage(errors.getFirst());
@@ -41,7 +36,6 @@ public class AuthenticationResponse {
         for (int error:errors){
             this.errors.add(new AuthErrorModel(error));
         }
-        System.out.println(this.errors.size());
     }
 
 }

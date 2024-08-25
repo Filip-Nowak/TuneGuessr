@@ -17,15 +17,14 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseModel> register(@Valid @RequestBody RegisterRequest request) {
-        System.out.println("start");
-        try {
+    public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody RegisterRequest request) {
+        try{
             authenticationService.register(request);
-        } catch (RuntimeException e) {
-            return ResponseEntity.ok(ResponseModel.builder().errorMessage(e.getMessage()).build());
+            return ResponseEntity.ok(new AuthenticationResponse(AuthStatus.EMAIL_SENT));
+        }catch (AuthError e){
+            AuthenticationResponse response = new AuthenticationResponse(e.getErrors());
+            return ResponseEntity.ok(response);
         }
-        System.out.println("registering");
-        return ResponseEntity.ok(ResponseModel.builder().data("email sent").build());
     }
 
     @PostMapping("/authenticate")
@@ -42,13 +41,13 @@ public class AuthenticationController {
     }
 
     @GetMapping("/confirm")
-    public ResponseEntity<ResponseModel> confirm(@RequestParam String token) {
+    public ResponseEntity<AuthenticationResponse> confirm(@RequestParam String token) {
         try {
             authenticationService.confirmToken(token);
-
-        } catch (RuntimeException e) {
-            return ResponseEntity.ok(ResponseModel.builder().errorMessage(e.getMessage()).build());
+            return ResponseEntity.ok(new AuthenticationResponse(AuthStatus.EMAIL_CONFIRMED));
+        } catch (AuthError e) {
+            AuthenticationResponse response = new AuthenticationResponse(e.getErrors());
+            return ResponseEntity.ok(response);
         }
-        return ResponseEntity.ok(ResponseModel.builder().data("confirmed").build());
     }
 }

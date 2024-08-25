@@ -10,4 +10,7 @@ import java.util.List;
 @Getter
 public class AuthError extends Exception{
     private final List<Integer> errors;
+    public void addError(int error){
+        errors.add(error);
+    }
 }

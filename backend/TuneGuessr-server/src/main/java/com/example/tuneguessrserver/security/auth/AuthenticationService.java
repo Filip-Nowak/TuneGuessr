@@ -36,12 +36,18 @@ public class AuthenticationService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final EmailSender emailSender;
 
-    public void register(RegisterRequest request) throws RuntimeException {
+    public void register(RegisterRequest request) throws AuthError {
+        AuthError error = new AuthError(new LinkedList<>());
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
-        } else if (userProfileRepository.existsByNickname(request.getNickname())) {
-            throw new RuntimeException("Nickname already exists");
+            error.addError(AuthStatus.EMAIL_EXISTS);
         }
+        if (userProfileRepository.existsByNickname(request.getNickname())) {
+            error.addError(AuthStatus.NICKNAME_EXISTS);
+        }
+        if (!error.getErrors().isEmpty()) {
+            throw error;
+        }
+
         var user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -75,16 +81,16 @@ public class AuthenticationService {
         }
     }
 
-    public void confirmToken(String token) throws RuntimeException {
+    public void confirmToken(String token) throws AuthError {
         ConfirmationToken confirmationToken = confirmationTokenRepository.findByToken(token);
         if (confirmationToken == null) {
-            throw new RuntimeException("Invalid token");
+            throw new AuthError(List.of(AuthStatus.INVALID_TOKEN));
         }
         if (confirmationToken.getConfirmedAt() != null) {
-            throw new RuntimeException("Token already confirmed");
+            throw new AuthError(List.of(AuthStatus.TOKEN_ALREADY_CONFIRMED));
         }
         if (confirmationToken.getExpiresAt().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("Token expired");
+            throw new AuthError(List.of(AuthStatus.TOKEN_EXPIRED));
         }
         confirmationToken.setConfirmedAt(LocalDateTime.now());
         confirmationTokenRepository.save(confirmationToken);

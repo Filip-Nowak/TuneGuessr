@@ -13,13 +13,13 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
-    @NotBlank(message = "Nickname is required")
-    @Length(min = 3, max = 20, message = "Nickname must be between 3 and 20 characters")
+    @NotBlank(message = "2")
+    @Length(min = 3, max = 20, message = "3")
     private String nickname;
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email is invalid")
+    @NotBlank(message = "4")
+    @Email(message = "5")
     private String email;
-    @NotBlank(message = "Password is required")
-    @Length(min = 6, max = 40, message = "Password must be between 6 and 40 characters")
+    @NotBlank(message = "6")
+    @Length(min = 6, max = 40, message = "7")
     private String password;
 }
