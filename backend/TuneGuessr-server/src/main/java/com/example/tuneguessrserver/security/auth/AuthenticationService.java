@@ -35,16 +35,22 @@ public class AuthenticationService {
     private final UserProfileRepository userProfileRepository;
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final EmailSender emailSender;
-
+    @Transactional
     public void register(RegisterRequest request) throws AuthError {
         AuthError error = new AuthError(new LinkedList<>());
         if (userRepository.existsByEmail(request.getEmail())) {
-            error.addError(AuthStatus.EMAIL_EXISTS);
+            User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+            if (user.isVerified()) {
+                error.addError(AuthStatus.EMAIL_EXISTS);
+            } else {
+                updateUnverifiedUser(user);
+            }
         }
         if (userProfileRepository.existsByNickname(request.getNickname())) {
             error.addError(AuthStatus.NICKNAME_EXISTS);
         }
         if (!error.getErrors().isEmpty()) {
+
             throw error;
         }
 
@@ -58,16 +64,16 @@ public class AuthenticationService {
                 .user(user)
                 .build();
         String token = UUID.randomUUID().toString();
+        user.setProfile(profile);
         user = userRepository.save(user);
         ConfirmationToken confirmationToken = new ConfirmationToken(
                 token,
                 user.getId()
         );
-        userProfileRepository.save(profile);
         confirmationTokenRepository.save(confirmationToken);
         emailSender.sendEmail(request.getEmail(), "Confirm your email", "confirm your email: http://localhost:8080/api/auth/confirm?token=" + token);
     }
-
+    @Transactional
     public String authenticate(AuthenticationRequest request) throws AuthError {
         try {
             authenticationManager.authenticate(
@@ -80,7 +86,7 @@ public class AuthenticationService {
             throw new AuthError(List.of(AuthStatus.INVALID_CREDENTIALS));
         }
     }
-
+    @Transactional
     public void confirmToken(String token) throws AuthError {
         ConfirmationToken confirmationToken = confirmationTokenRepository.findByToken(token);
         if (confirmationToken == null) {
@@ -98,4 +104,14 @@ public class AuthenticationService {
         user.setVerified(true);
         userRepository.save(user);
     }
+
+    private void updateUnverifiedUser(User user) {
+        userRepository.delete(user);
+        List<ConfirmationToken> tokens = confirmationTokenRepository.findByUserId(user.getId());
+        for (ConfirmationToken token : tokens) {
+            token.setExpiresAt(LocalDateTime.now());
+            confirmationTokenRepository.save(token);
+        }
+    }
+
 }

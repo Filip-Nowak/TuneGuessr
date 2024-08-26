@@ -21,7 +21,6 @@ public class UserProfile {
     @Column(unique = true)
     private String nickname;
     @OneToOne(cascade = CascadeType.ALL)
-
     private User user;
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Challenge> challengeList;

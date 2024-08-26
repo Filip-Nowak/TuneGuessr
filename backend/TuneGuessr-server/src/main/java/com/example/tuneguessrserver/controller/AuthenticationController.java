@@ -22,6 +22,7 @@ public class AuthenticationController {
             authenticationService.register(request);
             return ResponseEntity.ok(new AuthenticationResponse(AuthStatus.EMAIL_SENT));
         }catch (AuthError e){
+            System.out.println("handled");
             AuthenticationResponse response = new AuthenticationResponse(e.getErrors());
             return ResponseEntity.ok(response);
         }
