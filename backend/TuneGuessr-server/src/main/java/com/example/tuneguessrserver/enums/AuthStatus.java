@@ -34,7 +34,7 @@ public class AuthStatus {
             case EMAIL_CONFIRMED:
                 return "Email confirmed";
             case INVALID_TOKEN:
-                return "Invalid token";
+                return "Token not found";
             case TOKEN_EXPIRED:
                 return "Token expired";
             case TOKEN_ALREADY_CONFIRMED:
