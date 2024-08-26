@@ -20,7 +20,7 @@ public class ChallengeMapper {
                 .author(challenge.getUser().getNickname())
                 .build();
         if(challenge.getSongs()!=null)
-            model.setSongs(challenge.getSongs().stream().map(SongMapper::toModel).collect(Collectors.toList()));
+            model.setSongs(SongMapper.toModel(challenge.getSongs()));
         else model.setSongs(new ArrayList<>());
         return model;
     }

@@ -1,6 +1,7 @@
 package com.example.tuneguessrserver.model;
 
 import com.example.tuneguessrserver.entity.Challenge;
+import com.example.tuneguessrserver.mapper.SongMapper;
 
 import java.util.*;
 
@@ -23,7 +24,7 @@ public class ModelConverter {
             model.put("author", challenge.getUser().getNickname());
         }
         if(params.contains("songs")) {
-            model.put("songs", challenge.getSongs());
+            model.put("songs", SongMapper.toModel(challenge.getSongs()));
         }
         return model;
     }

@@ -36,7 +36,7 @@ public class AuthenticationService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final EmailSender emailSender;
     @Transactional
-    public void register(RegisterRequest request) throws AuthError {
+    public void register(RegisterRequest request,boolean v) throws AuthError {
         AuthError error = new AuthError(new LinkedList<>());
         if (userRepository.existsByEmail(request.getEmail())) {
             User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
@@ -71,7 +71,12 @@ public class AuthenticationService {
                 user.getId()
         );
         confirmationTokenRepository.save(confirmationToken);
-        emailSender.sendEmail(request.getEmail(), "Confirm your email", "confirm your email: http://localhost:8080/api/auth/confirm?token=" + token);
+        if(!v)
+            emailSender.sendEmail(request.getEmail(), "Confirm your email", "confirm your email: http://localhost:8080/api/auth/confirm?token=" + token);
+    }
+    @Transactional
+    public void register(RegisterRequest request) throws AuthError {
+        register(request,false);
     }
     @Transactional
     public String authenticate(AuthenticationRequest request) throws AuthError {

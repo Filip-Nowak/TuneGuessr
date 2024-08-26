@@ -12,6 +12,7 @@ import com.example.tuneguessrserver.model.challange.CreateChallengeModel;
 import com.example.tuneguessrserver.model.challange.SearchResultModel;
 import com.example.tuneguessrserver.service.ChallengeService;
 import com.example.tuneguessrserver.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,32 +34,33 @@ public class ChallengeController {
     private final UserService userService;
 
     @GetMapping("/challenge/{id}")
-    public ResponseEntity<ResponseModel> getChallenge(@PathVariable long id, @RequestParam(required = false) List< String> show) {
+    public ResponseEntity<ResponseModel> getChallenge(@PathVariable long id,HttpServletRequest request) {
+        List<String> showParams = getParams(request);
         Challenge challenge;
         try {
             challenge = challengeService.getChallengeById(id);
-
         } catch (Exception e) {
             return ResponseEntity.ok(ResponseModel.builder()
                     .errorMessage(e.getMessage())
                     .build());
         }
-        Map<String, Object> model = ModelConverter.convertChallengeToMap(show,challenge);
+        Map<String, Object> model = ModelConverter.convertChallengeToMap(showParams,challenge);
         return ResponseEntity.ok(ResponseModel.builder()
                 .data(model)
                 .build());
     }
 
     @GetMapping("/challenge/search/{name}")
-    public ResponseEntity<ResponseModel> searchChallenge(@PathVariable String name,@RequestParam(required = false) List<String> show){
+    public ResponseEntity<ResponseModel> searchChallenge(@PathVariable String name,HttpServletRequest request) {
+        List<String> showParams = getParams(request);
         List<Challenge> challenges = challengeService.searchChallengesByName(name);
-        if(show==null || show.isEmpty()){
+        if(showParams.isEmpty()){
             List<ChallengeModel> models = ChallengeMapper.toModel(challenges);
             return ResponseEntity.ok(ResponseModel.builder()
                     .data(models)
                     .build());
         }
-        List<Map<String, Object>> models = ModelConverter.convertChallengesToMap(show,challenges);
+        List<Map<String, Object>> models = ModelConverter.convertChallengesToMap(showParams,challenges);
         return ResponseEntity.ok(ResponseModel.builder()
                 .data(models)
                 .build());
@@ -151,6 +155,17 @@ public class ChallengeController {
         return ResponseEntity.ok(ResponseModel.builder()
                 .data(ChallengeMapper.toModel(challenge))
                 .build());
+    }
+
+    private List<String> getParams(HttpServletRequest request) {
+        Enumeration<String> params = request.getParameterNames();
+        List<String> showParams = new LinkedList<>();
+        while (params.hasMoreElements()) {
+            String element = params.nextElement();
+            if(element.equals("name") || element.equals("id") || element.equals("description") || element.equals("author") || element.equals("songs"))
+                showParams.add(element);
+        }
+        return showParams;
     }
 
 

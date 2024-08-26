@@ -21,7 +21,7 @@
 <br>
 
 - **bolded** endpoints with 🔒 are available to authenticated users
-- challenge `GET` endpoints accepts `show` params, that will specify response format. If no params are provided,
+- challenge `GET` endpoints accepts params, that will specify response format. If no params are provided,
   response will contain all fields
 
 <br>
@@ -148,7 +148,7 @@ if credentials were valid
 
 ### response
 
-if no show params provided
+if no params provided
 
 ```json
 {
@@ -163,7 +163,7 @@ if no show params provided
 }
 ```
 
-if all fields aren't required you can add show params, e.g. response of /api/challenge?show=id&show=name
+if all fields aren't required you can add params, e.g. response of /api/challenge?id&name
 
 ```json
 {
@@ -200,7 +200,7 @@ if all fields aren't required you can add show params, e.g. response of /api/cha
 
 ### additional info
 
-Returns list of matching challenges by name.You can also add show params to format the response
+Returns list of matching challenges by name.You can also add params to format the response
 
 <br>
 <br>
