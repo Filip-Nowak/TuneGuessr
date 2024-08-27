@@ -17,6 +17,12 @@ public class AuthStatus {
     public static final int INVALID_TOKEN = 41;
     public static final int TOKEN_EXPIRED = 42;
     public static final int TOKEN_ALREADY_CONFIRMED = 43;
+    public static final int PASSWORD_RESET_EMAIL_SENT = 50;
+    public static final int PASSWORD_RESET_TOKEN_CONFIRMED = 60;
+    public static final int PASSWORD_RESET_TOKEN_NOT_FOUND = 61;
+    public static final int PASSWORD_RESET_TOKEN_EXPIRED = 62;
+    public static final int PASSWORD_CHANGED = 70;
+
     public static String getMessage(int status) {
         switch (status) {
             case MULTIPLE_ERRORS:
@@ -51,6 +57,17 @@ public class AuthStatus {
                 return "Password is required";
             case PASSWORD_LENGTH:
                 return "Password length must be between 6 and 40";
+            case PASSWORD_RESET_EMAIL_SENT:
+                return "Password reset email sent";
+            case PASSWORD_RESET_TOKEN_CONFIRMED:
+                return "Password reset token confirmed";
+            case PASSWORD_RESET_TOKEN_NOT_FOUND:
+                return "Password reset token not found";
+            case PASSWORD_RESET_TOKEN_EXPIRED:
+                return "Password reset token expired";
+            case PASSWORD_CHANGED:
+                return "Password changed";
+
             default:
                 return "Unknown status";
         }

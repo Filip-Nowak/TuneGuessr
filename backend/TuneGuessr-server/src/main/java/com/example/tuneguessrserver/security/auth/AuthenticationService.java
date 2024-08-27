@@ -1,13 +1,13 @@
 package com.example.tuneguessrserver.security.auth;
 
 import com.example.tuneguessrserver.entity.ConfirmationToken;
+import com.example.tuneguessrserver.entity.ResetPasswordToken;
 import com.example.tuneguessrserver.entity.User;
 import com.example.tuneguessrserver.entity.UserProfile;
 import com.example.tuneguessrserver.enums.AuthStatus;
-import com.example.tuneguessrserver.repository.ConfirmationTokenRepository;
-import com.example.tuneguessrserver.repository.RoleRepository;
-import com.example.tuneguessrserver.repository.UserProfileRepository;
-import com.example.tuneguessrserver.repository.UserRepository;
+import com.example.tuneguessrserver.model.NewPasswordRequest;
+import com.example.tuneguessrserver.model.PasswordResetRequest;
+import com.example.tuneguessrserver.repository.*;
 import com.example.tuneguessrserver.security.JwtService;
 import com.example.tuneguessrserver.security.SimpleGrantedAuthority;
 import com.example.tuneguessrserver.service.EmailSender;
@@ -35,6 +35,7 @@ public class AuthenticationService {
     private final UserProfileRepository userProfileRepository;
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final EmailSender emailSender;
+    private final ResetPasswordTokenRepository resetPasswordTokenRepository;
     @Transactional
     public void register(RegisterRequest request,boolean v) throws AuthError {
         AuthError error = new AuthError(new LinkedList<>());
@@ -119,4 +120,41 @@ public class AuthenticationService {
         }
     }
 
+    public void resetPassword(PasswordResetRequest request) {
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        String token = UUID.randomUUID().toString();
+        ResetPasswordToken resetPasswordToken = ResetPasswordToken.builder()
+                .token(token)
+                .user(user)
+                .expiryDate(LocalDateTime.now().plusMinutes(15))
+                .build();
+        resetPasswordTokenRepository.save(resetPasswordToken);
+        emailSender.sendEmail(request.getEmail(), "Reset your password", "reset your password: http://localhost:8080/api/auth/reset?token=" + token);
+
+    }
+
+
+    public void checkToken(String token) {
+        ResetPasswordToken resetPasswordToken = resetPasswordTokenRepository.findByToken(token);
+        if (resetPasswordToken == null) {
+            throw new AuthError(List.of(AuthStatus.PASSWORD_RESET_TOKEN_NOT_FOUND));
+        }
+        if (resetPasswordToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new AuthError(List.of(AuthStatus.PASSWORD_RESET_TOKEN_EXPIRED));
+        }
+    }
+
+    public void newPassword(NewPasswordRequest request,String token) {
+        ResetPasswordToken resetPasswordToken = resetPasswordTokenRepository.findByToken(token);
+        if (resetPasswordToken == null) {
+            throw new AuthError(List.of(AuthStatus.PASSWORD_RESET_TOKEN_NOT_FOUND));
+        }
+        if (resetPasswordToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new AuthError(List.of(AuthStatus.PASSWORD_RESET_TOKEN_EXPIRED));
+        }
+        User user = resetPasswordToken.getUser();
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        userRepository.save(user);
+        resetPasswordTokenRepository.delete(resetPasswordToken);
+    }
 }
