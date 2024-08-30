@@ -1,5 +1,6 @@
 package com.example.tuneguessrserver.response;
 
+import com.example.tuneguessrserver.response.status.ErrorModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +32,16 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler{
         }
         if(errorCodes==null){
             return ResponseEntity.ok(
-                    new AuthenticationResponse(0)
+                    ResponseModel.builder()
+                            .errors(List.of(new ErrorModel(101)))
+                            .build()
             );
         }
-        AuthenticationResponse response = new AuthenticationResponse(errorCodes);
+        ApiResponse response;
+        if(errorCodes.get(0)<100)
+            response = new AuthenticationResponse(errorCodes);
+        else
+            response = new ResponseModel(errorCodes);
         return ResponseEntity.ok(
                 response
         );

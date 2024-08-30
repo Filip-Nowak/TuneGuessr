@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize
-public class AuthenticationResponse {
+public class AuthenticationResponse implements ApiResponse{
     private String token;
     private int status;
     private String message;

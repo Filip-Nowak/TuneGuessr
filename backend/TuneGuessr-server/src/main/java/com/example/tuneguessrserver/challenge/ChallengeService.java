@@ -1,5 +1,7 @@
 package com.example.tuneguessrserver.challenge;
 
+import com.example.tuneguessrserver.response.status.ApiError;
+import com.example.tuneguessrserver.response.status.ApiErrorStatus;
 import com.example.tuneguessrserver.user.UserProfile;
 import com.example.tuneguessrserver.response.mapper.ChallengeMapper;
 import com.example.tuneguessrserver.challenge.requests.AddSongModel;
@@ -19,10 +21,7 @@ public class ChallengeService {
 
 
     public List<Challenge> searchChallengesByName(String name) {
-        List<Challenge> challengeList=challengeRepository.findByNameContains(name);
-        if(challengeList!=null)
-            return challengeList;
-        return null;
+        return challengeRepository.findByNameContains(name);
     }
 
 
@@ -40,8 +39,8 @@ public class ChallengeService {
 
     }
 
-    public Challenge getChallengeById(long id) throws Exception {
-        return challengeRepository.findById(id).orElseThrow(() -> new Exception("Challenge not found"));
+    public Challenge getChallengeById(long id) throws ApiError {
+        return challengeRepository.findById(id).orElseThrow(() -> new ApiError(ApiErrorStatus.CHALLENGE_NOT_FOUND));
 
     }
 
@@ -62,22 +61,22 @@ public class ChallengeService {
         return songRepository.save(song);
     }
 
-    public void checkIsChallengeOwner(Challenge challenge, UserProfile profile) throws Exception {
+    public void checkIsChallengeOwner(Challenge challenge, UserProfile profile) throws ApiError {
         if(challenge.getUser().getId()!=profile.getId())
-            throw new Exception("You are not the owner of this challenge");
+            throw new ApiError(ApiErrorStatus.NOT_CHALLENGE_OWNER);
     }
 
 
-    public Song getSongByNumber(Challenge challenge, long songId) throws Exception {
+    public Song getSongByNumber(Challenge challenge, long songId) throws ApiError {
         for(Song song:challenge.getSongs()){
             if(song.getNumber()==songId)
                 return song;
         }
-        throw new Exception("Song not found");
+        throw new ApiError(ApiErrorStatus.SONG_NOT_FOUND);
 
     }
 
-    public void deleteSong(Challenge challenge, long songId) throws Exception {
+    public void deleteSong(Challenge challenge, long songId) {
         Song song=getSongByNumber(challenge,songId);
         challenge.getSongs().remove(song);
         songRepository.delete(song);

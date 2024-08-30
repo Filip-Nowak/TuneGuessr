@@ -11,7 +11,10 @@ public class ErrorModel {
     private final String message;
     public ErrorModel(int status) {
         this.status = status;
-        this.message = AuthStatus.getMessage(status);
+        if(status<100)
+            this.message = AuthStatus.getMessage(status);
+        else
+            this.message = ApiErrorStatus.getMessage(status);
 
     }
 }

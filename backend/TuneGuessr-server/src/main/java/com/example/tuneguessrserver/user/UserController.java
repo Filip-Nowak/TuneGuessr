@@ -1,9 +1,13 @@
 package com.example.tuneguessrserver.user;
 
 import com.example.tuneguessrserver.response.ResponseModel;
+import com.example.tuneguessrserver.response.status.ApiError;
+import com.example.tuneguessrserver.response.status.ErrorModel;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -18,9 +22,9 @@ public class UserController {
             return ResponseEntity.ok(ResponseModel.builder()
                     .data(user)
                     .build());
-        } catch (Exception e) {
+        } catch (ApiError e) {
             return ResponseEntity.ok(ResponseModel.builder()
-                    .errorMessage(e.getMessage())
+                    .errors(List.of(new ErrorModel(e.getStatus())))
                     .build());
         }
     }
@@ -32,9 +36,9 @@ public class UserController {
             return ResponseEntity.ok(ResponseModel.builder()
                     .data(userModel)
                     .build());
-        } catch (Exception e) {
+        } catch (ApiError e) {
             return ResponseEntity.ok(ResponseModel.builder()
-                    .errorMessage(e.getMessage())
+                            .errors(List.of(new ErrorModel(e.getStatus())))
                     .build());
         }
     }

@@ -1,6 +1,8 @@
 package com.example.tuneguessrserver.user;
 
 import com.example.tuneguessrserver.challenge.ChallengeModel;
+import com.example.tuneguessrserver.response.status.ApiError;
+import com.example.tuneguessrserver.response.status.ApiErrorStatus;
 import com.example.tuneguessrserver.security.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,8 +18,8 @@ public class UserService {
     private UserProfileRepository profileRepository;
     private JwtService jwtService;
     private UserProfileRepository userProfileRepository;
-    public UserProfile getProfileByNickname(String nickname){
-        UserProfile profile=profileRepository.findByNickname(nickname).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public UserProfile getProfileByNickname(String nickname) throws ApiError {
+        UserProfile profile=profileRepository.findByNickname(nickname).orElseThrow(() -> new ApiError(ApiErrorStatus.USER_NOT_FOUND));
         return profile;
     }
     public UserModel parseUserToModel(UserProfile userProfile){
@@ -64,10 +66,10 @@ public class UserService {
     private long generateProfileId() {
         return profileRepository.count();
     }
-    public UserProfile getProfileByHeader(String header){
+    public UserProfile getProfileByHeader(String header) throws ApiError{
         String token=header.substring(7);
         String email=jwtService.extractUserEmail(token);
-        return userProfileRepository.findProfileByEmail(email).orElse(null);
+        return userProfileRepository.findProfileByEmail(email).orElseThrow(() -> new ApiError(ApiErrorStatus.USER_NOT_FOUND));
     }
 
     public UserModel getUserByNickname(String nickname) {
