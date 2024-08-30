@@ -157,4 +157,19 @@ public class AuthenticationService {
         userRepository.save(user);
         resetPasswordTokenRepository.delete(resetPasswordToken);
     }
+
+    public ResetPasswordToken getTokenByPassword(NewPasswordRequest currentPassword, Authentication authentication) {
+        User user = userRepository.findByEmail(authentication.getName()).orElseThrow(() -> new AuthError(List.of(AuthStatus.INVALID_CREDENTIALS)));
+        if (!passwordEncoder.matches(currentPassword.getPassword(), user.getPassword())) {
+            throw new AuthError(List.of(AuthStatus.INVALID_CREDENTIALS));
+        }
+        String token = UUID.randomUUID().toString();
+        ResetPasswordToken resetPasswordToken = ResetPasswordToken.builder()
+                .token(token)
+                .user(user)
+                .expiryDate(LocalDateTime.now().plusMinutes(15))
+                .build();
+        resetPasswordTokenRepository.save(resetPasswordToken);
+        return resetPasswordToken;
+    }
 }

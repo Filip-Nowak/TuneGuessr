@@ -1,5 +1,6 @@
 package com.example.tuneguessrserver.controller;
 
+import com.example.tuneguessrserver.entity.ResetPasswordToken;
 import com.example.tuneguessrserver.enums.AuthStatus;
 import com.example.tuneguessrserver.model.NewPasswordRequest;
 import com.example.tuneguessrserver.model.PasswordResetRequest;
@@ -31,7 +32,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody AuthenticationRequest request) {
         try {
             String token = authenticationService.authenticate(request);
             AuthenticationResponse response = new AuthenticationResponse(AuthStatus.AUTHENTICATION_SUCCESS);
@@ -55,8 +56,8 @@ public class AuthenticationController {
     }
 
     //password reset
-    @PostMapping("/reset")
-    public ResponseEntity<AuthenticationResponse> reset(@RequestBody PasswordResetRequest request) {
+    @PostMapping("/reset-password-email")
+    public ResponseEntity<AuthenticationResponse> reset(@Valid @RequestBody PasswordResetRequest request) {
         try {
             authenticationService.resetPassword(request);
             return ResponseEntity.ok(new AuthenticationResponse(AuthStatus.EMAIL_SENT));
@@ -78,10 +79,23 @@ public class AuthenticationController {
     }
 
     @PostMapping("/new-password")
-    public ResponseEntity<AuthenticationResponse> newPassword(@RequestBody NewPasswordRequest request, @RequestParam String token) {
+    public ResponseEntity<AuthenticationResponse> newPassword(@Valid @RequestBody NewPasswordRequest request, @RequestParam String token) {
         try {
             authenticationService.newPassword(request,token);
             return ResponseEntity.ok(new AuthenticationResponse(AuthStatus.PASSWORD_CHANGED));
+        } catch (AuthError e) {
+            AuthenticationResponse response = new AuthenticationResponse(e.getErrors());
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<AuthenticationResponse> resetPassword(@Valid @RequestBody NewPasswordRequest currentPassword, Authentication authentication) {
+        try {
+            ResetPasswordToken token=authenticationService.getTokenByPassword(currentPassword, authentication);
+            AuthenticationResponse response = new AuthenticationResponse(AuthStatus.AUTHENTICATION_SUCCESS);
+            response.setToken(token.getToken());
+            return ResponseEntity.ok(response);
         } catch (AuthError e) {
             AuthenticationResponse response = new AuthenticationResponse(e.getErrors());
             return ResponseEntity.ok(response);
