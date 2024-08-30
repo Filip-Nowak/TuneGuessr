@@ -1,6 +1,6 @@
 package com.example.tuneguessrserver.security;
 
-import com.example.tuneguessrserver.repository.UserRepository;
+import com.example.tuneguessrserver.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

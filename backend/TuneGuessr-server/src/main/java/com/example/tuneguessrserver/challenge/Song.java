@@ -1,0 +1,25 @@
+package com.example.tuneguessrserver.challenge;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class Song {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+    private int number;
+    private String url;
+    private String name;
+    private String artist;
+    @ManyToOne
+    private Challenge challenge;
+
+}

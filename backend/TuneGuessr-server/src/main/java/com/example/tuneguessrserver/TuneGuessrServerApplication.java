@@ -1,14 +1,14 @@
 package com.example.tuneguessrserver;
 
-import com.example.tuneguessrserver.entity.*;
-import com.example.tuneguessrserver.model.challange.AddSongModel;
-import com.example.tuneguessrserver.repository.ConfirmationTokenRepository;
-import com.example.tuneguessrserver.repository.RoleRepository;
-import com.example.tuneguessrserver.repository.UserProfileRepository;
-import com.example.tuneguessrserver.security.auth.AuthenticationService;
-import com.example.tuneguessrserver.security.auth.RegisterRequest;
-import com.example.tuneguessrserver.service.ChallengeService;
-import com.example.tuneguessrserver.service.UserService;
+import com.example.tuneguessrserver.auth.passwordReset.ConfirmationToken;
+import com.example.tuneguessrserver.challenge.Challenge;
+import com.example.tuneguessrserver.challenge.requests.AddSongModel;
+import com.example.tuneguessrserver.auth.passwordReset.ConfirmationTokenRepository;
+import com.example.tuneguessrserver.user.RoleRepository;
+import com.example.tuneguessrserver.user.*;
+import com.example.tuneguessrserver.auth.AuthenticationService;
+import com.example.tuneguessrserver.auth.requests.RegisterRequest;
+import com.example.tuneguessrserver.challenge.ChallengeService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
