@@ -1,5 +1,6 @@
 package com.example.tuneguessrserver.auth.requests;
 
+import com.example.tuneguessrserver.response.status.AuthStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 public class PasswordResetRequest {
-    @NotBlank(message = "4")
-    @Email(message = "5")
+    @NotBlank(message = ""+ AuthStatus.EMAIL_REQUIRED)
+    @Email(message = ""+ AuthStatus.EMAIL_FORMAT)
     private String email;
 }

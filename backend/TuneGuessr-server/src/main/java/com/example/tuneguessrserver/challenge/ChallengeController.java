@@ -1,7 +1,7 @@
 package com.example.tuneguessrserver.challenge;
 
 import com.example.tuneguessrserver.response.status.ApiError;
-import com.example.tuneguessrserver.response.status.ApiErrorStatus;
+import com.example.tuneguessrserver.response.status.ApiStatus;
 import com.example.tuneguessrserver.response.status.ErrorModel;
 import com.example.tuneguessrserver.user.UserProfile;
 import com.example.tuneguessrserver.response.mapper.ChallengeMapper;
@@ -108,7 +108,7 @@ public class ChallengeController {
 
         } catch (ApiError e) {
             return ResponseEntity.ok(ResponseModel.builder()
-                    .errors(List.of(new ErrorModel(ApiErrorStatus.NOT_CHALLENGE_OWNER)))
+                    .errors(List.of(new ErrorModel(ApiStatus.NOT_CHALLENGE_OWNER)))
                     .build());
         }
 

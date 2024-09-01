@@ -56,7 +56,6 @@ public class AuthenticationController {
         }
     }
 
-    //password reset
     @PostMapping("/reset-password-email")
     public ResponseEntity<AuthenticationResponse> reset(@Valid @RequestBody PasswordResetRequest request) {
         try {

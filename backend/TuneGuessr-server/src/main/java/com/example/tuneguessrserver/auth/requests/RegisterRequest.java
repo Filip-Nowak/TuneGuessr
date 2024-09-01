@@ -1,5 +1,6 @@
 package com.example.tuneguessrserver.auth.requests;
 
+import com.example.tuneguessrserver.response.status.AuthStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -13,13 +14,13 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
-    @NotBlank(message = "2")
-    @Length(min = 3, max = 20, message = "3")
+    @NotBlank(message = ""+ AuthStatus.NICKNAME_REQUIRED)
+    @Length(min = 3, max = 20, message = ""+ AuthStatus.NICKNAME_LENGTH)
     private String nickname;
-    @NotBlank(message = "4")
-    @Email(message = "5")
+    @NotBlank(message = ""+ AuthStatus.EMAIL_REQUIRED)
+    @Email(message = ""+ AuthStatus.EMAIL_FORMAT)
     private String email;
-    @NotBlank(message = "6")
-    @Length(min = 6, max = 40, message = "7")
+    @NotBlank(message = ""+ AuthStatus.PASSWORD_REQUIRED)
+    @Length(min = 6, max = 40, message = ""+ AuthStatus.PASSWORD_LENGTH)
     private String password;
 }

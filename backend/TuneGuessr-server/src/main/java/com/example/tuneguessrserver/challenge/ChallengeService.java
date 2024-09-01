@@ -1,7 +1,7 @@
 package com.example.tuneguessrserver.challenge;
 
 import com.example.tuneguessrserver.response.status.ApiError;
-import com.example.tuneguessrserver.response.status.ApiErrorStatus;
+import com.example.tuneguessrserver.response.status.ApiStatus;
 import com.example.tuneguessrserver.user.UserProfile;
 import com.example.tuneguessrserver.response.mapper.ChallengeMapper;
 import com.example.tuneguessrserver.challenge.requests.AddSongModel;
@@ -40,7 +40,7 @@ public class ChallengeService {
     }
 
     public Challenge getChallengeById(long id) throws ApiError {
-        return challengeRepository.findById(id).orElseThrow(() -> new ApiError(ApiErrorStatus.CHALLENGE_NOT_FOUND));
+        return challengeRepository.findById(id).orElseThrow(() -> new ApiError(ApiStatus.CHALLENGE_NOT_FOUND));
 
     }
 
@@ -63,7 +63,7 @@ public class ChallengeService {
 
     public void checkIsChallengeOwner(Challenge challenge, UserProfile profile) throws ApiError {
         if(challenge.getUser().getId()!=profile.getId())
-            throw new ApiError(ApiErrorStatus.NOT_CHALLENGE_OWNER);
+            throw new ApiError(ApiStatus.NOT_CHALLENGE_OWNER);
     }
 
 
@@ -72,7 +72,7 @@ public class ChallengeService {
             if(song.getNumber()==songId)
                 return song;
         }
-        throw new ApiError(ApiErrorStatus.SONG_NOT_FOUND);
+        throw new ApiError(ApiStatus.SONG_NOT_FOUND);
 
     }
 

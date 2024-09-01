@@ -17,6 +17,13 @@
 |                                          |              |                                                 |
 | **/api/user** 🔒                         | **`GET`**    | returns user info by jwt token                  |
 | /api/user/{nickname}                     | `GET`        | returns user info by nickname token             |
+|                                          |              |                                                 |
+| /api/auth/reset-password-email           | `POST`       | generates token and sends it via email          |
+| **/api/auth/reset-password**  🔒         | **`POST`**   | generates token and returns it in response      |
+| /api/auth/check-token?token={token}      | `GET`        | checks password-reset token                     |
+| /api/auth/new-password?token={token}     | `POST`       | changes user`s password                         |
+|                                          |              |                                                 |
+|                                          |              |                                                 |
 
 <br>
 
@@ -53,12 +60,12 @@ a problem `errors` will contain list of errors. More info in [Authentication sta
 
 ### Data response
 
-Used in endpoints that return data. If everything went well, `errorMessage` will be null and `data` will contain
-requested data. If there was a problem `errorMessage` will contain error message and `data` will be null.
+Used in endpoints that return data. If everything went well, `errors` will be empty and `data` will contain requested
+data. If there was a problem `errors` will contain list of errors
 
 ```json
 {
-  "errorMessage": "",
+  "errors": [],
   "data": {}
 }
 ```
@@ -152,7 +159,7 @@ if no params provided
 
 ```json
 {
-  "errorMessage": null,
+  "errors": [],
   "data": {
     "id": 0,
     "author": "",
@@ -167,7 +174,7 @@ if all fields aren't required you can add params, e.g. response of /api/challeng
 
 ```json
 {
-  "errorMessage": null,
+  "errors": [],
   "data": {
     "id": 0,
     "name": ""
@@ -185,7 +192,7 @@ if all fields aren't required you can add params, e.g. response of /api/challeng
 
 ```json
 {
-  "errorMessage": null,
+  "errors": [],
   "data": [
     {
       "id": 0,
@@ -223,7 +230,7 @@ description is optional
 
 ```json
 {
-  "errorMessage": null,
+  "errors": [],
   "data": {
     "id": 0,
     "author": "",
@@ -244,7 +251,7 @@ description is optional
 
 ```json
 {
-  "errorMessage": null,
+  "errors": [],
   "data": "Challenge deleted"
 }
 ```
@@ -271,7 +278,7 @@ return song's challenge
 
 ```json
 {
-  "errorMessage": null,
+  "errors": [],
   "data": {
     "id": 0,
     "author": "",
@@ -304,7 +311,7 @@ return modified song's challenge
 
 ```json
 {
-  "errorMessage": null,
+  "errors": [],
   "data": {
     "id": 0,
     "author": "",
@@ -329,7 +336,7 @@ return deleted song's challenge
 
 ```json
 {
-  "errorMessage": null,
+  "errors": [],
   "data": {
     "id": 0,
     "author": "",
@@ -348,7 +355,7 @@ return deleted song's challenge
 
 ```json
 {
-  "errorMessage": null,
+  "errors": [],
   "data": {
     "id": 0,
     "nickname": "",
@@ -370,7 +377,7 @@ returns user data by jwt token
 
 ```json
 {
-  "errorMessage": null,
+  "errors": [],
   "data": {
     "id": 0,
     "nickname": "",
@@ -380,11 +387,129 @@ returns user data by jwt token
 }
 ```
 
-# Authentication status
+<br><br><br>
+
+## `POST /api/auth/reset-password-email`
+
+### body
+
+```json
+{
+  "email": ""
+}
+```
+
+### response
+
+```json
+{
+  "status": 50,
+  "message": "Password reset email sent",
+  "errors": []
+}
+```
+
+### additional info
+sends email with password reset token
+
+<br><br><br>
+
+## `POST /api/auth/reset-password` 🔒
+
+### body
+
+```json
+{
+  "password": ""
+}
+```
+
+### response
+
+```json
+{
+  "status": 30,
+  "message": "Authentication successful",
+  "token": "",
+  "errors": []
+}
+```
+
+### additional info
+
+returns password-reset token, if provided password is correct
+
+<br><br><br>
+
+## `GET /api/auth/check-token?token={token}`
+
+### response
+
+```json
+{
+  "status": 60,
+  "message": "Password reset token confirmed",
+  "errors": []
+}
+```
+
+### additional info
+
+checks if provided token is valid. Note that this endpoint doesn't expire tokens
+
+<br><br><br>
+
+## `POST /api/auth/new-password?token={token}`
+
+### body
+
+```json
+{
+  "password": ""
+}
+```
+
+### response
+
+```json
+{
+  "status": 70,
+  "message": "Password changed",
+  "token": "",
+  "errors": []
+}
+```
+
+### additional info
+
+if token is valid, changes user's password
+
+<br><br><br>
+
+
+# Response status
 
 If everything went well status will be dividable by 10 (20,30,40). In case of error, `status` will contain error code
 and `message`
 will contain error message:
+
+```json
+{
+  "data": null,
+  "errors": [
+    {
+      "status": 102,
+      "message": "challenge not found"
+    }
+  ]
+}
+```
+
+### Authentication response
+
+In case of authentication response, there will always be `status` and `message` fields, because of many possible results
+of
+authentication process.
 
 ```json
 {
@@ -424,23 +549,37 @@ Errors from `2 to 20` are body format errors, errors from `20 to 29` are registr
 from `30 to 39`
 are authentication errors and errors from `40 to 49` are email confirmation errors
 
-| Code   | Message                                  |
-|--------|------------------------------------------|
-| **20** | Account registered and email send        |
-| **30** | Authentication successful                |
-| **40** | Email confirmed                          |
-|        |                                          |
-| **1**  | Multiple errors                          |
-| **2**  | Nickname is required                     |
-| **3**  | Nickname length must be between 3 and 20 |
-| **4**  | Email is required                        |
-| **5**  | Email is invalid                         |
-| **6**  | Password is required                     |
-| **7**  | Password length must be between 6 and 40 |
-| **21** | Email already exists                     |
-| **22** | Nickname already exists                  |
-| **31** | Invalid credentials                      |
-| **41** | Token not found                          |
-| **42** | Token expired                            |
-| **43** | Token already confirmed                  |
+| Code    | Message                                                   |
+|---------|-----------------------------------------------------------|
+| **20**  | Account registered and email send                         |
+| **30**  | Authentication successful                                 |
+| **40**  | Email confirmed                                           |
+|         |                                                           |
+| **1**   | Multiple errors                                           |
+| **2**   | Nickname is required                                      |
+| **3**   | Nickname length must be between 3 and 20                  |
+| **4**   | Email is required                                         |
+| **5**   | Email is invalid                                          |
+| **6**   | Password is required                                      |
+| **7**   | Password length must be between 6 and 40                  |
+| **21**  | Email already exists                                      |
+| **22**  | Nickname already exists                                   |
+| **31**  | Invalid credentials                                       |
+| **41**  | Token not found                                           |
+| **42**  | Token expired                                             |
+| **43**  | Token already confirmed                                   |
+| **101** | unexpected api error                                      |
+| **102** | challenge not found                                       |
+| **103** | You are not the owner of this challenge                   |
+| **104** | Song not found                                            |
+| **105** | User not found                                            |
+| **106** | Challenge name is required                                |
+| **107** | Challenge name must be at most 40 characters long         |
+| **108** | Challenge description must be at most 200 characters long |
+| **109** | Song title is required                                    |
+| **111** | Song title must be at most 100 characters long            |
+| **112** | Song artist is required                                   |
+| **113** | Song artist must be at most 100 characters long           |
+| **114** | Song url is required                                      |
+| **115** | Song url must be at most 200 characters long              |
 

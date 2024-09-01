@@ -1,6 +1,6 @@
 package com.example.tuneguessrserver.response.status;
 
-public class ApiErrorStatus {
+public class ApiStatus {
     public static final int UNEXPECTED_ERROR = 101;
     public static final int CHALLENGE_NOT_FOUND = 102;
     public static final int NOT_CHALLENGE_OWNER = 103;
@@ -10,11 +10,11 @@ public class ApiErrorStatus {
     public static final int CHALLENGE_NAME_LENGTH = 107;
     public static final int CHALLENGE_DESCRIPTION_LENGTH = 108;
     public static final int SONG_TITLE_REQUIRED = 109;
-    public static final int SONG_TITLE_LENGTH = 110;
-    public static final int SONG_ARTIST_REQUIRED = 111;
-    public static final int SONG_ARTIST_LENGTH = 112;
-    public static final int SONG_URL_REQUIRED = 113;
-    public static final int SONG_URL_LENGTH = 114;
+    public static final int SONG_TITLE_LENGTH = 111;
+    public static final int SONG_ARTIST_REQUIRED = 112;
+    public static final int SONG_ARTIST_LENGTH = 113;
+    public static final int SONG_URL_REQUIRED = 114;
+    public static final int SONG_URL_LENGTH = 115;
 
 
 

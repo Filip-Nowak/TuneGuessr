@@ -1,5 +1,6 @@
 package com.example.tuneguessrserver.auth.requests;
 
+import com.example.tuneguessrserver.response.status.AuthStatus;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import org.hibernate.validator.constraints.Length;
 @Builder
 @NoArgsConstructor
 public class NewPasswordRequest {
-    @NotBlank(message = "6")
-    @Length(min = 6, max = 40, message = "7")
+    @NotBlank(message = ""+ AuthStatus.PASSWORD_REQUIRED)
+    @Length(min = 6, max = 40, message = ""+ AuthStatus.PASSWORD_LENGTH)
     private String password;
 }

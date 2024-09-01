@@ -1,6 +1,5 @@
 package com.example.tuneguessrserver.response.status;
 
-import com.example.tuneguessrserver.response.status.AuthStatus;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
@@ -14,7 +13,7 @@ public class ErrorModel {
         if(status<100)
             this.message = AuthStatus.getMessage(status);
         else
-            this.message = ApiErrorStatus.getMessage(status);
+            this.message = ApiStatus.getMessage(status);
 
     }
 }
