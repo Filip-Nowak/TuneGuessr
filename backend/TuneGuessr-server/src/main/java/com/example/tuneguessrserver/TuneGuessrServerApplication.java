@@ -22,48 +22,50 @@ public class TuneGuessrServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(TuneGuessrServerApplication.class, args);
     }
+
     @Bean
-    public CommandLineRunner runner(AuthenticationService authenticationService, RoleRepository roleRepository,ConfirmationTokenRepository confirmationTokenRepository, UserProfileRepository userProfileRepository, ChallengeService challengeService, UserService userService){
-        return runner->{
+    public CommandLineRunner runner(AuthenticationService authenticationService, RoleRepository roleRepository, ConfirmationTokenRepository confirmationTokenRepository, UserProfileRepository userProfileRepository, ChallengeService challengeService, UserService userService) {
+        return runner -> {
             loadRoles(roleRepository);
 //            loaduser(userService,roleRepository);
 //            loadChallenge(challengeService,userService);
-            loadMiki(authenticationService,confirmationTokenRepository,userProfileRepository,challengeService);
+            loadMiki(authenticationService, confirmationTokenRepository, userProfileRepository, challengeService);
         };
     }
 
-    private void loadMiki(AuthenticationService authenticationService, ConfirmationTokenRepository confirmationTokenRepository, UserProfileRepository userProfileRepository,ChallengeService challengeService) {
+    private void loadMiki(AuthenticationService authenticationService, ConfirmationTokenRepository confirmationTokenRepository, UserProfileRepository userProfileRepository, ChallengeService challengeService) {
         authenticationService.register(RegisterRequest.builder()
                 .email("test@test.gmail.com")
                 .password("kanapka")
                 .nickname("Mikołaj Bala")
-                .build(),true);
+                .build(), true);
         ConfirmationToken token = confirmationTokenRepository.findAll().get(0);
-        authenticationService.confirmToken(token.getToken());;
+        authenticationService.confirmToken(token.getToken());
+        ;
         UserProfile userProfile = userProfileRepository.findByNickname("Mikołaj Bala").orElseThrow();
-        loadPRap(challengeService,userProfile);
-        loadRap(challengeService,userProfile);
+        loadPRap(challengeService, userProfile);
+        loadRap(challengeService, userProfile);
         authenticationService.register(RegisterRequest.builder()
                 .email("wlodek@gmail.com")
                 .nickname("Włodek")
                 .password("wlodek1975")
-                .build(),true);
+                .build(), true);
         token = confirmationTokenRepository.findAll().get(1);
         authenticationService.confirmToken(token.getToken());
         UserProfile wlodek = userProfileRepository.findByNickname("Włodek").orElseThrow();
-        loadDiscoPolo(challengeService,wlodek);
-        loadRock(challengeService,userProfile);
-        loadLata80(challengeService,wlodek);
+        loadDiscoPolo(challengeService, wlodek);
+        loadRock(challengeService, userProfile);
+        loadLata80(challengeService, wlodek);
     }
 
-    private void loadDiscoPolo(ChallengeService challengeService,UserProfile userProfile) {
-        Challenge challenge=Challenge.builder()
+    private void loadDiscoPolo(ChallengeService challengeService, UserProfile userProfile) {
+        Challenge challenge = Challenge.builder()
                 .name("Klasyki disco polo")
                 .user(userProfile)
                 .description("Zagraj w te hity disco polo")
                 .build();
         challengeService.save(challenge);
-        for(String song:discoPolo){
+        for (String song : discoPolo) {
             String[] split = song.split(";");
             challengeService.addSongToChallenge(challenge, AddSongModel.builder()
                     .artist(split[0])
@@ -72,14 +74,15 @@ public class TuneGuessrServerApplication {
                     .build());
         }
     }
-    private void loadRock(ChallengeService challengeService,UserProfile userProfile) {
-        Challenge challenge=Challenge.builder()
+
+    private void loadRock(ChallengeService challengeService, UserProfile userProfile) {
+        Challenge challenge = Challenge.builder()
                 .name("Klasyki zagranicznego rocka")
                 .user(userProfile)
                 .description("Zagraj w te hity rocka")
                 .build();
         challengeService.save(challenge);
-        for(String song:rock){
+        for (String song : rock) {
             String[] split = song.split(";");
             challengeService.addSongToChallenge(challenge, AddSongModel.builder()
                     .artist(split[0])
@@ -88,13 +91,14 @@ public class TuneGuessrServerApplication {
                     .build());
         }
     }
-private void loadPRap(ChallengeService challengeService,UserProfile userProfile) {
-        Challenge challenge=Challenge.builder()
+
+    private void loadPRap(ChallengeService challengeService, UserProfile userProfile) {
+        Challenge challenge = Challenge.builder()
                 .name("Klasyki polskiego rapu")
                 .user(userProfile)
                 .build();
         challengeService.save(challenge);
-        for(String song:pRap){
+        for (String song : pRap) {
             String[] split = song.split(";");
             challengeService.addSongToChallenge(challenge, AddSongModel.builder()
                     .artist(split[0])
@@ -103,14 +107,15 @@ private void loadPRap(ChallengeService challengeService,UserProfile userProfile)
                     .build());
         }
     }
-    private void loadRap(ChallengeService challengeService,UserProfile userProfile) {
-        Challenge challenge=Challenge.builder()
+
+    private void loadRap(ChallengeService challengeService, UserProfile userProfile) {
+        Challenge challenge = Challenge.builder()
                 .name("Klasyki rapu")
                 .user(userProfile)
                 .description("Zagraj w te hity rapu")
                 .build();
         challengeService.save(challenge);
-        for(String song:rap){
+        for (String song : rap) {
             String[] split = song.split(";");
             challengeService.addSongToChallenge(challenge, AddSongModel.builder()
                     .artist(split[0])
@@ -119,13 +124,14 @@ private void loadPRap(ChallengeService challengeService,UserProfile userProfile)
                     .build());
         }
     }
-    private void loadLata80(ChallengeService challengeService,UserProfile userProfile) {
-        Challenge challenge=Challenge.builder()
+
+    private void loadLata80(ChallengeService challengeService, UserProfile userProfile) {
+        Challenge challenge = Challenge.builder()
                 .name("Klasyki lat 80")
                 .user(userProfile)
                 .build();
         challengeService.save(challenge);
-        for(String song:lata80){
+        for (String song : lata80) {
             String[] split = song.split(";");
             challengeService.addSongToChallenge(challenge, AddSongModel.builder()
                     .artist(split[0])
@@ -134,6 +140,7 @@ private void loadPRap(ChallengeService challengeService,UserProfile userProfile)
                     .build());
         }
     }
+
     private final String[] discoPolo = new String[]{
             "Akcent;Przekorny los;https://www.youtube.com/watch?v=MWilsN_5Y-s",
             "Akcent;Przez twe oczy zielone;https://www.youtube.com/watch?v=cxtnot8lY4U",
@@ -165,7 +172,6 @@ private void loadPRap(ChallengeService challengeService,UserProfile userProfile)
             "The Rolling Stones;Paint It Black;https://www.youtube.com/watch?v=O4irXQhgMqg",
             "AC/DC;Back In Black;https://www.youtube.com/watch?v=pAgnJDJN4VA",
             "Nirvana;Smells Like Teen Spirit;https://www.youtube.com/watch?v=hTWKbfoikeg",
-            "Pink Floyd;Comfortably Numb;https://www.youtube.com/watch?v=_FrOQC-zEog",
             "Guns N' Roses;Sweet Child O' Mine;https://www.youtube.com/watch?v=1w7OgIMMRc4",
             "The Beatles;Hey Jude;https://www.youtube.com/watch?v=A_MjCqQoLLA",
             "Metallica;Enter Sandman;https://www.youtube.com/watch?v=CD-E-LDc384",
@@ -255,64 +261,37 @@ private void loadPRap(ChallengeService challengeService,UserProfile userProfile)
             "Nas;If I Ruled The World (Imagine That);https://www.youtube.com/watch?v=mlp-IIG9ApU"
     };
     private final String[] lata80 = new String[]{
-            "Lady Pank;Mniej niż zero;https://www.youtube.com/watch?v=WT7sYhdW12g",
-            "Republika;Biała flaga;https://www.youtube.com/watch?v=kGkw_HcmaCw",
-            "Perfect;Autobiografia;https://www.youtube.com/watch?v=a4oLNgXKx2g",
-            "Maanam;Kocham cię, kochanie moje;https://www.youtube.com/watch?v=QG5BkhKwd4o",
-            "Urszula;Dmuchawce, latawce, wiatr;https://www.youtube.com/watch?v=YJ6flU5zrYM",
-            "Kombi;Słodkiego miłego życia;https://www.youtube.com/watch?v=hfY8veF4fA8",
-            "Bajm;Józek, nie daruję ci tej nocy;https://www.youtube.com/watch?v=GnXe7pKNcE0",
-            "Budka Suflera;Jolka, Jolka pamiętasz;https://www.youtube.com/watch?v=Hsph_eUazG4",
-            "Oddział Zamknięty;Andzia i ja;https://www.youtube.com/watch?v=YmcEdcJ9kwg",
-            "Lombard;Przeżyj to sam;https://www.youtube.com/watch?v=eRL1N7nZpwY",
-            "T.Love;Chłopaki nie płaczą;https://www.youtube.com/watch?v=r-c6WwiqKwk",
-            "Kult;Do Ani;https://www.youtube.com/watch?v=rR9fUfmMAvk",
-            "Varius Manx;Orła cień;https://www.youtube.com/watch?v=ShHimE5TGH4",
-            "Anna Jantar;Nic nie może wiecznie trwać;https://www.youtube.com/watch?v=-a-PLh5pr_I",
-            "Perfect;Nie płacz Ewka;https://www.youtube.com/watch?v=ro8UfBRXjII",
-            "Czesław Niemen;Dziwny jest ten świat;https://www.youtube.com/watch?v=wq5c6TG9Hq4",
-            "Kayah;Fleciki;https://www.youtube.com/watch?v=ioXlK-ccrxg",
-            "Edyta Bartosiewicz;Sen;https://www.youtube.com/watch?v=qPdb6k-4Pcc",
-            "Hey;Teksański;https://www.youtube.com/watch?v=ojugEko7pa4",
-            "Róże Europy;Jedwab;https://www.youtube.com/watch?v=OQat9Bq9zOY",
-            "Formacja Nieżywych Schabuff;Lato;https://www.youtube.com/watch?v=9W7P9D7XXvU",
-            "Goya;Smak słów;https://www.youtube.com/watch?v=H0vToRxEl1A",
-            "Majka Jeżowska;A ja wolę moją mamę;https://www.youtube.com/watch?v=TyO8_Z4pt2c",
-            "Golden Life;Oprócz;https://www.youtube.com/watch?v=FZ57J6fHqJY",
-            "Varius Manx;Zanim zrozumiesz;https://www.youtube.com/watch?v=9yt6F7OSpiE",
-            "Reni Jusis;Zakręcona;https://www.youtube.com/watch?v=Z_43ftA5j-s",
-            "K.A.S.A.;Piękniejsza;https://www.youtube.com/watch?v=zh64m4rk6DQ",
-            "Myslovitz;Długość dźwięku samotności;https://www.youtube.com/watch?v=gzG32v4LzDg",
-            "Maanam;Cykady na Cykladach;https://www.youtube.com/watch?v=KKx8zsv4X3c",
-            "Anna Maria Jopek;Ale jestem;https://www.youtube.com/watch?v=JvIbAjAEFV0",
-            "Czerwone Gitary;Niebo z moich stron;https://www.youtube.com/watch?v=WWgkJpLDxJM"
+            "Lady Pank;Mniej niż zero;https://www.youtube.com/watch?v=Lc-26SnSmok",
+            "Republika;Biała flaga;https://www.youtube.com/watch?v=gHUDbpI8Ulk",
+            "Perfect;Autobiografia;https://www.youtube.com/watch?v=1n0MupX-7AM",
+            "Kombi;Słodkiego miłego życia;https://www.youtube.com/watch?v=YMsQ5izhIDo",
+            "Budka Suflera;Jolka, Jolka pamiętasz;https://www.youtube.com/watch?v=fYKfvvwsoAY",
+            "Lombard;Przeżyj to sam;https://www.youtube.com/watch?v=ZeE3wjUbiaA",
+            "T.Love;Chłopaki nie płaczą;https://www.youtube.com/watch?v=X0lkrxFuGr8",
+            "Anna Jantar;Nic nie może wiecznie trwać;https://www.youtube.com/watch?v=LBmUBMnuU2k",
+            "Perfect;Nie płacz Ewka;https://www.youtube.com/watch?v=G_oKsG8KRZI",
+            "Czesław Niemen;Dziwny jest ten świat;https://www.youtube.com/watch?v=wTjLZwpmufw",
+            "Myslovitz;Długość dźwięku samotności;https://youtube.com/watch?v=qCIyK3ec4kE",
+            "Maanam;Cykady na Cykladach;https://www.youtube.com/watch?v=mh8ZqQS1EPM",
+            "Kult;Gdy nie ma dzieci;https://www.youtube.com/watch?v=I8NcELiIMHg",
+            "Kombi;Black and White;https://www.youtube.com/watch?v=jsy6owPn4Qg",
+            "Budka Suflera;Takie tango;https://www.youtube.com/watch?v=wQ8j_ew4Hso",
+            "Kult;Baranek;https://www.youtube.com/watch?v=DqBuIaa2-_s",
+            "Perfect;Ale wkoło jest wesoło;https://www.youtube.com/watch?v=1_XsuuQNT9E",
+            "Lady Pank;Zawsze tam gdzie Ty;https://www.youtube.com/watch?v=fyoCXePXQF0",
+            "Kombi;Nasze randez-vous;https://www.youtube.com/watch?v=XVdr4w4xttg",
+            "Republika;Telefony;https://www.youtube.com/watch?v=qEXyPSBYbMA",
+            "Budka Suflera;Bal wszystkich świętych;https://www.youtube.com/watch?v=kE87oI5rdew",
+            "Perfect;Wszystko ma swój czas;https://www.youtube.com/watch?v=kZuYff81-Fc",
+            "Republika;Mamona;https://www.youtube.com/watch?v=-R7qqsT6-T8",
+            "Obywatel G.C.;Nie pytaj o Polskę;https://www.youtube.com/watch?v=cSjk6phf3iY",
+            "Obtwatel G.C.;Tak tak to ja;https://www.youtube.com/watch?v=sOrXHaOqLL8",
+            "Lady Pank;Kryzysowa narzeczona;https://www.youtube.com/watch?v=SPnEpzUy2V4"
     };
 
 
-
-
-    private void loaduser(UserService userService,RoleRepository roleRepository) {
-        User user=User.builder()
-                .email("user@gmail.com")
-                .roles(List.of(roleRepository.findByName("USER")))
-                .password("$2a$10$wzSBD27giCRjTQYEFNd6ZOSsP5NEqARabqxiihK7PQVE0U.Xjs9Q6").build();
-        UserProfile userProfile=UserProfile.builder()
-                .user(user)
-                .nickname("jebacz kurew")
-                .build();
-        userService.saveProfile(userProfile);
-    }
-
-    private void loadChallenge(ChallengeService challengeService, UserService userService) {
-        UserProfile userProfile=userService.getProfileByNickname("jebacz kurew");
-        Challenge challenge=Challenge.builder()
-                .user(userProfile)
-                .name("xd").build();
-        challengeService.save(challenge);
-    }
-
     private void loadRoles(RoleRepository roleRepository) {
-        Role role=Role.builder()
+        Role role = Role.builder()
                 .name("USER")
                 .build();
         roleRepository.save(role);
