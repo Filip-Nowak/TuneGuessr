@@ -44,6 +44,11 @@ public class SecurityConfiguration {
 //                .and()
 //                .authenticationProvider(authenticationProvider)
 //                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(
+                        csrf->{
+                            csrf.disable();
+                        }
+                )
                 .authorizeHttpRequests(
                         auth->{
                             auth.requestMatchers(HttpMethod.POST, "api/auth/reset-password").authenticated();
