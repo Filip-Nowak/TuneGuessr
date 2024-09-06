@@ -5,6 +5,8 @@ import com.example.tuneguessrserver.entity.Role;
 import com.example.tuneguessrserver.entity.User;
 import com.example.tuneguessrserver.entity.UserProfile;
 import com.example.tuneguessrserver.repository.RoleRepository;
+import com.example.tuneguessrserver.security.auth.AuthenticationService;
+import com.example.tuneguessrserver.security.auth.RegisterRequest;
 import com.example.tuneguessrserver.service.ChallengeService;
 import com.example.tuneguessrserver.service.UserService;
 import org.springframework.boot.CommandLineRunner;
@@ -21,12 +23,21 @@ public class TuneGuessrServerApplication {
         SpringApplication.run(TuneGuessrServerApplication.class, args);
     }
     @Bean
-    public CommandLineRunner runner(UserService userService,RoleRepository roleRepository, ChallengeService challengeService){
+    public CommandLineRunner runner(AuthenticationService authenticationService, RoleRepository roleRepository){
         return runner->{
             loadRoles(roleRepository);
-            loaduser(userService,roleRepository);
-            loadChallenge(challengeService,userService);
+//            loaduser(userService,roleRepository);
+//            loadChallenge(challengeService,userService);
+            loadMiki(authenticationService);
         };
+    }
+
+    private void loadMiki(AuthenticationService authenticationService) {
+        authenticationService.register(RegisterRequest.builder()
+                .email("test@test.gmail.com")
+                .password("kanapka")
+                .nickname("Mikołaj Bala")
+                .build());
     }
 
     private void loaduser(UserService userService,RoleRepository roleRepository) {
