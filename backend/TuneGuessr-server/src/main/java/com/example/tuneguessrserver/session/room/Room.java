@@ -10,13 +10,13 @@ import java.util.List;
 public class Room implements SessionData{
     private String id;
     private GameMode mode;
-    private List<Player> players=new LinkedList<>();
+    private List<String> players=new LinkedList<>();
     private int maxPlayers=10;
     private String hostId;
-    public void addPlayer(Player player){
+    public void addPlayer(String playerId){
         if(players.size()>=maxPlayers){
             throw new RuntimeException("Room is full");
         }
-        players.add(player);
+        players.add(playerId);
     }
 }

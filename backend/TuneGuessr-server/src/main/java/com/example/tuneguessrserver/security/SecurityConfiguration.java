@@ -58,6 +58,7 @@ public class SecurityConfiguration {
                             auth.requestMatchers(HttpMethod.GET, "api/user").authenticated();
                             auth.requestMatchers("api/test/**").permitAll();
                             auth.requestMatchers("ws/**").permitAll();
+                            auth.requestMatchers("create-user").permitAll();
                             auth.anyRequest().authenticated();
                         }
                 )

@@ -10,16 +10,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoomService {
     private final RedisService redisService;
-    public Room createRoom(Player host) {
+    public Room createRoom(String hostId) {
         String roomId = redisService.generateRoomId();
         Room room = Room.builder()
                 .id(roomId)
-                .hostId(host.getId())
-                .players(List.of(Player.builder()
-                        .id(host.getId())
-                        .nickname(host.getNickname())
-                        .roomId(roomId)
-                        .build()))
+                .hostId(hostId)
+                .players(List.of(hostId))
                 .build();
         saveRoom(room);
         return room;
@@ -30,18 +26,15 @@ public class RoomService {
     }
 
     private void saveRoom(Room room) {
-        for (Player player : room.getPlayers()) {
-            redisService.save(player);
-        }
         redisService.save(room);
     }
 
-    public void joinRoom(Player player, String roomId) {
+    public void joinRoom(String playerId, String roomId) {
         Room room = getRoom(roomId);
         if(room.getPlayers().size() >= room.getMaxPlayers()) {
             throw new RuntimeException("Room is full");
         }
-        room.addPlayer(player);
+        room.addPlayer(playerId);
         saveRoom(room);
     }
     public void leaveRoom(Player player) {
@@ -57,4 +50,11 @@ public class RoomService {
         }
     }
 
+    public String createUser() {
+        String userId = redisService.generatePlayerId();
+        redisService.save(Player.builder()
+                .id(userId)
+                .build());
+        return userId;
+    }
 }
