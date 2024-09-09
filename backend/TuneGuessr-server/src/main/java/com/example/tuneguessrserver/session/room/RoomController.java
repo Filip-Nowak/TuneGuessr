@@ -2,6 +2,7 @@ package com.example.tuneguessrserver.session.room;
 
 import com.example.tuneguessrserver.response.ResponseModel;
 import com.example.tuneguessrserver.session.PlayerSession;
+import com.example.tuneguessrserver.session.SessionModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -28,6 +29,7 @@ public class RoomController {
     }
     @MessageMapping("/user/set-session")
     public void setId(Map <String,String> data) {
+        System.out.println("setting session");
         if(data.containsKey("userId")) {
             playerSession.setUserId(data.get("userId"));
         }
@@ -36,6 +38,15 @@ public class RoomController {
         }
         if(data.containsKey("nickname")) {
             playerSession.setNickname(data.get("nickname"));
+        }
+        if(data.containsKey("ready")) {
+            playerSession.setReady(Boolean.parseBoolean(data.get("ready")));
+        }
+        if(playerSession.getUserId()!=null) {
+            System.out.println("sending session");
+            SessionModel model=SessionModel.builder().userId(playerSession.getUserId()).roomId(playerSession.getRoomId()).nickname(playerSession.getNickname()).build();
+            System.out.println("/xdd/"+playerSession.getUserId());
+            messagingTemplate.convertAndSendToUser(playerSession.getUserId(),"/info",model);
         }
     }
     @GetMapping("/create-user")
@@ -48,7 +59,11 @@ public class RoomController {
 
     @MessageMapping("/user/session")
     public void session() {
-        messagingTemplate.convertAndSend("/user/"+playerSession.getUserId(),playerSession);
+        if(playerSession.getUserId()==null) {
+            return;
+        }
+        SessionModel model=SessionModel.builder().userId(playerSession.getUserId()).roomId(playerSession.getRoomId()).nickname(playerSession.getNickname()).build();
+        messagingTemplate.convertAndSend("/user/"+5,model   );
     }
     @MessageMapping("/room/session")
     public void roomSession() {

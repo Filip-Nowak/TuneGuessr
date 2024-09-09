@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
+import Online from "../Online";
 
-export default function CommandsContainer() {
+export default function CommandsContainer({setConnected,setUpdated}) {
   const nicknameInput = useRef(null);
   const roomIdInput = useRef(null);
   const handleCreateUser = () => {
@@ -15,6 +16,13 @@ export default function CommandsContainer() {
     console.log("create room");
     Online.createRoom();
   };
+  const handleConnect = () => {
+    console.log("connect");
+    Online.connect(()=>{
+      setUpdated(false);
+      setConnected(true);
+    });
+  }
   return (
     <div style={{ width: "100%", border: "5px black dashed" }}>
       CommandsContainer
@@ -24,12 +32,22 @@ export default function CommandsContainer() {
         </button>
       </div>
       <div>
+        <button onClick={handleConnect} style={{ backgroundColor: "gray" }}>
+          connect
+        </button>
+      </div>
+      <div>
         nickname:
-        <input ref={nicknameInput} />
+        <input ref={nicknameInput} style={{border:"1px black solid"}}/>
         <button onClick={handleSetSession} style={{ backgroundColor: "gray" }}>
           set session
         </button>
       </div>
+      <div>
+        <button onClick={handeCreateRoom} style={{ backgroundColor: "gray" }}>
+          create room
+        </button>
+        </div>  
     </div>
   );
 }
