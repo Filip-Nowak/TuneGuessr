@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import Online from "../Online";
+import Online from "../online/Online";
 
 export default function CommandsContainer({setConnected,setUpdated}) {
   const nicknameInput = useRef(null);
@@ -19,6 +19,12 @@ export default function CommandsContainer({setConnected,setUpdated}) {
   const handleConnect = () => {
     console.log("connect");
     Online.connect(()=>{
+      setUpdated(false);
+      setConnected(true);
+    });
+  }
+  const handleQuickConnect = () => {
+    Online.quickConnect(()=>{
       setUpdated(false);
       setConnected(true);
     });
@@ -48,6 +54,11 @@ export default function CommandsContainer({setConnected,setUpdated}) {
           create room
         </button>
         </div>  
+        <h1>quick connect</h1>
+        <button onClick={handleQuickConnect} style={{ backgroundColor: "gray" }}>
+          quick connect
+        </button>
+        
     </div>
   );
 }

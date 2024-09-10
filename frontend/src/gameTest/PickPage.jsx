@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import Online from "./Online";
+import Online from "./online/Online";
 import CommandsContainer from "./components/CommandsContainer";
 import SessionInfo from "./components/SessionInfo";
 import RoomInfo from "./components/RoomInfo";

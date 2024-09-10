@@ -50,11 +50,5 @@ public class RoomService {
         }
     }
 
-    public String createUser() {
-        String userId = redisService.generatePlayerId();
-        redisService.save(Player.builder()
-                .id(userId)
-                .build());
-        return userId;
-    }
+
 }

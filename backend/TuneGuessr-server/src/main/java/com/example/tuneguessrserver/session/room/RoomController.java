@@ -1,6 +1,7 @@
 package com.example.tuneguessrserver.session.room;
 
 import com.example.tuneguessrserver.response.ResponseModel;
+import com.example.tuneguessrserver.response.websocket.MessageModel;
 import com.example.tuneguessrserver.session.PlayerSession;
 import com.example.tuneguessrserver.session.SessionModel;
 import lombok.RequiredArgsConstructor;
@@ -24,49 +25,15 @@ public class RoomController {
     @MessageMapping("/room/create")
     public void createRoom() {
         Room room=roomService.createRoom(playerSession.getUserId());
-        messagingTemplate.convertAndSend("/user/"+playerSession.getUserId(),room.getId());
-
-    }
-    @MessageMapping("/user/set-session")
-    public void setId(Map <String,String> data) {
-        System.out.println("setting session");
-        if(data.containsKey("userId")) {
-            playerSession.setUserId(data.get("userId"));
-        }
-        if(data.containsKey("roomId")) {
-            playerSession.setRoomId(data.get("roomId"));
-        }
-        if(data.containsKey("nickname")) {
-            playerSession.setNickname(data.get("nickname"));
-        }
-        if(data.containsKey("ready")) {
-            playerSession.setReady(Boolean.parseBoolean(data.get("ready")));
-        }
-        if(playerSession.getUserId()!=null) {
-            System.out.println("sending session");
-            SessionModel model=SessionModel.builder().userId(playerSession.getUserId()).roomId(playerSession.getRoomId()).nickname(playerSession.getNickname()).build();
-            System.out.println("/xdd/"+playerSession.getUserId());
-            messagingTemplate.convertAndSendToUser(playerSession.getUserId(),"/info",model);
-        }
-    }
-    @GetMapping("/create-user")
-    public ResponseEntity<ResponseModel> createUser() {
-        String id=roomService.createUser();
-        return ResponseEntity.ok(ResponseModel.builder().data(Map.of(
-                "userId",id
-        )).build());
+        playerSession.setRoomId(room.getId());
+        MessageModel message=MessageModel.createRoomCreationInfo(room);
+        messagingTemplate.convertAndSendToUser(playerSession.getUserId(),"/info",message);
     }
 
-    @MessageMapping("/user/session")
-    public void session() {
-        if(playerSession.getUserId()==null) {
-            return;
-        }
-        SessionModel model=SessionModel.builder().userId(playerSession.getUserId()).roomId(playerSession.getRoomId()).nickname(playerSession.getNickname()).build();
-        messagingTemplate.convertAndSend("/user/"+5,model   );
-    }
     @MessageMapping("/room/session")
     public void roomSession() {
-        messagingTemplate.convertAndSend("/room/"+playerSession.getUserId(),playerSession);
+        Room room=roomService.getRoom(playerSession.getRoomId());
+        MessageModel message=MessageModel.createRoomInfo(room);
+        messagingTemplate.convertAndSendToUser(playerSession.getUserId(),"/room",message);
     }
 }
