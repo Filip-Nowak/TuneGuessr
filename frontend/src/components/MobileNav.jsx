@@ -1,7 +1,8 @@
-import { Link, redirect } from 'react-router-dom';
-import BURGER from '../assets/menu.svg';
-import CLOSE from '../assets/close-outline.svg';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import CLOSE from '../assets/close-outline.svg';
+import BURGER from '../assets/menu.svg';
+import { NavigationLinks } from '../constants/NavigationLinks';
 
 export function MobileNav() {
 	const [isShown, setIsShown] = useState(false);
@@ -15,7 +16,7 @@ export function MobileNav() {
 
 	return (
 		<nav className='fixed md:hidden'>
-			<button onClick={() => setIsShown(true)} className='w-32 p-6'>
+			<button onClick={() => setIsShown(true)} className='w-32 p-6 z-50'>
 				<img src={BURGER} alt='menu button' />
 			</button>
 
@@ -31,22 +32,26 @@ export function MobileNav() {
 					alt='close navigation'
 				/>
 				<li>
-					<Link onClick={handleCloseNav} className='p-4'>
+					<Link to={NavigationLinks.play} onClick={handleCloseNav} className='p-4'>
 						Play
 					</Link>
 				</li>
 				<li>
-					<Link onClick={handleCloseNav} className='p-4'>
+					<Link
+						to={NavigationLinks.custonPlaylist}
+						onClick={handleCloseNav}
+						className='p-4'
+					>
 						Custom Playslist
 					</Link>
 				</li>
 				<li>
-					<Link onClick={handleCloseNav} className='p-4'>
+					<Link to={NavigationLinks.faq} onClick={handleCloseNav} className='p-4'>
 						FAQ
 					</Link>
 				</li>
 				<li>
-					<Link onClick={handleCloseNav} className='p-4'>
+					<Link to={NavigationLinks.settings} onClick={handleCloseNav} className='p-4'>
 						Settings
 					</Link>
 				</li>

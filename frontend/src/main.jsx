@@ -7,6 +7,8 @@ import { LoginPage } from './views/LoginPage.jsx';
 import { RegisterPage } from './views/RegisterPage.jsx';
 import { ErrorPage } from './views/ErrorPage.jsx';
 import { SettingsPage } from './components/SettingsPage.jsx';
+import { Play } from './views/Play.jsx';
+import { GamePanel } from './views/GamePanel.jsx';
 
 const router = createBrowserRouter([
 	{
@@ -14,6 +16,10 @@ const router = createBrowserRouter([
 		element: <App />,
 		errorElement: <ErrorPage />,
 		children: [
+			{
+				path: '/',
+				element: <Play />,
+			},
 			{
 				path: '/settings',
 				element: <SettingsPage />,
@@ -31,6 +37,10 @@ const router = createBrowserRouter([
 	{
 		path: '/success',
 		element: <SuccessPage />,
+	},
+	{
+		path: '/challange',
+		element: <GamePanel />,
 	},
 ]);
 

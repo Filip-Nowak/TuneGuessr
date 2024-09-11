@@ -22,23 +22,22 @@ public class TuneGuessrServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(TuneGuessrServerApplication.class, args);
     }
-
     @Bean
-    public CommandLineRunner runner(AuthenticationService authenticationService, RoleRepository roleRepository, ConfirmationTokenRepository confirmationTokenRepository, UserProfileRepository userProfileRepository, ChallengeService challengeService, UserService userService) {
-        return runner -> {
+    public CommandLineRunner runner(AuthenticationService authenticationService, RoleRepository roleRepository,ConfirmationTokenRepository confirmationTokenRepository, UserProfileRepository userProfileRepository, ChallengeService challengeService, UserService userService){
+        return runner->{
             loadRoles(roleRepository);
 //            loaduser(userService,roleRepository);
 //            loadChallenge(challengeService,userService);
-            loadMiki(authenticationService, confirmationTokenRepository, userProfileRepository, challengeService);
+            loadMiki(authenticationService,confirmationTokenRepository,userProfileRepository,challengeService);
         };
     }
 
-    private void loadMiki(AuthenticationService authenticationService, ConfirmationTokenRepository confirmationTokenRepository, UserProfileRepository userProfileRepository, ChallengeService challengeService) {
+    private void loadMiki(AuthenticationService authenticationService, ConfirmationTokenRepository confirmationTokenRepository, UserProfileRepository userProfileRepository,ChallengeService challengeService) {
         authenticationService.register(RegisterRequest.builder()
                 .email("test@test.gmail.com")
                 .password("kanapka")
                 .nickname("Mikołaj Bala")
-                .build(), true);
+                .build(),true);
         ConfirmationToken token = confirmationTokenRepository.findAll().get(0);
         authenticationService.confirmToken(token.getToken());
         ;
@@ -65,7 +64,7 @@ public class TuneGuessrServerApplication {
                 .description("Zagraj w te hity disco polo")
                 .build();
         challengeService.save(challenge);
-        for (String song : discoPolo) {
+        for(String song:discoPolo){
             String[] split = song.split(";");
             challengeService.addSongToChallenge(challenge, AddSongModel.builder()
                     .artist(split[0])
@@ -74,15 +73,14 @@ public class TuneGuessrServerApplication {
                     .build());
         }
     }
-
-    private void loadRock(ChallengeService challengeService, UserProfile userProfile) {
-        Challenge challenge = Challenge.builder()
+    private void loadRock(ChallengeService challengeService,UserProfile userProfile) {
+        Challenge challenge=Challenge.builder()
                 .name("Klasyki zagranicznego rocka")
                 .user(userProfile)
                 .description("Zagraj w te hity rocka")
                 .build();
         challengeService.save(challenge);
-        for (String song : rock) {
+        for(String song:rock){
             String[] split = song.split(";");
             challengeService.addSongToChallenge(challenge, AddSongModel.builder()
                     .artist(split[0])
@@ -91,14 +89,13 @@ public class TuneGuessrServerApplication {
                     .build());
         }
     }
-
-    private void loadPRap(ChallengeService challengeService, UserProfile userProfile) {
-        Challenge challenge = Challenge.builder()
+private void loadPRap(ChallengeService challengeService,UserProfile userProfile) {
+        Challenge challenge=Challenge.builder()
                 .name("Klasyki polskiego rapu")
                 .user(userProfile)
                 .build();
         challengeService.save(challenge);
-        for (String song : pRap) {
+        for(String song:pRap){
             String[] split = song.split(";");
             challengeService.addSongToChallenge(challenge, AddSongModel.builder()
                     .artist(split[0])
@@ -291,7 +288,7 @@ public class TuneGuessrServerApplication {
 
 
     private void loadRoles(RoleRepository roleRepository) {
-        Role role = Role.builder()
+        Role role=Role.builder()
                 .name("USER")
                 .build();
         roleRepository.save(role);

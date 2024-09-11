@@ -7,11 +7,11 @@ function App() {
 		<div>
 			<MobileNav />
 			<Sidebar />
-			<div className=' pl-72'>
+			<div className='md:pl-72'>
 				<Outlet />
 			</div>
-			<div className='h-screen bg-white'></div>
 			<div className='h-screen bg-orange-400'></div>
+			{/* <div className='h-screen bg-white'></div> */}
 		</div>
 	);
 }
