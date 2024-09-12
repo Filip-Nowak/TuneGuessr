@@ -16,4 +16,7 @@ public class UserSessionService {
                 .build());
         return userId;
     }
+    public void saveUser(Player player) {
+        redisService.save(player);
+    }
 }

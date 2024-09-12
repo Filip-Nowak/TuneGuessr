@@ -15,7 +15,13 @@ public class MessageModel {
         return MessageModel.builder().info(MessageInfo.ROOM_SESSION).message(message).build();
     }
     public static MessageModel createRoomCreationInfo(Object message){
-        return MessageModel.builder().info(MessageInfo.CREATE_ROOM).message(message).build();
+        return MessageModel.builder().info(MessageInfo.ROOM_CREATED).message(message).build();
     }
 
+    public static MessageModel createNewPlayerJoinedInfo(Object message){
+        return MessageModel.builder().info(MessageInfo.NEW_PLAYER_JOINED).message(message).build();
+    }
+    public static MessageModel createJoinedRoomInfo(Object message){
+        return MessageModel.builder().info(MessageInfo.JOINED_ROOM).message(message).build();
+    }
 }

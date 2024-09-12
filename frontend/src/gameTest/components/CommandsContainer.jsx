@@ -1,7 +1,7 @@
-import React, { useRef } from "react";
-import Online from "../online/Online";
+import React, { useEffect, useRef } from "react";
+import Online from "../online/Online.js";
 
-export default function CommandsContainer({setConnected,setUpdated}) {
+export default function CommandsContainer({ setConnected, setUpdated }) {
   const nicknameInput = useRef(null);
   const roomIdInput = useRef(null);
   const handleCreateUser = () => {
@@ -18,17 +18,21 @@ export default function CommandsContainer({setConnected,setUpdated}) {
   };
   const handleConnect = () => {
     console.log("connect");
-    Online.connect(()=>{
+    Online.connect(() => {
       setUpdated(false);
       setConnected(true);
     });
-  }
+  };
   const handleQuickConnect = () => {
-    Online.quickConnect(()=>{
+    Online.quickConnect(() => {
       setUpdated(false);
       setConnected(true);
     });
-  }
+  };
+  const handleJoinRoom = () => {
+    console.log("join room");
+    Online.joinRoom(roomIdInput.current.value);
+  };
   return (
     <div style={{ width: "100%", border: "5px black dashed" }}>
       CommandsContainer
@@ -44,7 +48,7 @@ export default function CommandsContainer({setConnected,setUpdated}) {
       </div>
       <div>
         nickname:
-        <input ref={nicknameInput} style={{border:"1px black solid"}}/>
+        <input ref={nicknameInput} style={{ border: "1px black solid" }} />
         <button onClick={handleSetSession} style={{ backgroundColor: "gray" }}>
           set session
         </button>
@@ -53,12 +57,18 @@ export default function CommandsContainer({setConnected,setUpdated}) {
         <button onClick={handeCreateRoom} style={{ backgroundColor: "gray" }}>
           create room
         </button>
-        </div>  
-        <h1>quick connect</h1>
-        <button onClick={handleQuickConnect} style={{ backgroundColor: "gray" }}>
-          quick connect
+      </div>
+      <div>
+        room id:
+        <input ref={roomIdInput} style={{ border: "1px black solid" }} />
+        <button onClick={handleJoinRoom} style={{ backgroundColor: "gray" }}>
+          join room
         </button>
-        
+      </div>
+      <h1>quick connect</h1>
+      <button onClick={handleQuickConnect} style={{ backgroundColor: "gray" }}>
+        quick connect
+      </button>
     </div>
   );
 }

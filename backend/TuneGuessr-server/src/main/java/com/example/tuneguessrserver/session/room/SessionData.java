@@ -1,5 +1,7 @@
 package com.example.tuneguessrserver.session.room;
 
-public interface SessionData {
+import java.io.Serializable;
+
+public interface SessionData extends Serializable {
     String getId();
 }

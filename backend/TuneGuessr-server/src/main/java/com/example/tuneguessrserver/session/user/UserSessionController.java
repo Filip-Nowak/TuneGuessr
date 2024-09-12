@@ -5,6 +5,7 @@ import com.example.tuneguessrserver.response.websocket.MessageInfo;
 import com.example.tuneguessrserver.response.websocket.MessageModel;
 import com.example.tuneguessrserver.session.PlayerSession;
 import com.example.tuneguessrserver.session.SessionModel;
+import com.example.tuneguessrserver.session.room.Player;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
@@ -23,39 +24,49 @@ public class UserSessionController {
     private final PlayerSession playerSession;
     private final SimpMessagingTemplate messagingTemplate;
     private final UserSessionService userSessionService;
+
     @MessageMapping("/user/set-session")
-    public void setId(Map<String,String> data) {
-        if(data.containsKey("userId")) {
+    public void setId(Map<String, String> data) {
+        if (data.containsKey("userId")) {
             playerSession.setUserId(data.get("userId"));
         }
-        if(data.containsKey("roomId")) {
+        if (data.containsKey("roomId")) {
             playerSession.setRoomId(data.get("roomId"));
         }
-        if(data.containsKey("nickname")) {
+        if (data.containsKey("nickname")) {
             playerSession.setNickname(data.get("nickname"));
         }
-        if(data.containsKey("ready")) {
+        if (data.containsKey("ready")) {
             playerSession.setReady(Boolean.parseBoolean(data.get("ready")));
         }
-        if(playerSession.getUserId()!=null) {
-MessageModel model = MessageModel.createUserInfo(new SessionModel(playerSession));
-            messagingTemplate.convertAndSendToUser(playerSession.getUserId(),"/info",model);
+        if (playerSession.getUserId() != null) {
+            Player player = Player.builder()
+                    .id(playerSession.getUserId())
+                    .roomId(playerSession.getRoomId())
+                    .nickname(playerSession.getNickname())
+                    .ready(playerSession.isReady())
+                    .build();
+            userSessionService.saveUser(player);
+            MessageModel model = MessageModel.createUserInfo(new SessionModel(playerSession));
+            ;
+            messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", model);
         }
     }
+
     @GetMapping("/create-user")
     public ResponseEntity<ResponseModel> createUser() {
-        String id=userSessionService.createUser();
+        String id = userSessionService.createUser();
         return ResponseEntity.ok(ResponseModel.builder().data(Map.of(
-                "userId",id
+                "userId", id
         )).build());
     }
 
     @MessageMapping("/user/session")
     public void session() {
-        if(playerSession.getUserId()==null) {
+        if (playerSession.getUserId() == null) {
             return;
         }
         MessageModel message = MessageModel.createUserInfo(new SessionModel(playerSession));
-        messagingTemplate.convertAndSendToUser(playerSession.getUserId(),"/info",message);
+        messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", message);
     }
 }

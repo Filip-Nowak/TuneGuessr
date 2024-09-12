@@ -7,12 +7,14 @@ import com.example.tuneguessrserver.session.SessionModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -26,7 +28,13 @@ public class RoomController {
     public void createRoom() {
         Room room=roomService.createRoom(playerSession.getUserId());
         playerSession.setRoomId(room.getId());
-        MessageModel message=MessageModel.createRoomCreationInfo(room);
+        List<PlayerModel> players=roomService.getPlayerModels(room.getId());
+        RoomModel model=RoomModel.builder()
+                .id(room.getId())
+                .hostId(room.getHostId())
+                .players(players)
+                .build();
+        MessageModel message=MessageModel.createRoomCreationInfo(model);
         messagingTemplate.convertAndSendToUser(playerSession.getUserId(),"/info",message);
     }
 
@@ -35,5 +43,27 @@ public class RoomController {
         Room room=roomService.getRoom(playerSession.getRoomId());
         MessageModel message=MessageModel.createRoomInfo(room);
         messagingTemplate.convertAndSendToUser(playerSession.getUserId(),"/room",message);
+    }
+
+    @MessageMapping("/room/join")
+    public void joinRoom(@Payload String roomId) {
+        System.out.println(playerSession.getUserId() + " joined room " + roomId);
+        roomService.joinRoom(playerSession.getUserId(),roomId);
+        Room room=roomService.getRoom(roomId);
+        playerSession.setRoomId(roomId);
+        PlayerModel playerModel=PlayerModel.builder()
+                .id(playerSession.getUserId())
+                .nickname(playerSession.getNickname())
+                .ready(playerSession.isReady())
+                .build();
+        MessageModel newPlayerMessage=MessageModel.createNewPlayerJoinedInfo(playerModel);
+        messagingTemplate.convertAndSend("/room/"+roomId,newPlayerMessage);
+        RoomModel roomModel = RoomModel.builder()
+                .id(room.getId())
+                .hostId(room.getHostId())
+                .players(roomService.getPlayerModels(room.getId()))
+                .build();
+        MessageModel joinedRoomMessage=MessageModel.createJoinedRoomInfo(roomModel);
+        messagingTemplate.convertAndSendToUser(playerSession.getUserId(),"/info",joinedRoomMessage);
     }
 }

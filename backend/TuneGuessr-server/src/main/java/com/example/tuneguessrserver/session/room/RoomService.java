@@ -1,21 +1,26 @@
 package com.example.tuneguessrserver.session.room;
 
 import com.example.tuneguessrserver.session.RedisService;
+import com.example.tuneguessrserver.session.user.UserSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class RoomService {
     private final RedisService redisService;
+    private final UserSessionService userSessionService;
     public Room createRoom(String hostId) {
         String roomId = redisService.generateRoomId();
+        LinkedList<String> list = new LinkedList<>();
+        list.add(hostId);
         Room room = Room.builder()
                 .id(roomId)
                 .hostId(hostId)
-                .players(List.of(hostId))
+                .players(list)
                 .build();
         saveRoom(room);
         return room;
@@ -36,6 +41,9 @@ public class RoomService {
         }
         room.addPlayer(playerId);
         saveRoom(room);
+        Player player = (Player) redisService.find(playerId);
+        player.setRoomId(roomId);
+        userSessionService.saveUser(player);
     }
     public void leaveRoom(Player player) {
         Room room = getRoom(player.getRoomId());
@@ -50,5 +58,30 @@ public class RoomService {
         }
     }
 
+
+    public List<Player> getPlayers(String id) {
+        Room room = getRoom(id);
+        List<Player> players = new LinkedList<>();
+        for(String playerId : room.getPlayers()) {
+            players.add((Player) redisService.find(playerId));
+        }
+        return players;
+    }
+
+    public List<PlayerModel> getPlayerModels(String id) {
+        Room room = getRoom(id);
+        List<PlayerModel> players = new LinkedList<>();
+        for(String playerId : room.getPlayers()) {
+            Player player = (Player) redisService.find(playerId);
+            System.out.println("chuj xd");
+            System.out.println(player);
+            players.add(PlayerModel.builder()
+                    .id(player.getId())
+                    .nickname(player.getNickname())
+                    .ready(player.isReady())
+                    .build());
+        }
+        return players;
+    }
 
 }
