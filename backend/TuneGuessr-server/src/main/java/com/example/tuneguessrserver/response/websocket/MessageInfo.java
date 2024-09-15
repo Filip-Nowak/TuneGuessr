@@ -5,5 +5,5 @@ public enum MessageInfo {
     ROOM_SESSION,
     ROOM_CREATED,
     NEW_PLAYER_JOINED,
-    JOINED_ROOM,
+    JOINED_ROOM, PLAYER_LEFT, PLAYER_READY,
 }

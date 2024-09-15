@@ -2,6 +2,7 @@ package com.example.tuneguessrserver.session.user;
 
 import com.example.tuneguessrserver.session.RedisService;
 import com.example.tuneguessrserver.session.room.Player;
+import com.example.tuneguessrserver.session.room.RoomController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

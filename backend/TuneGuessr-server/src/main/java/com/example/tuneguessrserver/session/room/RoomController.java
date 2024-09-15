@@ -66,4 +66,26 @@ public class RoomController {
         MessageModel joinedRoomMessage=MessageModel.createJoinedRoomInfo(roomModel);
         messagingTemplate.convertAndSendToUser(playerSession.getUserId(),"/info",joinedRoomMessage);
     }
+
+    @MessageMapping("/room/leave")
+    public void leaveRoom() {
+        System.out.println(playerSession);
+        Room room=roomService.leaveRoom(playerSession.getUserId());
+        if(room==null){
+            messagingTemplate.convertAndSend("/room/"+playerSession.getRoomId(),MessageModel.createPlayerLeftInfo(Map.of("playerId",playerSession.getUserId(),"hostId","")));
+            playerSession.setRoomId(null);
+            return;
+        }
+        MessageModel message=MessageModel.createPlayerLeftInfo(Map.of("playerId",playerSession.getUserId(),"hostId",room.getHostId()));
+        playerSession.setRoomId(null);
+        messagingTemplate.convertAndSend("/room/"+room.getId(),message);
+    }
+    @MessageMapping("/room/ready")
+    public void setReady(@Payload boolean ready){
+        playerSession.setReady(ready);
+        roomService.setPlayerReady(playerSession.getUserId(),ready);
+        Room room=roomService.getRoom(playerSession.getRoomId());
+        MessageModel message=MessageModel.createPlayerReadyInfo(Map.of("playerId",playerSession.getUserId(),"ready",ready));
+        messagingTemplate.convertAndSend("/room/"+room.getId(),message);
+    }
 }

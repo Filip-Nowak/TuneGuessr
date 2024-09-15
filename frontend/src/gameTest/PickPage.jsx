@@ -54,11 +54,41 @@ export default function PickPage() {
     setHostId(room.hostId);
     setUpdated(false);
   };
+  const handleLeftRoom = (info) => {
+    const { playerId, hostId } = info;
+    if (playerId === Online.getUserId()) {
+      Online.setRoomId("");
+      setRoom({});
+      setPlayers([]);
+      setHostId("");
+    } else {
+      setPlayers((prev) => [
+        ...prev.filter((player) => player.id !== playerId),
+      ]);
+      setHostId(hostId);
+    }
+  };
+  const handlePlayerReady = (info) => {
+    const { playerId, ready } = info;
+    if (playerId === Online.getUserId()) {
+      Online.setReady(ready);
+    }
+    setPlayers((prev) =>
+      prev.map((player) => {
+        if (player.id === playerId) {
+          return { ...player, ready: ready };
+        }
+        return player;
+      })
+    );
+  };
   useEffect(() => {
     Online.setSessionUpdateHandler(handleSessionChange);
     Online.setCreateRoomHandler(handleRoomCreated);
     Online.setNewPlayerJoinedHandler(handleNewPlayrJoined);
     Online.setJoinedRoomHandler(handleJoinedRoom);
+    Online.setPlayerLeftHandler(handleLeftRoom);
+    Online.setPlayerReadyHandler(handlePlayerReady);
   }, []);
   if (!updated) {
     setSession({});

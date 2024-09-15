@@ -5,7 +5,10 @@ import MessageHandler from "./MessageHandler";
 class Online {
   #stompClient;
   #userId;
-  #roomId;
+  #roomId = "";
+  #roomSubscription;
+  #userSubscription;
+  #ready = false;
   /**
    * @type {MessageHandler}
    */
@@ -74,11 +77,14 @@ class Online {
     const client = new Client({
       webSocketFactory: () => socket,
       onConnect: () => {
-        client.subscribe("/user/" + this.#userId + "/info", (message) => {
-          const body = JSON.parse(message.body);
-          console.log("body:", body);
-          this.#messageHandler.handle(body.info, body.message);
-        });
+        this.#userSubscription = client.subscribe(
+          "/user/" + this.#userId + "/info",
+          (message) => {
+            const body = JSON.parse(message.body);
+            console.log("body:", body);
+            this.#messageHandler.handle(body.info, body.message);
+          }
+        );
         const nickname = prompt("Enter your nickname");
         this.setSession(nickname);
 
@@ -114,6 +120,12 @@ class Online {
   setNewPlayerJoinedHandler(handler) {
     this.#messageHandler.addHandler("NEW_PLAYER_JOINED", handler);
   }
+  setPlayerLeftHandler(handler) {
+    this.#messageHandler.addHandler("PLAYER_LEFT", handler);
+  }
+  setPlayerReadyHandler(handler) {
+    this.#messageHandler.addHandler("PLAYER_READY", handler);
+  }
   getUserId() {
     return this.#userId;
   }
@@ -127,15 +139,46 @@ class Online {
     }
   }
   setRoomId(roomId) {
-    this.#roomId = roomId;
     if (this.#stompClient && this.#stompClient.connected) {
-      this.#stompClient.subscribe("/room/" + roomId, (message) => {
-        const body = JSON.parse(message.body);
-        this.#messageHandler.handle(body.info, body.message);
-      });
+      this.#roomId = roomId;
+      if (roomId === "") {
+        this.#roomSubscription.unsubscribe();
+        console.log("unsubscribed from /room/" + roomId);
+        return;
+      }
+      this.#roomSubscription = this.#stompClient.subscribe(
+        "/room/" + roomId,
+        (message) => {
+          console.log("room message:", message);
+          const body = JSON.parse(message.body);
+          this.#messageHandler.handle(body.info, body.message);
+        }
+      );
     } else {
       throw new Error("not connected");
     }
+  }
+  isInRoom() {
+    return !!this.#roomId;
+  }
+  leaveRoom() {
+    if (this.#stompClient && this.#stompClient.connected) {
+      this.#stompClient.publish({
+        destination: "/app/room/leave",
+        body: this.#roomId,
+      });
+    }
+  }
+  ready() {
+    if (this.#stompClient && this.#stompClient.connected) {
+      this.#stompClient.publish({
+        destination: "/app/room/ready",
+        body: JSON.stringify(!this.#ready),
+      });
+    }
+  }
+  setReady(ready) {
+    this.#ready = ready;
   }
 }
 export default new Online();
