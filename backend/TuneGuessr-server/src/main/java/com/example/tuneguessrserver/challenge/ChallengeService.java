@@ -1,5 +1,6 @@
 package com.example.tuneguessrserver.challenge;
 
+import com.example.tuneguessrserver.response.mapper.SongMapper;
 import com.example.tuneguessrserver.response.status.ApiError;
 import com.example.tuneguessrserver.response.status.ApiStatus;
 import com.example.tuneguessrserver.user.UserProfile;
@@ -81,5 +82,18 @@ public class ChallengeService {
         challenge.getSongs().remove(song);
         songRepository.delete(song);
         save(challenge);
+    }
+    public Challenge getChallengeWithSongs(long id) {
+        return challengeRepository.findByIdAndFetchSongsEagerly(id).orElseThrow(()->new ApiError(ApiStatus.CHALLENGE_NOT_FOUND));
+    }
+    public List<SongModel> getRandomSongs(long challengeId, int count) {
+        List<Song> songs = new LinkedList<>();
+        Challenge challenge = getChallengeWithSongs(challengeId);
+        for(int i=0;i<count;i++){
+            int index = (int) (Math.random() * challenge.getSongs().size());
+            songs.add(challenge.getSongs().get(index));
+            challenge.getSongs().remove(index);
+        }
+        return SongMapper.toModel(songs);
     }
 }

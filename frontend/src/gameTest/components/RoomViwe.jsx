@@ -9,6 +9,9 @@ export default function RoomView({ players = [], hostId }) {
   const handleLeave = () => {
     Online.leaveRoom();
   };
+  const handleGameReady = () => {
+    Online.gameReady();
+  }
   return (
     <div>
       RoomViwe
@@ -31,10 +34,29 @@ export default function RoomView({ players = [], hostId }) {
           <button style={{ backgroundColor: "gray" }} onClick={handleLeave}>
             leave
           </button>
+          {
+            <div>
+              {Online.getUserId() === hostId ? (
+                <button
+                  style={{ backgroundColor: "gray" }}
+                  onClick={() => {
+                    Online.startGame();
+                  }}
+                >
+                  start
+                </button>
+              ) : (
+                ""
+              )}
+            </div>
+          }
         </div>
       ) : (
         ""
       )}
+      <button onClick={handleGameReady}>
+        game ready
+      </button>
     </div>
   );
 }

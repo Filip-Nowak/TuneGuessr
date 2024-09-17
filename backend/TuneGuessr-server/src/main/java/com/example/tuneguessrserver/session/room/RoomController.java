@@ -1,6 +1,9 @@
 package com.example.tuneguessrserver.session.room;
 
+import com.example.tuneguessrserver.game.GameService;
+import com.example.tuneguessrserver.game.classic.ClassicGameTemplate;
 import com.example.tuneguessrserver.response.ResponseModel;
+import com.example.tuneguessrserver.response.websocket.CreateRoomMessage;
 import com.example.tuneguessrserver.response.websocket.MessageModel;
 import com.example.tuneguessrserver.session.PlayerSession;
 import com.example.tuneguessrserver.session.SessionModel;
@@ -24,10 +27,13 @@ public class RoomController {
     private final RoomService roomService;
     private final PlayerSession playerSession;
     private final SimpMessagingTemplate messagingTemplate;
+    private final GameService gameService;
     @MessageMapping("/room/create")
-    public void createRoom() {
-        Room room=roomService.createRoom(playerSession.getUserId());
+    public void createRoom(@Payload CreateRoomMessage createRoomMessage) {
+        System.out.println(createRoomMessage);
+        Room room=roomService.createRoom(playerSession.getUserId(),createRoomMessage.getChallengeId(),createRoomMessage.getGameMode());
         playerSession.setRoomId(room.getId());
+
         List<PlayerModel> players=roomService.getPlayerModels(room.getId());
         RoomModel model=RoomModel.builder()
                 .id(room.getId())
@@ -88,4 +94,16 @@ public class RoomController {
         MessageModel message=MessageModel.createPlayerReadyInfo(Map.of("playerId",playerSession.getUserId(),"ready",ready));
         messagingTemplate.convertAndSend("/room/"+room.getId(),message);
     }
+    @MessageMapping("/room/start")
+    public void startGame(){
+        Room room=roomService.getRoom(playerSession.getRoomId());
+        if(room.getHostId().equals(playerSession.getUserId())){
+            gameService.startGame(room.getId());
+            System.out.println("Game started");
+            Object game= gameService.getGame(room.getId());
+            System.out.println(game);
+        }
+        messagingTemplate.convertAndSend("/room/"+room.getId(),MessageModel.createGameStartInfo());
+    }
+
 }

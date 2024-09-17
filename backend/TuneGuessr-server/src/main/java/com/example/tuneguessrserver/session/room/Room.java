@@ -1,10 +1,11 @@
 package com.example.tuneguessrserver.session.room;
 
+import com.example.tuneguessrserver.game.GameMode;
 import lombok.Builder;
 import lombok.Data;
 
 import java.util.LinkedList;
-import java.util.List;
+
 @Data
 @Builder
 public class Room implements SessionData{
@@ -15,6 +16,7 @@ public class Room implements SessionData{
     @Builder.Default
     private int maxPlayers=10;
     private String hostId;
+    private long challengeId;
     public void addPlayer(String playerId){
         if(players.size()>=maxPlayers){
             throw new RuntimeException("Room is full");

@@ -1,4 +1,4 @@
-package com.example.tuneguessrserver.session.room;
+package com.example.tuneguessrserver.game;
 
 public enum GameMode {
     CLASSIC,SURVIVAL,MULTIPLAYER

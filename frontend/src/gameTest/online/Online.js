@@ -99,11 +99,12 @@ class Online {
     this.#stompClient = client;
   }
 
-  createRoom() {
+  createRoom(challengeId,gamemode) {
     console.log("createRoom");
     if (this.#stompClient && this.#stompClient.connected) {
       this.#stompClient.publish({
         destination: "/app/room/create",
+        body: JSON.stringify({ challengeId: challengeId, gameMode: gamemode }),
       });
     }
   }
@@ -125,6 +126,12 @@ class Online {
   }
   setPlayerReadyHandler(handler) {
     this.#messageHandler.addHandler("PLAYER_READY", handler);
+  }
+  setGameStartedHandler(handler) {
+    this.#messageHandler.addHandler("GAME_START", handler);
+  }
+  setNextSongHandler(handler) {
+    this.#messageHandler.addHandler("NEXT_SONG", handler);
   }
   getUserId() {
     return this.#userId;
@@ -179,6 +186,20 @@ class Online {
   }
   setReady(ready) {
     this.#ready = ready;
+  }
+  startGame() {
+    if (this.#stompClient && this.#stompClient.connected) {
+      this.#stompClient.publish({
+        destination: "/app/room/start",
+      });
+    }
+  }
+  gameReady() {
+    if (this.#stompClient && this.#stompClient.connected) {
+      this.#stompClient.publish({
+        destination: "/app/game/ready",
+      });
+    }
   }
 }
 export default new Online();

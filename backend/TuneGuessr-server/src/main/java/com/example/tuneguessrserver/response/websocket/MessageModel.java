@@ -37,4 +37,12 @@ public class MessageModel {
     public static MessageModel createPlayerReadyInfo(Object playerModel) {
         return MessageModel.builder().info(MessageInfo.PLAYER_READY).message(playerModel).build();
     }
+
+    public static MessageModel createGameStartInfo() {
+        return MessageModel.builder().info(MessageInfo.GAME_START).message(null).build();
+    }
+
+    public static MessageModel createNextSongInfo(String songUrl) {
+        return MessageModel.builder().info(MessageInfo.NEXT_SONG).message(songUrl).build();
+    }
 }

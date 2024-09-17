@@ -1,5 +1,6 @@
 package com.example.tuneguessrserver.session.room;
 
+import com.example.tuneguessrserver.game.GameMode;
 import com.example.tuneguessrserver.session.RedisService;
 import com.example.tuneguessrserver.session.user.UserSessionService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,8 @@ public class RoomService {
     private final RedisService redisService;
     private final UserSessionService userSessionService;
 
-    public Room createRoom(String hostId) {
+    public Room createRoom(String hostId, long challengeId, String modeName) {
+        GameMode mode= GameMode.valueOf(modeName);
         String roomId = redisService.generateRoomId();
         LinkedList<String> list = new LinkedList<>();
         list.add(hostId);
@@ -22,6 +24,8 @@ public class RoomService {
                 .id(roomId)
                 .hostId(hostId)
                 .players(list)
+                .challengeId(challengeId)
+                .mode(mode)
                 .build();
         saveRoom(room);
         Player player = (Player) redisService.find(hostId);

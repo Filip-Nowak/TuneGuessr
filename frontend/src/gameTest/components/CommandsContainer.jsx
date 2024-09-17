@@ -4,6 +4,8 @@ import Online from "../online/Online.js";
 export default function CommandsContainer({ setConnected, setUpdated }) {
   const nicknameInput = useRef(null);
   const roomIdInput = useRef(null);
+  const challengeIdInput = useRef(null);
+  const gamemodeInput = useRef(null);
   const handleCreateUser = () => {
     console.log("create user");
     Online.createUser();
@@ -14,7 +16,10 @@ export default function CommandsContainer({ setConnected, setUpdated }) {
   };
   const handeCreateRoom = () => {
     console.log("create room");
-    Online.createRoom();
+    Online.createRoom(
+      challengeIdInput.current.value,
+      gamemodeInput.current.value
+    );
   };
   const handleConnect = () => {
     console.log("connect");
@@ -54,6 +59,14 @@ export default function CommandsContainer({ setConnected, setUpdated }) {
         </button>
       </div>
       <div>
+        challenge id:
+        <input style={{ border: "1px black solid" }} ref={
+          challengeIdInput
+        }/><br/>
+        gamemode:
+        <input style={{ border: "1px black solid" }} ref={
+          gamemodeInput
+        }/><br/>
         <button onClick={handeCreateRoom} style={{ backgroundColor: "gray" }}>
           create room
         </button>

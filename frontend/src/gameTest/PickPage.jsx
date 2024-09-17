@@ -89,6 +89,13 @@ export default function PickPage() {
     Online.setJoinedRoomHandler(handleJoinedRoom);
     Online.setPlayerLeftHandler(handleLeftRoom);
     Online.setPlayerReadyHandler(handlePlayerReady);
+    Online.setGameStartedHandler(() => {
+      console.log("game started");
+    });
+    Online.setNextSongHandler((body) => {
+      console.log("next song");
+      console.log(body)
+    });
   }, []);
   if (!updated) {
     setSession({});

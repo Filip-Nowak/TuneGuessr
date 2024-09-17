@@ -1,5 +1,6 @@
 package com.example.tuneguessrserver.session;
 
+import com.example.tuneguessrserver.game.GameData;
 import com.example.tuneguessrserver.session.room.SessionData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -19,6 +20,9 @@ public class RedisService {
     }
     public void save(SessionData data) {
         save(data.getId(), data);
+    }
+    public void save(GameData data) {
+        save("g-"+data.getId(), data);
     }
     public Object find(String key) {
         return redisRepository.opsForValue().get(key);
