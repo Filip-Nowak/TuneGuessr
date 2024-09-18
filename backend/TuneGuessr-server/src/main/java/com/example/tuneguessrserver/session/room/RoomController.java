@@ -28,82 +28,91 @@ public class RoomController {
     private final PlayerSession playerSession;
     private final SimpMessagingTemplate messagingTemplate;
     private final GameService gameService;
+
     @MessageMapping("/room/create")
     public void createRoom(@Payload CreateRoomMessage createRoomMessage) {
         System.out.println(createRoomMessage);
-        Room room=roomService.createRoom(playerSession.getUserId(),createRoomMessage.getChallengeId(),createRoomMessage.getGameMode());
+        Room room = roomService.createRoom(playerSession.getUserId(), createRoomMessage.getChallengeId(), createRoomMessage.getGameMode());
         playerSession.setRoomId(room.getId());
 
-        List<PlayerModel> players=roomService.getPlayerModels(room.getId());
-        RoomModel model=RoomModel.builder()
+        List<PlayerModel> players = roomService.getPlayerModels(room.getId());
+        RoomModel model = RoomModel.builder()
                 .id(room.getId())
                 .hostId(room.getHostId())
                 .players(players)
+                .challengeId(room.getChallengeId())
+                .gameMode(room.getMode())
                 .build();
-        MessageModel message=MessageModel.createRoomCreationInfo(model);
-        messagingTemplate.convertAndSendToUser(playerSession.getUserId(),"/info",message);
+        MessageModel message = MessageModel.createRoomCreationInfo(model);
+        messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", message);
     }
 
     @MessageMapping("/room/session")
     public void roomSession() {
-        Room room=roomService.getRoom(playerSession.getRoomId());
-        MessageModel message=MessageModel.createRoomInfo(room);
-        messagingTemplate.convertAndSendToUser(playerSession.getUserId(),"/room",message);
+        Room room = roomService.getRoom(playerSession.getRoomId());
+        MessageModel message = MessageModel.createRoomInfo(room);
+        messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/room", message);
     }
 
     @MessageMapping("/room/join")
     public void joinRoom(@Payload String roomId) {
         System.out.println(playerSession.getUserId() + " joined room " + roomId);
-        roomService.joinRoom(playerSession.getUserId(),roomId);
-        Room room=roomService.getRoom(roomId);
+        roomService.joinRoom(playerSession.getUserId(), roomId);
+        Room room = roomService.getRoom(roomId);
         playerSession.setRoomId(roomId);
-        PlayerModel playerModel=PlayerModel.builder()
+        PlayerModel playerModel = PlayerModel.builder()
                 .id(playerSession.getUserId())
                 .nickname(playerSession.getNickname())
                 .ready(playerSession.isReady())
                 .build();
-        MessageModel newPlayerMessage=MessageModel.createNewPlayerJoinedInfo(playerModel);
-        messagingTemplate.convertAndSend("/room/"+roomId,newPlayerMessage);
+        MessageModel newPlayerMessage = MessageModel.createNewPlayerJoinedInfo(playerModel);
+        messagingTemplate.convertAndSend("/room/" + roomId, newPlayerMessage);
         RoomModel roomModel = RoomModel.builder()
                 .id(room.getId())
                 .hostId(room.getHostId())
                 .players(roomService.getPlayerModels(room.getId()))
+                .challengeId(room.getChallengeId())
+                .gameMode(room.getMode())
                 .build();
-        MessageModel joinedRoomMessage=MessageModel.createJoinedRoomInfo(roomModel);
-        messagingTemplate.convertAndSendToUser(playerSession.getUserId(),"/info",joinedRoomMessage);
+        MessageModel joinedRoomMessage = MessageModel.createJoinedRoomInfo(roomModel);
+        messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", joinedRoomMessage);
     }
 
     @MessageMapping("/room/leave")
     public void leaveRoom() {
         System.out.println(playerSession);
-        Room room=roomService.leaveRoom(playerSession.getUserId());
-        if(room==null){
-            messagingTemplate.convertAndSend("/room/"+playerSession.getRoomId(),MessageModel.createPlayerLeftInfo(Map.of("playerId",playerSession.getUserId(),"hostId","")));
+        Room room = roomService.leaveRoom(playerSession.getUserId());
+        if (room == null) {
+            messagingTemplate.convertAndSend("/room/" + playerSession.getRoomId(), MessageModel.createPlayerLeftInfo(Map.of("playerId", playerSession.getUserId(), "hostId", "")));
             playerSession.setRoomId(null);
             return;
         }
-        MessageModel message=MessageModel.createPlayerLeftInfo(Map.of("playerId",playerSession.getUserId(),"hostId",room.getHostId()));
+        MessageModel message = MessageModel.createPlayerLeftInfo(Map.of("playerId", playerSession.getUserId(), "hostId", room.getHostId()));
         playerSession.setRoomId(null);
-        messagingTemplate.convertAndSend("/room/"+room.getId(),message);
+        messagingTemplate.convertAndSend("/room/" + room.getId(), message);
     }
+
     @MessageMapping("/room/ready")
-    public void setReady(@Payload boolean ready){
+    public void setReady(@Payload boolean ready) {
+        System.out.println("Ready"
+        );
         playerSession.setReady(ready);
-        roomService.setPlayerReady(playerSession.getUserId(),ready);
-        Room room=roomService.getRoom(playerSession.getRoomId());
-        MessageModel message=MessageModel.createPlayerReadyInfo(Map.of("playerId",playerSession.getUserId(),"ready",ready));
-        messagingTemplate.convertAndSend("/room/"+room.getId(),message);
+        roomService.setPlayerReady(playerSession.getUserId(), ready);
+        Room room = roomService.getRoom(playerSession.getRoomId());
+        MessageModel message = MessageModel.createPlayerReadyInfo(Map.of("playerId", playerSession.getUserId(), "ready", ready));
+        messagingTemplate.convertAndSend("/room/" + room.getId(), message);
     }
+
     @MessageMapping("/room/start")
-    public void startGame(){
-        Room room=roomService.getRoom(playerSession.getRoomId());
-        if(room.getHostId().equals(playerSession.getUserId())){
+    public void startGame() {
+        Room room = roomService.getRoom(playerSession.getRoomId());
+        if (room.getHostId().equals(playerSession.getUserId())) {
             gameService.startGame(room.getId());
             System.out.println("Game started");
-            Object game= gameService.getGame(room.getId());
+            Object game = gameService.getGame(room.getId());
             System.out.println(game);
         }
-        messagingTemplate.convertAndSend("/room/"+room.getId(),MessageModel.createGameStartInfo());
+        messagingTemplate.convertAndSend("/room/" + room.getId(), MessageModel.createGameStartInfo());
     }
 
 }

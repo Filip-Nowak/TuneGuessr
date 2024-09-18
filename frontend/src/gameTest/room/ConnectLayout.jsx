@@ -1,0 +1,25 @@
+import React, { useRef } from 'react'
+import Online from '../online/Online';
+
+export default function ConnectLayout({setConnected}) {
+    const nicknameInput = useRef(null);
+    const handleConnect = () => {
+      console.log(nicknameInput.current.value);
+        Online.quickConnect(nicknameInput.current.value,() => {
+            setConnected(true);
+            }
+        );
+    }
+
+  return (
+    <div style={{display:"flex",width:"100%",alignItems:"center",backgroundColor:"#333",color:"white",justifyContent:"center",height:"100vh",flexDirection:"column"}}>
+    <div>
+    enter nickname:    
+    </div>
+    <input ref={nicknameInput} style={{border:"1px black solid",color:"black"}} />
+    <button style={{backgroundColor:"gray"}} onClick={handleConnect}>
+        connect
+    </button>
+    </div>
+  )
+}

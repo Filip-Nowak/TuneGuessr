@@ -10,7 +10,7 @@ import { SettingsPage } from "./components/SettingsPage.jsx";
 import TestPage from "./gameTest/TestPage.jsx";
 import GamePage from "./gameTest/GamePage.jsx";
 import PickPage from "./gameTest/PickPage.jsx";
-import RoomPage from "./gameTest/RoomPage.jsx";
+import RoomPage from "./gameTest/room/RoomPage.jsx";
 
 const router = createBrowserRouter([
   {

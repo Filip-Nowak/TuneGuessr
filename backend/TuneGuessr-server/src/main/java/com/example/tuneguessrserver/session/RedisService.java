@@ -29,7 +29,7 @@ public class RedisService {
     }
 
     public String generateRoomId() {
-        return UUID.randomUUID().toString().substring(0,10);
+        return UUID.randomUUID().toString().substring(0,8);
     }
     public String generatePlayerId() {
         return "p-"+UUID.randomUUID();
