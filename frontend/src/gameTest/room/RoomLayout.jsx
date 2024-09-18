@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Online from '../online/Online';
 import { useEffect } from 'react';
 
-export default function RoomLayout({setInRoom}) {
+export default function RoomLayout({setInRoom,setInGame}) {
     const [room, setRoom] = useState(Online.getRoom());
     const [challengeName, setChallengeName] = useState("");
     const [ready, setReady] = useState(false);
@@ -13,9 +13,11 @@ export default function RoomLayout({setInRoom}) {
             console.log(data)
             setChallengeName(data.data.name);
         })
+        
         Online.setPlayerReadyHandler(handlePlayerReady);
         Online.setNewPlayerJoinedHandler(handlePlayerJoined);
         Online.setPlayerLeftHandler(handlePlayerLeft);
+        Online.setGameStartedHandler(handleStartGame);
     }, []);
     const handlePlayerReady = () => {
         setRoom(Online.getRoom().clone());
@@ -30,6 +32,9 @@ export default function RoomLayout({setInRoom}) {
             setRoom(Online.getRoom().clone());
         }
         
+    }
+    const handleStartGame = () => {
+        setInGame(true);
     }
     console.log(room);
     console.log(Online);
@@ -80,6 +85,19 @@ export default function RoomLayout({setInRoom}) {
                     Online.ready(!ready);
                     setReady(prevState => !prevState);
                 }}>{ready?"Unready":"Ready"}</button>
+                {
+                    room.getHostId()===Online.getUserId()?
+                    <button style={
+                        {
+                            backgroundColor:"gray",
+                            color:"white",
+                            padding:"5px",
+                            border:"none"
+                        }
+                    } onClick={() => {
+                        Online.startGame();
+                    }}>Start Game</button>:""
+                }
                 </div>
         </div>
     </div>

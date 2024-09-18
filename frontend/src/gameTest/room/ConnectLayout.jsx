@@ -7,6 +7,9 @@ export default function ConnectLayout({setConnected}) {
       console.log(nicknameInput.current.value);
         Online.quickConnect(nicknameInput.current.value,() => {
             setConnected(true);
+            Online.setRoomErrorHandler((error) => {
+                console.log("room error:",error);
+            });
             }
         );
     }

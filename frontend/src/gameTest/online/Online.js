@@ -148,6 +148,7 @@ class Online {
         this.#room = null;
       }else{
         this.#room.removePlayer(message);
+        this.#room.setHostId(message.hostId);
       }
     }
     );
@@ -194,11 +195,18 @@ class Online {
   setNextSongHandler(handler) {
     this.#messageHandler.addHandler("NEXT_SONG", handler);
   }
+  setRoomErrorHandler(handler) {
+    this.#messageHandler.addHandler("ROOM_ERROR", handler);
+  }
   getUserId() {
     return this.#userId;
   }
   joinRoom(roomId) {
     console.log("joinRoom");
+    if(roomId === ""){
+      console.log("empty room id");
+      return;
+    }
     if (this.#stompClient && this.#stompClient.connected) {
       this.#stompClient.publish({
         destination: "/app/room/join",

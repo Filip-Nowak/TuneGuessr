@@ -96,4 +96,8 @@ public class ChallengeService {
         }
         return SongMapper.toModel(songs);
     }
+
+    public boolean challengeExists(long challengeId) {
+        return challengeRepository.existsById(challengeId);
+    }
 }

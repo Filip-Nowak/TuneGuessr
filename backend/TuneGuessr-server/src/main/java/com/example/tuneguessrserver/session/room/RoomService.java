@@ -1,5 +1,6 @@
 package com.example.tuneguessrserver.session.room;
 
+import com.example.tuneguessrserver.challenge.ChallengeService;
 import com.example.tuneguessrserver.game.GameMode;
 import com.example.tuneguessrserver.session.RedisService;
 import com.example.tuneguessrserver.session.user.UserSessionService;
@@ -14,9 +15,21 @@ import java.util.List;
 public class RoomService {
     private final RedisService redisService;
     private final UserSessionService userSessionService;
-
-    public Room createRoom(String hostId, long challengeId, String modeName) {
-        GameMode mode= GameMode.valueOf(modeName);
+    private final ChallengeService challengeService;
+    public Room createRoom(String hostId, long challengeId, String modeName) throws RoomException {
+        GameMode mode;
+        try {
+            mode = GameMode.valueOf(modeName);
+        } catch (IllegalArgumentException e) {
+            throw new RoomException("Invalid game mode");
+        }
+        Player player = (Player) redisService.find(hostId);
+        if (player.getRoomId() != null) {
+            throw new RoomException("Player is already in a room");
+        }
+        if(!challengeService.challengeExists(challengeId)) {
+            throw new RoomException("Challenge does not exist");
+        }
         String roomId = redisService.generateRoomId();
         LinkedList<String> list = new LinkedList<>();
         list.add(hostId);
@@ -28,7 +41,6 @@ public class RoomService {
                 .mode(mode)
                 .build();
         saveRoom(room);
-        Player player = (Player) redisService.find(hostId);
         player.setRoomId(roomId);
         userSessionService.saveUser(player);
         return room;
@@ -42,22 +54,30 @@ public class RoomService {
         redisService.save(room);
     }
 
-    public void joinRoom(String playerId, String roomId) {
+    public void joinRoom(String playerId, String roomId) throws RoomException{
+        Player player = (Player) redisService.find(playerId);
+        if (player.getRoomId() != null) {
+            throw new RoomException("Player is already in a room");
+        }
         Room room = getRoom(roomId);
+        if(room == null) {
+            throw new RoomException("Room does not exist");
+        }
         if (room.getPlayers().size() >= room.getMaxPlayers()) {
-            throw new RuntimeException("Room is full");
+            throw new RoomException("Room is full");
         }
         room.addPlayer(playerId);
         saveRoom(room);
-        Player player = (Player) redisService.find(playerId);
         player.setRoomId(roomId);
         userSessionService.saveUser(player);
     }
 
-    public Room leaveRoom(String id) {
+    public Room leaveRoom(String id) throws RoomException{
         Player player = (Player) redisService.find(id);
-        System.out.println(player);
         Room room = getRoom(player.getRoomId());
+        if(room == null) {
+            throw new RoomException("Player is not in a room");
+        }
         room.getPlayers().remove(id);
         player.setRoomId(null);
         userSessionService.saveUser(player);
@@ -98,8 +118,11 @@ public class RoomService {
         return players;
     }
 
-    public void setPlayerReady(String userId, boolean ready) {
+    public void setPlayerReady(String userId, boolean ready) throws RoomException{
         Player player = (Player) redisService.find(userId);
+        if(player.getRoomId() == null) {
+            throw new RoomException("Player is not in a room");
+        }
         player.setReady(ready);
         userSessionService.saveUser(player);
     }

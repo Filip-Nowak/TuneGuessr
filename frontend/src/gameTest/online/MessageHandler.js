@@ -9,6 +9,10 @@ export default class MessageHandler {
   }
   handle(type, message) {
     const handlers = this.handlers[type];
+    if(!handlers) {
+      throw new Error("No handler for message type: " + type
+      );
+    }
     if (handlers.length!==0) {
       for(let handler of handlers) {
         handler(message);

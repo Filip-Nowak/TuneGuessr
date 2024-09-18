@@ -17,6 +17,7 @@ export default function JoinRoomLayout({setInRoom}) {
     });
   }, []);
   const handleJoinRoom = () => {
+    if(roomIdInput.current.value === "") console.log("xd");
     Online.joinRoom(roomIdInput.current.value);
     
   };

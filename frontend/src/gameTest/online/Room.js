@@ -73,5 +73,8 @@ export default class Room{
             inGame: this.#inGame
         });
     }
+    setHostId(hostId){
+        this.#hostId = hostId;
+    }
 
 }

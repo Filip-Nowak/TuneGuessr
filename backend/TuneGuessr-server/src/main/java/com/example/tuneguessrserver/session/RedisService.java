@@ -29,7 +29,13 @@ public class RedisService {
     }
 
     public String generateRoomId() {
-        return UUID.randomUUID().toString().substring(0,8);
+        while(true) {
+            String id = UUID.randomUUID().toString().substring(0, 8);
+            if(find(id) == null) {
+                return id;
+            }
+        }
+
     }
     public String generatePlayerId() {
         return "p-"+UUID.randomUUID();
