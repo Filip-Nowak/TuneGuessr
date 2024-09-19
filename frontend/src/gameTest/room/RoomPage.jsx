@@ -10,24 +10,27 @@ export default function RoomPage() {
   const [connected, setConnected] = useState(false);
   const [inRoom, setInRoom] = useState(false);
   const [inGame, setInGame] = useState(false);
-  console.log(Online)
 
-  return <div style={{backgroundColor:"#333",height:"100vh",color:"white"}}>
-    {
-      connected?
-      <div>
-        {
-          inRoom?
-           <div> {
-              !inGame?
-              <RoomLayout setInGame={setInGame} setInRoom={setInRoom} />:
-              <GameLayout setInGame={setInGame} />
-            }</div>
-          :
-          <JoinRoomLayout setInRoom={setInRoom} />
-        }
-        </div>:
-<ConnectLayout setConnected={setConnected} />
-    }
-  </div>;
+  return (
+    <div style={{ backgroundColor: "#333", height: "100vh", color: "white" }}>
+      {connected ? (
+        <div>
+          {inRoom ? (
+            <div>
+              {" "}
+              {!inGame ? (
+                <RoomLayout setInGame={setInGame} setInRoom={setInRoom} />
+              ) : (
+                <GameLayout setInGame={setInGame} />
+              )}
+            </div>
+          ) : (
+            <JoinRoomLayout setInRoom={setInRoom} />
+          )}
+        </div>
+      ) : (
+        <ConnectLayout setConnected={setConnected} />
+      )}
+    </div>
+  );
 }

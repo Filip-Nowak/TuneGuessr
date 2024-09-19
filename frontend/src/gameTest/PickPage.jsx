@@ -94,7 +94,7 @@ export default function PickPage() {
     });
     Online.setNextSongHandler((body) => {
       console.log("next song");
-      console.log(body)
+      console.log(body);
     });
   }, []);
   if (!updated) {

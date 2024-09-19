@@ -5,6 +5,7 @@ import com.example.tuneguessrserver.game.GameService;
 import com.example.tuneguessrserver.response.websocket.CreateRoomMessage;
 import com.example.tuneguessrserver.response.websocket.MessageModel;
 import com.example.tuneguessrserver.session.PlayerSession;
+import com.example.tuneguessrserver.utils.Log;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -29,6 +30,7 @@ public class RoomController {
     @MessageMapping("/room/create")
     public void createRoom(@Payload CreateRoomMessage createRoomMessage) {
         try {
+        Log.info("Creating room with: \n\tchallenge id: " + createRoomMessage.getChallengeId() + "\n\tgame mode: " + createRoomMessage.getGameMode() +" \n\tby user: " + playerSession.getUserId() + " with nickname: " + playerSession.getNickname());
             Room room = roomService.createRoom(playerSession.getUserId(), createRoomMessage.getChallengeId(), createRoomMessage.getGameMode());
             playerSession.setRoomId(room.getId());
             List<PlayerModel> players = roomService.getPlayerModels(room.getId());
@@ -40,9 +42,11 @@ public class RoomController {
                     .gameMode(room.getMode())
                     .build();
             MessageModel message = MessageModel.createRoomCreationInfo(model);
+            Log.info("Room created with id: " + room.getId());
             messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", message);
 
         } catch (RoomException e) {
+            Log.info("Room creation failed: " + e.getMessage());
             messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", MessageModel.createRoomErrorInfo(e.getMessage()));
 
 
@@ -59,6 +63,7 @@ public class RoomController {
     @MessageMapping("/room/join")
     public void joinRoom(@Payload String roomId) {
         try {
+            Log.info("Joining room with id: " + roomId + " \n\tby user: " + playerSession.getUserId() + " with nickname: " + playerSession.getNickname());
             roomService.joinRoom(playerSession.getUserId(), roomId);
             Room room = roomService.getRoom(roomId);
             playerSession.setRoomId(roomId);
@@ -77,8 +82,10 @@ public class RoomController {
                     .gameMode(room.getMode())
                     .build();
             MessageModel joinedRoomMessage = MessageModel.createJoinedRoomInfo(roomModel);
+            Log.info("Room joined with id: " + roomId);
             messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", joinedRoomMessage);
         } catch (RoomException e) {
+            Log.info("Room joining failed: " + e.getMessage());
             messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", MessageModel.createRoomErrorInfo(e.getMessage()));
         }
     }
@@ -86,16 +93,20 @@ public class RoomController {
     @MessageMapping("/room/leave")
     public void leaveRoom() {
         try {
+            Log.info("Leaving room with id: " + playerSession.getRoomId() + "\n\tby user: " + playerSession.getUserId() + " with nickname: " + playerSession.getNickname());
             Room room = roomService.leaveRoom(playerSession.getUserId());
             if (room == null) {
                 messagingTemplate.convertAndSend("/room/" + playerSession.getRoomId(), MessageModel.createPlayerLeftInfo(Map.of("playerId", playerSession.getUserId(), "hostId", "")));
                 playerSession.setRoomId(null);
+                Log.info("User with id: " + playerSession.getUserId() + " left the room");
                 return;
             }
             MessageModel message = MessageModel.createPlayerLeftInfo(Map.of("playerId", playerSession.getUserId(), "hostId", room.getHostId()));
             playerSession.setRoomId(null);
+            Log.info("Room left with id: " + room.getId());
             messagingTemplate.convertAndSend("/room/" + room.getId(), message);
         } catch (RoomException e) {
+            Log.info("Room leaving failed: " + e.getMessage());
             messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", MessageModel.createRoomErrorInfo(e.getMessage()));
         }
     }
@@ -103,12 +114,15 @@ public class RoomController {
     @MessageMapping("/room/ready")
     public void setReady(@Payload boolean ready) {
         try {
+            Log.info("Setting ready to: " + ready + "\n\tby user: " + playerSession.getUserId() + " with nickname: " + playerSession.getNickname());
             roomService.setPlayerReady(playerSession.getUserId(), ready);
             playerSession.setReady(ready);
             Room room = roomService.getRoom(playerSession.getRoomId());
             MessageModel message = MessageModel.createPlayerReadyInfo(Map.of("playerId", playerSession.getUserId(), "ready", ready));
+            Log.info("Ready set to: " + ready);
             messagingTemplate.convertAndSend("/room/" + room.getId(), message);
         } catch (RoomException e) {
+            Log.info("Setting ready failed: " + e.getMessage());
             messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", MessageModel.createRoomErrorInfo(e.getMessage()));
         }
     }
@@ -116,6 +130,7 @@ public class RoomController {
     @MessageMapping("/room/start")
     public void startGame() {
         try {
+            Log.info("Starting game in room with id: " + playerSession.getRoomId() + "\n\tby user: " + playerSession.getUserId() + " with nickname: " + playerSession.getNickname());
             Room room = roomService.getRoom(playerSession.getRoomId());
             if (!room.getHostId().equals(playerSession.getUserId())) {
                 throw new RoomException("Only host can start the game");
@@ -126,12 +141,10 @@ public class RoomController {
                 }
             }
             gameService.startGame(room.getId());
-            System.out.println("Game started");
-            Object game = gameService.getGame(room.getId());
-            System.out.println(game);
-
+            Log.info("Game started in room with id: " + playerSession.getRoomId());
             messagingTemplate.convertAndSend("/room/" + room.getId(), MessageModel.createGameStartInfo());
         } catch (RoomException e) {
+            Log.info("Game starting failed: " + e.getMessage());
             messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", MessageModel.createGameErrorInfo(e.getMessage()));
         }
 

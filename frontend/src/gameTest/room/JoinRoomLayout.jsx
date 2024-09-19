@@ -2,24 +2,20 @@ import React, { useEffect, useRef } from "react";
 import Online from "../online/Online";
 import { set } from "react-hook-form";
 
-export default function JoinRoomLayout({setInRoom}) {
+export default function JoinRoomLayout({ setInRoom }) {
   const roomIdInput = useRef(null);
   const challengeIdInput = useRef(null);
   const challengeTypeInput = useRef(null);
   useEffect(() => {
     Online.setCreateRoomHandler(() => {
-      console.log("room created");
       setInRoom(true);
     });
     Online.setJoinedRoomHandler(() => {
-      console.log("joined room");
       setInRoom(true);
     });
   }, []);
   const handleJoinRoom = () => {
-    if(roomIdInput.current.value === "") console.log("xd");
     Online.joinRoom(roomIdInput.current.value);
-    
   };
 
   const handleCreateRoom = () => {
@@ -41,28 +37,37 @@ export default function JoinRoomLayout({setInRoom}) {
         <div
           style={{ display: "flex", justifyContent: "center", padding: "10px" }}
         >
-          <input ref={roomIdInput } placeholder="Enter Room Code" style={{ width: "100%" }} />
+          <input
+            ref={roomIdInput}
+            placeholder="Enter Room Code"
+            style={{ width: "100%", color: "black" }}
+          />
         </div>
         <div
           style={{ display: "flex", justifyContent: "center", padding: "10px" }}
         >
-          <button style={{ width: "100%", backgroundColor: "gray" }} onClick={handleJoinRoom}>
+          <button
+            style={{ width: "100%", backgroundColor: "gray" }}
+            onClick={handleJoinRoom}
+          >
             Join Room
           </button>
         </div>
       </div>
       <div style={{ border: "1px white solid", width: "30%", height: "20vh" }}>
         <input
-        ref={challengeIdInput}
-          value="4"
+          ref={challengeIdInput}
+          defaultValue="4"
           type="number"
           placeholder="Enter Challenge id"
           style={{ width: "100%", color: "black" }}
         />
-        <select style={{ width: "100%", color: "black" }} ref={challengeTypeInput}>
-          <option value="CLASSIC" selected>
-            Classic
-          </option>
+        <select
+          style={{ width: "100%", color: "black" }}
+          ref={challengeTypeInput}
+          defaultValue={"CLASSIC"}
+        >
+          <option value="CLASSIC">Classic</option>
           <option value="SURVIVAL">Survival</option>
           <option value="MULTIPLAYER">Multiplayer</option>
         </select>
