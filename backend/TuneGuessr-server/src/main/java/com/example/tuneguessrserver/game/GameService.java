@@ -1,17 +1,13 @@
 package com.example.tuneguessrserver.game;
 
 import com.example.tuneguessrserver.challenge.ChallengeService;
-import com.example.tuneguessrserver.challenge.Song;
 import com.example.tuneguessrserver.challenge.SongModel;
-import com.example.tuneguessrserver.game.classic.ClassicGame;
-import com.example.tuneguessrserver.game.classic.ClassicGameTemplate;
-import com.example.tuneguessrserver.game.classic.ClassicPlayer;
-import com.example.tuneguessrserver.game.classic.TemplateConverter;
+import com.example.tuneguessrserver.game.classic.*;
 import com.example.tuneguessrserver.session.RedisService;
 import com.example.tuneguessrserver.session.room.Room;
 import com.example.tuneguessrserver.session.room.RoomService;
 import com.example.tuneguessrserver.session.user.UserSessionService;
-import io.lettuce.core.ScriptOutputType;
+import com.example.tuneguessrserver.utils.Log;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +21,7 @@ public class GameService {
     private final UserSessionService userSessionService;
     private final ChallengeService challengeService;
     private final TemplateConverter templateConverter;
-    public void startGame(String roomId) {
+    public void loadGame(String roomId) {
         Room room = roomService.getRoom(roomId);
         GameMode mode = room.getMode();
         if (mode == GameMode.CLASSIC) {
@@ -33,49 +29,87 @@ public class GameService {
             ClassicGame classicGame = ClassicGame.builder()
                     .id(roomId)
                     .challengeId(room.getChallengeId())
-                    .songs(songs)
+                    .songs(songs
+                            .stream().map(song -> {
+                                double randomSongStart = Math.floor(Math.random() * 100) / 100;
+                                return GameSongModel.builder()
+                                        .start(randomSongStart)
+                                        .url(song.getUrl())
+                                        .build();
+                            }).toList())
                     .players(room.getPlayers().stream()
-                            .map(player -> ClassicPlayer.builder()
+                            .map(player -> GamePlayer.builder()
                                     .id(player)
                                     .build())
                             .toList())
                     .build();
-            redisService.save(classicGame.getTemplate());
-            for (ClassicPlayer player : classicGame.getPlayers()) {
+            saveGame(classicGame);
+            for (GamePlayer player : classicGame.getPlayers()) {
                 redisService.save(player);
             }
+            Game game = getGame(roomId);
+            Log.info("Game loaded2: "+game);
         }
 
     }
-    public String getCurrentSong(String roomId) {
-        ClassicGame game = getGame(roomId);
-        return game.getSongs().get(game.getCurrentSongIndex()).getUrl();
+    public void saveGame(Game game) {
+        GameTemplateHolder holder = new GameTemplateHolder(game);
+        redisService.save(holder);
+        Log.info("Game saved: "+game);
+        Game game1= getGame(game.getId());
+        Log.info("Game loaded: "+game1);
     }
+//    public String getCurrentSong(String roomId) {
+//        Game game = getGame(roomId);
+//        return game.getSongs().get(game.getCurrentSongIndex()).getUrl();
+//    }
 
-    public ClassicGame getGame(String roomId) {
-        ClassicGameTemplate template = (ClassicGameTemplate) redisService.find("g-"+roomId);
-        return templateConverter.toClassicGame(template);
+    public Game getGame(String roomId) {
+        GameTemplateHolder holder = (GameTemplateHolder) redisService.find("g-"+roomId);
+        return templateConverter.toGame(holder.getTemplate());
     }
-    public ClassicPlayer getPlayer(String userId) {
-        return (ClassicPlayer) redisService.find("g-"+userId);
+    public GamePlayer getPlayer(String userId) {
+        return (GamePlayer) redisService.find("g-"+userId);
     }
 
     public void setReady(String userId) {
-        ClassicPlayer player = getPlayer(userId);
-        System.out.println(player);
+        GamePlayer player = getPlayer(userId);
         player.setReady(true);
-        System.out.println(player);
         redisService.save(player);
     }
 
     public boolean checkAllReady(String roomId) {
-        ClassicGame game = getGame(roomId);
-        System.out.println(game);
-        for (ClassicPlayer player : game.getPlayers()) {
+        Game game = getGame(roomId);
+        for (GamePlayer player : game.getPlayers()) {
             if (!player.isReady()) {
                 return false;
             }
         }
         return true;
+    }
+
+    public void endGame(String id) {
+        //todo end game
+    }
+
+    public GameLog startGame(String roomId) {
+        Game game = getGame(roomId);
+        GameLog log=game.start();
+        saveGame(game);
+        return log;
+    }
+
+    public GameLog nextSong(String playerId,String roomId) {
+        Game game = getGame(roomId);
+        GameLog log=game.handleNext(playerId,roomId);
+        saveGame(game);
+        return log;
+    }
+
+    public GameLog guess(String userId, String roomId, String guess, boolean title) {
+        Game game = getGame(roomId);
+        GameLog log=game.handleGuess(userId,guess,title);
+        saveGame(game);
+        return log;
     }
 }

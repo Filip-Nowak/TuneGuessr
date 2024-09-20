@@ -16,7 +16,7 @@ class Online {
    */
   #messageHandler = new MessageHandler();
   async createUser() {
-    const response = await fetch("http://localhost:8080/create-user");
+    const response = await fetch("https://localhost:8080/create-user");
     const data = await response.json();
     this.#userId = data.data.userId;
   }
@@ -43,7 +43,7 @@ class Online {
   handleSessionChange;
   async quickConnect(nickname, onConnect) {
     await this.createUser();
-    const socket = new SockJS("http://localhost:8080/ws");
+    const socket = new SockJS("https://localhost:8080/ws");
     const client = new Client({
       webSocketFactory: () => socket,
       onConnect: () => {
@@ -198,14 +198,13 @@ class Online {
     this.#sendMessage("/app/room/ready", ready.toString());
   }
   startGame() {
-    this.#sendMessage("/app/game/start", "");
+    this.#sendMessage("/app/room/start", "");
   }
-  gameReady() {
-    if (this.#stompClient && this.#stompClient.connected) {
-      this.#stompClient.publish({
-        destination: "/app/game/ready",
-      });
-    }
+  readyToNext() {
+    this.#sendMessage("/app/game/ready-to-next", "");
+  }
+  readyToStart() {
+    this.#sendMessage("/app/game/ready-to-start", "");
   }
   getRoom() {
     return this.#room;

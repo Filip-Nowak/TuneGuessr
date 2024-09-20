@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Online from "../online/Online";
 
 export default function ConnectLayout({ setConnected }) {

@@ -1,7 +1,10 @@
 package com.example.tuneguessrserver.response.websocket;
 
+import com.example.tuneguessrserver.game.GameSongModel;
 import lombok.Builder;
 import lombok.Data;
+
+import java.util.Map;
 
 @Data
 @Builder
@@ -41,8 +44,13 @@ public class MessageModel {
         return MessageModel.builder().info(MessageInfo.GAME_START).message(null).build();
     }
 
-    public static MessageModel createNextSongInfo(String songUrl) {
-        return MessageModel.builder().info(MessageInfo.NEXT_SONG).message(songUrl).build();
+    public static MessageModel createNextSongInfo(GameSongModel song) {
+        return MessageModel.builder().info(MessageInfo.NEXT_SONG).message(
+                Map.of(
+                        "url", song.getUrl(),
+                        "start", song.getStart()
+                )
+        ).build();
     }
 
     public static MessageModel createRoomErrorInfo(String error) {
@@ -51,5 +59,17 @@ public class MessageModel {
 
     public static MessageModel createGameErrorInfo(String error) {
         return MessageModel.builder().info(MessageInfo.GAME_ERROR).message(error).build();
+    }
+
+    public static MessageModel createFinishInfo() {
+        return MessageModel.builder().info(MessageInfo.FINISHED).message(null).build();
+    }
+
+    public static MessageModel createCorrectGuessInfo(String title) {
+        return MessageModel.builder().info(MessageInfo.CORRECT_GUESS).message(title).build();
+    }
+
+    public static MessageModel createWrongGuessInfo() {
+        return MessageModel.builder().info(MessageInfo.WRONG_GUESS).message(null).build();
     }
 }

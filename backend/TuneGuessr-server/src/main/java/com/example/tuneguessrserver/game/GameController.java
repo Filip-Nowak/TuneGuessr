@@ -2,9 +2,11 @@ package com.example.tuneguessrserver.game;
 
 import com.example.tuneguessrserver.response.websocket.MessageModel;
 import com.example.tuneguessrserver.session.PlayerSession;
+import com.example.tuneguessrserver.utils.Log;
 import io.lettuce.core.ScriptOutputType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
@@ -16,16 +18,42 @@ public class GameController {
     private final GameService gameService;
     private final PlayerSession playerSession;
     private final SimpMessagingTemplate messagingTemplate;
-    @MessageMapping("/game/ready")
+
+    @MessageMapping("/game/next")
     public void ready() {
-        System.out.println("Ready");
         String roomId = playerSession.getRoomId();
-        gameService.setReady(playerSession.getUserId());
-        boolean allReady = gameService.checkAllReady(roomId);
-        if (allReady) {
-            System.out.println("All ready");
-            String songUrl = gameService.getCurrentSong(roomId);
-            messagingTemplate.convertAndSend("/room/"+roomId, MessageModel.createNextSongInfo(songUrl));
+        GameLog log = gameService.nextSong(playerSession.getUserId(),roomId);
+        if (log.isPrivateMessage()) {
+            messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", (log.getMessage()));
+        } else {
+            messagingTemplate.convertAndSend("/room/" + roomId, (log.getMessage()));
+        }
+    }
+
+    @MessageMapping("/game/ready-to-start")
+    public void startGame() {
+        String roomId = playerSession.getRoomId();
+        synchronized (roomId.intern()) {
+            gameService.setReady(playerSession.getUserId());
+            boolean allReady = gameService.checkAllReady(roomId);
+            if (allReady) {
+                GameLog log = gameService.startGame(roomId);
+                if (log.isPrivateMessage()) {
+                    messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", (log.getMessage()));
+                } else {
+                    messagingTemplate.convertAndSend("/room/" + roomId, (log.getMessage()));
+                }
+            }
+        }
+    }
+    @MessageMapping("/game/guess")
+    public void guess(@Payload GuessModel guessModel){
+        String roomId = playerSession.getRoomId();
+        GameLog log = gameService.guess(playerSession.getUserId(),roomId,guessModel.getGuess(),guessModel.isTitle());
+        if (log.isPrivateMessage()) {
+            messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", (log.getMessage()));
+        } else {
+            messagingTemplate.convertAndSend("/room/" + roomId, (log.getMessage()));
         }
 
     }

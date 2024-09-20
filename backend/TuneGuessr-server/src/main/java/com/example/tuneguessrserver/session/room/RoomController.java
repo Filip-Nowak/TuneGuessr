@@ -1,6 +1,7 @@
 package com.example.tuneguessrserver.session.room;
 
 import com.example.tuneguessrserver.challenge.ChallengeService;
+import com.example.tuneguessrserver.game.Game;
 import com.example.tuneguessrserver.game.GameService;
 import com.example.tuneguessrserver.response.websocket.CreateRoomMessage;
 import com.example.tuneguessrserver.response.websocket.MessageModel;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 @Controller
@@ -140,9 +144,17 @@ public class RoomController {
                     throw new RoomException("Not all players are ready");
                 }
             }
-            gameService.startGame(room.getId());
             Log.info("Game started in room with id: " + playerSession.getRoomId());
+            gameService.loadGame(room.getId());
             messagingTemplate.convertAndSend("/room/" + room.getId(), MessageModel.createGameStartInfo());
+            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+            scheduler.schedule(() -> {
+                boolean allReady = gameService.checkAllReady(room.getId());
+                if (!allReady) {
+                    messagingTemplate.convertAndSend("/room/" + room.getId(), MessageModel.createGameErrorInfo("Not all players are ready"));
+                    gameService.endGame(room.getId());
+                }
+            }, 5, TimeUnit.SECONDS);
         } catch (RoomException e) {
             Log.info("Game starting failed: " + e.getMessage());
             messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", MessageModel.createGameErrorInfo(e.getMessage()));

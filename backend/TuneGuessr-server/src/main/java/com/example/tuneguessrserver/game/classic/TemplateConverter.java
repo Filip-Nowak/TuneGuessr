@@ -1,6 +1,7 @@
 package com.example.tuneguessrserver.game.classic;
 
-import com.example.tuneguessrserver.game.GameService;
+import com.example.tuneguessrserver.game.Game;
+import com.example.tuneguessrserver.game.GameMode;
 import com.example.tuneguessrserver.session.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,8 +22,15 @@ public class TemplateConverter {
             System.out.println("g-"+id);
             Object player = gameService.find("g-"+id);
             System.out.println(player);
-            game.getPlayers().add((ClassicPlayer) gameService.find("g-"+id));
+            game.getPlayers().add((GamePlayer) gameService.find("g-"+id));
         }
         return game;
+    }
+
+    public Game toGame(GameTemplate template) {
+        if (template.getMode() == GameMode.CLASSIC) {
+            return toClassicGame((ClassicGameTemplate) template);
+        }
+        return null;
     }
 }
