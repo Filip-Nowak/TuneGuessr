@@ -35,6 +35,8 @@ public class GameService {
                                 return GameSongModel.builder()
                                         .start(randomSongStart)
                                         .url(song.getUrl())
+                                        .artist(song.getArtist())
+                                        .title(song.getTitle())
                                         .build();
                             }).toList())
                     .players(room.getPlayers().stream()
@@ -55,9 +57,9 @@ public class GameService {
     public void saveGame(Game game) {
         GameTemplateHolder holder = new GameTemplateHolder(game);
         redisService.save(holder);
-        Log.info("Game saved: "+game);
-        Game game1= getGame(game.getId());
-        Log.info("Game loaded: "+game1);
+        for(GamePlayer player:game.getPlayers()){
+            redisService.save(player);
+        }
     }
 //    public String getCurrentSong(String roomId) {
 //        Game game = getGame(roomId);
@@ -100,6 +102,7 @@ public class GameService {
     }
 
     public GameLog nextSong(String playerId,String roomId) {
+        Log.info("Next song");
         Game game = getGame(roomId);
         GameLog log=game.handleNext(playerId,roomId);
         saveGame(game);

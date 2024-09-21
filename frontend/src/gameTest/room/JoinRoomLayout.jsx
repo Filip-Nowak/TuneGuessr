@@ -57,7 +57,7 @@ export default function JoinRoomLayout({ setInRoom }) {
       <div style={{ border: "1px white solid", width: "30%", height: "20vh" }}>
         <input
           ref={challengeIdInput}
-          defaultValue="4"
+          defaultValue="1"
           type="number"
           placeholder="Enter Challenge id"
           style={{ width: "100%", color: "black" }}

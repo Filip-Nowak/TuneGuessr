@@ -4,6 +4,7 @@ import com.example.tuneguessrserver.challenge.SongModel;
 import com.example.tuneguessrserver.game.Game;
 import com.example.tuneguessrserver.game.GameLog;
 import com.example.tuneguessrserver.game.GameSongModel;
+import com.example.tuneguessrserver.game.GuessModel;
 import com.example.tuneguessrserver.response.websocket.MessageModel;
 import com.example.tuneguessrserver.utils.Log;
 import lombok.AllArgsConstructor;
@@ -47,8 +48,12 @@ public class ClassicGame extends Game {
                 .findFirst()
                 .orElseThrow();
         if (player.getCurrentSongIndex() < songs.size()) {
+            player.setCurrentSongIndex(player.getCurrentSongIndex() + 1);
             GameSongModel song = songs.get(player.getCurrentSongIndex());
             MessageModel messageModel = MessageModel.createNextSongInfo(song);
+            //todo change current index
+
+
             return GameLog.builder()
                     .message(messageModel)
                     .privateMessage(true)
@@ -79,10 +84,16 @@ public class ClassicGame extends Game {
                 .orElseThrow();
         GameSongModel song = songs.get(player.getCurrentSongIndex());
         if(title){
+            Log.info("Comparing title " + guess+"with "+song.getTitle());
             if (song.getTitle().equalsIgnoreCase(guess)) {
-                player.setCurrentSongIndex(player.getCurrentSongIndex() + 1);
                 return GameLog.builder()
-                        .message(MessageModel.createCorrectGuessInfo(song.getTitle()))
+                        .message(MessageModel.createCorrectGuessInfo(
+                                GuessModel.builder()
+                                        .title(true)
+                                        .guess(song.getTitle())
+                                        .points(600)
+                                        .build()
+                        ))
                         .privateMessage(true)
                         .build();
             }else{
@@ -92,10 +103,16 @@ public class ClassicGame extends Game {
                         .build();
             }
         }else{
+            Log.info("Comparing artist " + guess+"with "+song.getArtist());
             if (song.getArtist().equalsIgnoreCase(guess)) {
-                player.setCurrentSongIndex(player.getCurrentSongIndex() + 1);
                 return GameLog.builder()
-                        .message(MessageModel.createCorrectGuessInfo(song.getArtist()))
+                        .message(MessageModel.createCorrectGuessInfo(
+                                GuessModel.builder()
+                                        .title(false)
+                                        .guess(song.getArtist())
+                                        .points(400)
+                                        .build()
+                        ))
                         .privateMessage(true)
                         .build();
             }else{

@@ -161,6 +161,12 @@ class Online {
   setRoomErrorHandler(handler) {
     this.#messageHandler.addHandler("ROOM_ERROR", handler);
   }
+  setCorrectGuessHandler(handler) {
+    this.#messageHandler.addHandler("CORRECT_GUESS", handler);
+  }
+  setWrongGuessHandler(handler) {
+    this.#messageHandler.addHandler("WRONG_GUESS", handler);
+  }
   getUserId() {
     return this.#userId;
   }
@@ -200,8 +206,8 @@ class Online {
   startGame() {
     this.#sendMessage("/app/room/start", "");
   }
-  readyToNext() {
-    this.#sendMessage("/app/game/ready-to-next", "");
+  next() {
+    this.#sendMessage("/app/game/next", "");
   }
   readyToStart() {
     this.#sendMessage("/app/game/ready-to-start", "");
@@ -219,6 +225,18 @@ class Online {
     } else {
       console.log("not connected");
     }
+  }
+  guessArtist(artist) {
+    this.#sendMessage("/app/game/guess", JSON.stringify({
+      guess: artist,
+      title:false
+  }));
+  }
+  guessTitle(title) {
+    this.#sendMessage("/app/game/guess", JSON.stringify({
+      guess: title,
+      title:true
+    }));
   }
 }
 export default new Online();

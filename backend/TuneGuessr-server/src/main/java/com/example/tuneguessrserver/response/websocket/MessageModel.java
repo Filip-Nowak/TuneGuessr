@@ -65,8 +65,8 @@ public class MessageModel {
         return MessageModel.builder().info(MessageInfo.FINISHED).message(null).build();
     }
 
-    public static MessageModel createCorrectGuessInfo(String title) {
-        return MessageModel.builder().info(MessageInfo.CORRECT_GUESS).message(title).build();
+    public static MessageModel createCorrectGuessInfo(Object guess) {
+        return MessageModel.builder().info(MessageInfo.CORRECT_GUESS).message(guess).build();
     }
 
     public static MessageModel createWrongGuessInfo() {

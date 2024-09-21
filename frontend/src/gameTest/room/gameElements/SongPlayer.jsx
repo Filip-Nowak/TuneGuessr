@@ -1,13 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { set } from "react-hook-form";
 import YouTube from "react-youtube";
+import Online from "../../online/Online";
 
-export default function SongPlayer({ url, startingTime = 0.3 }) {
+export default function SongPlayer({ url, startingTime,title,artist}) {
   const [playing, setPlaying] = useState(false);
   const playerRef = useRef(null);
   const [time, setTime] = useState(0);
   const timer = useRef(null);
   const [firstTry, setFirstTry] = useState(true);
+  const [loadingVideo, setLoadingVideo] = useState(true);
+  const guessArtistRef = useRef(null);
+  const guessTitleRef = useRef(null);
   const opts = {
     height: "390",
     width: "640",
@@ -15,17 +19,23 @@ export default function SongPlayer({ url, startingTime = 0.3 }) {
       autoplay: 0,
     },
   };
+  useEffect(() => {
+    setLoadingVideo(true);
+    setPlaying(false);
+    setFirstTry(true);
+  }, [url]);
+
 
   const onPlayerReady = (event) => {
     playerRef.current = event.target;
-    const videoLength = playerRef.current.getDuration();
-    playerRef.current.seekTo(startingTime * videoLength, true);
-    playerRef.current.cueVideoById(url.split("v=")[1]);
+    playerRef.current.mute();
+      const videoLength = playerRef.current.getDuration();
+      playerRef.current.seekTo(startingTime * videoLength, true);
+    playerRef.current.playVideo();
   };
   const playVideo = () => {
     setPlaying(true);
     const videoLength = playerRef.current.getDuration();
-
     playerRef.current.seekTo(startingTime * videoLength, true);
     playerRef.current.playVideo();
     if (!firstTry) {
@@ -42,35 +52,46 @@ export default function SongPlayer({ url, startingTime = 0.3 }) {
     playerRef.current.pauseVideo();
   };
 
+  const guessArtist = () => {
+    console.log("dupa") 
+    console.log(guessArtistRef.current.value);
+    Online.guessArtist(guessArtistRef.current.value);
+  }
+  const guessTitle = () => {
+    Online.guessTitle(guessTitleRef.current.value);
+  }
+
   return (
     <div>
-      <div style={{ display: "none" }}>
+      <div style={{ display: "" }}>
+        {
+          url ? (
         <YouTube
+        key={url}
           videoId={url.split("v=")[1]}
           opts={opts}
           onReady={onPlayerReady}
           onPlay={() => {
-            if (firstTry) {
-              timer.current = setInterval(() => {
-                setTime((prev) => {
-                  return prev + 1;
-                });
-              }, 100);
+            if(firstTry){
+              playerRef.current.pauseVideo();
+              playerRef.current.unMute();
               setFirstTry(false);
+              setLoadingVideo(false);
             }
           }}
           onPause={() => setPlaying(false)}
         />
+        ):""}
       </div>
       <div>time: {time}</div>
       <div
         style={{
-          height: "50vh",
+          height: "10vh",
           display: "flex",
           textAlign: "center",
           justifyContent: "center",
           alignItems: "center",
-          fontSize: "8rem",
+          fontSize: "2rem",
         }}
       >
         {playing ? (
@@ -82,8 +103,29 @@ export default function SongPlayer({ url, startingTime = 0.3 }) {
         )}
       </div>
       <div>
-        <button onClick={playVideo}>Play</button>
-        <button onClick={pauseVideo}>Pause</button>
+        {
+          loadingVideo ? (
+            <div>Loading Video...</div>
+          ) : (
+            <div>
+              {
+                playing ? (
+                  <button onClick={pauseVideo}>Pause</button>
+                ) : (
+                  <button onClick={playVideo}>Play</button>
+                )
+              }
+            </div>
+          ) 
+        }
+      </div>
+      <div>
+        artist: {
+          artist!==null?<div>{artist}<br/><br/></div>:(
+          <div><input style={{color:"black"}}  ref={guessArtistRef}/><button onClick={guessArtist}>guess</button> <br/><br/></div>)}
+        title: {
+          title!==null?<div>{title}<br/></div>:(
+          <div><input style={{color:"black"}} ref={guessTitleRef}/><button onClick={guessTitle}>guess</button></div>)}
       </div>
     </div>
   );
