@@ -18,7 +18,7 @@ export default class Room {
     }
   }
   addPlayer(player) {
-    this.#players.push(player);
+    this.#players.push({ ...player, score: 0, time: 0, finished: false });
   }
   removePlayer(player) {
     for (let i = 0; i < this.#players.length; i++) {
@@ -69,5 +69,15 @@ export default class Room {
   }
   setHostId(hostId) {
     this.#hostId = hostId;
+  }
+  setPlayerFinished(playerId, score, time) {
+    for (let i = 0; i < this.#players.length; i++) {
+      if (this.#players[i].id === playerId) {
+        this.#players[i].score = score;
+        this.#players[i].time = time;
+        this.#players[i].finished = true;
+        break;
+      }
+    }
   }
 }

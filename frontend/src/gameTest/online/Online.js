@@ -132,6 +132,10 @@ class Online {
       this.#userId = message.userId;
       this.#nickname = message.nickname;
     });
+    this.#messageHandler.addHandler("FINISHED", (message) => {
+      console.log("player finished", message);
+      this.#room.setPlayerFinished(message.id, message.score, message.time);
+    });
   }
 
   setSessionUpdateHandler(handler) {
@@ -166,6 +170,12 @@ class Online {
   }
   setWrongGuessHandler(handler) {
     this.#messageHandler.addHandler("WRONG_GUESS", handler);
+  }
+  setAnswerHandler(handler) {
+    this.#messageHandler.addHandler("ANSWER", handler);
+  }
+  setFinishedHandler(handler) {
+    this.#messageHandler.addHandler("FINISHED", handler);
   }
   getUserId() {
     return this.#userId;
@@ -226,17 +236,25 @@ class Online {
       console.log("not connected");
     }
   }
-  guessArtist(artist) {
-    this.#sendMessage("/app/game/guess", JSON.stringify({
-      guess: artist,
-      title:false
-  }));
+  guessArtist(artist, time) {
+    this.#sendMessage(
+      "/app/game/guess",
+      JSON.stringify({
+        guess: artist,
+        title: false,
+        time: time,
+      })
+    );
   }
-  guessTitle(title) {
-    this.#sendMessage("/app/game/guess", JSON.stringify({
-      guess: title,
-      title:true
-    }));
+  guessTitle(title, time) {
+    this.#sendMessage(
+      "/app/game/guess",
+      JSON.stringify({
+        guess: title,
+        title: true,
+        time: time,
+      })
+    );
   }
 }
 export default new Online();

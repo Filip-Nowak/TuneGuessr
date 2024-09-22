@@ -47,7 +47,8 @@ public class ClassicGame extends Game {
                 .filter(p -> p.getId().equals(playerId))
                 .findFirst()
                 .orElseThrow();
-        if (player.getCurrentSongIndex() < songs.size()) {
+        if (player.getCurrentSongIndex() < songs.size()-1) {
+            player.setTries(0);
             player.setCurrentSongIndex(player.getCurrentSongIndex() + 1);
             GameSongModel song = songs.get(player.getCurrentSongIndex());
             MessageModel messageModel = MessageModel.createNextSongInfo(song);
@@ -59,9 +60,10 @@ public class ClassicGame extends Game {
                     .privateMessage(true)
                     .build();
         }
+
         return GameLog.builder()
-                .message(MessageModel.createFinishInfo())
-                .privateMessage(true)
+                .message(MessageModel.createFinishInfo(player.getId(),player.getScore(),player.getTime()))
+                .privateMessage(false)
                 .build();
     }
 
@@ -77,26 +79,39 @@ public class ClassicGame extends Game {
     }
 
     @Override
-    public GameLog handleGuess(String userId, String guess,boolean title) {
+    public GameLog handleGuess(String userId, String guess,boolean title,int time) {
         GamePlayer player = players.stream()
                 .filter(p -> p.getId().equals(userId))
                 .findFirst()
                 .orElseThrow();
+        player.setTime(time);
         GameSongModel song = songs.get(player.getCurrentSongIndex());
         if(title){
             Log.info("Comparing title " + guess+"with "+song.getTitle());
             if (song.getTitle().equalsIgnoreCase(guess)) {
+                int points = player.getTries()==0?600:600/(2*player.getTries());
+                player.setScore(player.getScore()+points);
+                Log.info("Player guessed, score: "+player.getScore());
                 return GameLog.builder()
                         .message(MessageModel.createCorrectGuessInfo(
                                 GuessModel.builder()
                                         .title(true)
                                         .guess(song.getTitle())
-                                        .points(600)
+                                        .points(points)
                                         .build()
                         ))
                         .privateMessage(true)
                         .build();
             }else{
+                player.setTries(player.getTries()+1);
+                if(player.getTries()>2){
+                    Log.info("Player guessed wrong third time, score: "+player.getScore());
+                    return GameLog.builder()
+                            .message(MessageModel.createAnswerInfo(song.getTitle(),song.getArtist()))
+                            .privateMessage(true)
+                            .build();
+                }
+                Log.info("Player guessed wrong, score: "+player.getScore());
                 return GameLog.builder()
                         .message(MessageModel.createWrongGuessInfo())
                         .privateMessage(true)
@@ -105,17 +120,29 @@ public class ClassicGame extends Game {
         }else{
             Log.info("Comparing artist " + guess+"with "+song.getArtist());
             if (song.getArtist().equalsIgnoreCase(guess)) {
+                int points = player.getTries()==0?400:400/(2*player.getTries());
+                player.setScore(player.getScore()+points);
+                Log.info("Player guessed, score: "+player.getScore());
                 return GameLog.builder()
                         .message(MessageModel.createCorrectGuessInfo(
                                 GuessModel.builder()
                                         .title(false)
                                         .guess(song.getArtist())
-                                        .points(400)
+                                        .points(points)
                                         .build()
                         ))
                         .privateMessage(true)
                         .build();
             }else{
+                player.setTries(player.getTries()+1);
+                if(player.getTries()>2){
+                    Log.info("Player guessed wrong third time, score: "+player.getScore());
+                    return GameLog.builder()
+                            .message(MessageModel.createAnswerInfo(song.getTitle(),song.getArtist()))
+                            .privateMessage(true)
+                            .build();
+                }
+                Log.info("Player guessed wrong, score: "+player.getScore());
                 return GameLog.builder()
                         .message(MessageModel.createWrongGuessInfo())
                         .privateMessage(true)

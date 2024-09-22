@@ -49,7 +49,7 @@ public class GameController {
     @MessageMapping("/game/guess")
     public void guess(@Payload GuessModel guessModel){
         String roomId = playerSession.getRoomId();
-        GameLog log = gameService.guess(playerSession.getUserId(),roomId,guessModel.getGuess(),guessModel.isTitle());
+        GameLog log = gameService.guess(playerSession.getUserId(),roomId,guessModel.getGuess(),guessModel.isTitle(),guessModel.getTime());
         if (log.isPrivateMessage()) {
             messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", (log.getMessage()));
         } else {

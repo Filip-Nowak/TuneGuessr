@@ -109,9 +109,9 @@ public class GameService {
         return log;
     }
 
-    public GameLog guess(String userId, String roomId, String guess, boolean title) {
+    public GameLog guess(String userId, String roomId, String guess, boolean title, int time) {
         Game game = getGame(roomId);
-        GameLog log=game.handleGuess(userId,guess,title);
+        GameLog log=game.handleGuess(userId,guess,title,time);
         saveGame(game);
         return log;
     }

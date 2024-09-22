@@ -9,4 +9,5 @@ public class GuessModel {
     private boolean title;
     private String guess;
     private int points;
+    private int time;
 }

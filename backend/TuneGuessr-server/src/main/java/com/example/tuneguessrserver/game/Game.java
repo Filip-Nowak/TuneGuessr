@@ -12,7 +12,7 @@ public abstract class Game {
     protected GameMode mode;
 
     public abstract GameLog start();
-    public abstract GameLog handleGuess(String userId, String guess,boolean title);
+    public abstract GameLog handleGuess(String userId, String guess,boolean title,int time);
     protected List<GamePlayer> players=List.of();
 
     public abstract GameTemplate getTemplate();

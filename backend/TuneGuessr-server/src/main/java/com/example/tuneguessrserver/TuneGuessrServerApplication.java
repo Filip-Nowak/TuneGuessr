@@ -285,7 +285,7 @@ public class TuneGuessrServerApplication {
             "Perfect;Wszystko ma swój czas;https://www.youtube.com/watch?v=kZuYff81-Fc",
             "Republika;Mamona;https://www.youtube.com/watch?v=-R7qqsT6-T8",
             "Obywatel G.C.;Nie pytaj o Polskę;https://www.youtube.com/watch?v=cSjk6phf3iY",
-            "Obtwatel G.C.;Tak tak to ja;https://www.youtube.com/watch?v=sOrXHaOqLL8",
+            "Obywatel G.C.;Tak tak to ja;https://www.youtube.com/watch?v=sOrXHaOqLL8",
             "Lady Pank;Kryzysowa narzeczona;https://www.youtube.com/watch?v=SPnEpzUy2V4"
     };
 

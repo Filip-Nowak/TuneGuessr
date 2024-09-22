@@ -61,8 +61,14 @@ public class MessageModel {
         return MessageModel.builder().info(MessageInfo.GAME_ERROR).message(error).build();
     }
 
-    public static MessageModel createFinishInfo() {
-        return MessageModel.builder().info(MessageInfo.FINISHED).message(null).build();
+    public static MessageModel createFinishInfo(String id, int score, long time) {
+        return MessageModel.builder().info(MessageInfo.FINISHED).message(
+                Map.of(
+                        "id", id,
+                        "score", score,
+                        "time", time
+                )
+        ).build();
     }
 
     public static MessageModel createCorrectGuessInfo(Object guess) {
@@ -71,5 +77,9 @@ public class MessageModel {
 
     public static MessageModel createWrongGuessInfo() {
         return MessageModel.builder().info(MessageInfo.WRONG_GUESS).message(null).build();
+    }
+
+    public static MessageModel createAnswerInfo(String title, String artist) {
+        return MessageModel.builder().info(MessageInfo.ANSWER).message(Map.of("title", title, "artist", artist)).build();
     }
 }

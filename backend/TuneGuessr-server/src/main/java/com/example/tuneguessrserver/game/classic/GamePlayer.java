@@ -16,5 +16,7 @@ public class GamePlayer implements GameData {
     private long time=0;
     private boolean ready=false;
     private int currentSongIndex=0;
+    private int tries=0;
+
 
 }
