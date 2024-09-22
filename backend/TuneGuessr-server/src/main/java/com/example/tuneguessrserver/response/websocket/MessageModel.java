@@ -82,4 +82,8 @@ public class MessageModel {
     public static MessageModel createAnswerInfo(String title, String artist) {
         return MessageModel.builder().info(MessageInfo.ANSWER).message(Map.of("title", title, "artist", artist)).build();
     }
+
+    public static MessageModel createEndInfo() {
+        return MessageModel.builder().info(MessageInfo.END_GAME).message(null).build();
+    }
 }

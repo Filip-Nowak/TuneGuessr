@@ -57,4 +57,14 @@ public class GameController {
         }
 
     }
+    @MessageMapping("/game/end")
+    public void endGame() {
+        String roomId = playerSession.getRoomId();
+        GameLog log = gameService.endGame(roomId);
+        if (log.isPrivateMessage()) {
+            messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", (log.getMessage()));
+        } else {
+            messagingTemplate.convertAndSend("/room/" + roomId, (log.getMessage()));
+        }
+    }
 }

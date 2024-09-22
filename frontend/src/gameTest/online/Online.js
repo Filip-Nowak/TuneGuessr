@@ -136,6 +136,15 @@ class Online {
       console.log("player finished", message);
       this.#room.setPlayerFinished(message.id, message.score, message.time);
     });
+    this.#messageHandler.addHandler("END_GAME", (message) => {
+      this.#room.setInGame(false);
+      for (let player of this.#room.getPlayers()) {
+        player.finished = false;
+        player.score = 0;
+        player.time = 0;
+        player.ready = false;
+      }
+    });
   }
 
   setSessionUpdateHandler(handler) {
@@ -176,6 +185,9 @@ class Online {
   }
   setFinishedHandler(handler) {
     this.#messageHandler.addHandler("FINISHED", handler);
+  }
+  setGameEndHandler(handler) {
+    this.#messageHandler.addHandler("END_GAME", handler);
   }
   getUserId() {
     return this.#userId;
@@ -255,6 +267,12 @@ class Online {
         time: time,
       })
     );
+  }
+  removeHandler(info, handler) {
+    this.#messageHandler.removeHandler(info, handler);
+  }
+  endGame() {
+    this.#sendMessage("/app/game/end", "");
   }
 }
 export default new Online();

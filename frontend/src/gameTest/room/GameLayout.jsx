@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Online from "../online/Online";
 import SongPlayer from "./gameElements/SongPlayer";
 import { set } from "react-hook-form";
+import FinishedView from "./gameElements/FinishedView";
 
 export default function GameLayout() {
   const [url, setUrl] = useState(null);
@@ -41,31 +42,38 @@ export default function GameLayout() {
       setArtist(answer.artist);
       setLives(0);
     });
-    Online.setFinishedHandler((msg) => {
-      const players = Online.getRoom().getPlayers();
-      console.log(msg);
-      console.log(msg.id, Online.getUserId());
-      console.log();
-      if (msg.id === Online.getUserId()) {
-        setFinished(true);
-        setPoints(msg.score);
-        setTime(msg.time);
-      }
-    });
+    Online.setFinishedHandler(handleFinished);
+
     Online.readyToStart();
   }, []);
+  const handleFinished = (msg) => {
+    const players = Online.getRoom().getPlayers();
+    console.log(msg);
+    console.log(msg.id, Online.getUserId());
+    console.log();
+    if (msg.id === Online.getUserId()) {
+      setFinished(true);
+      setPoints(msg.score);
+      setTime(msg.time);
+    }
+  };
+
   const handleNext = () => {
     Online.next();
+  };
+  const returnToLobby = () => {
+    Online.endGame();
   };
   return (
     <div>
       GameLayout
       {finished ? (
-        <div>
-          finished <br />
-          points: {points}
-          time: {time}
-        </div>
+        <FinishedView
+          points={points}
+          time={time}
+          handleFinished={handleFinished}
+          returnToLobby={returnToLobby}
+        />
       ) : (
         <div>
           <br /> points: {points}
@@ -76,6 +84,7 @@ export default function GameLayout() {
             startingTime={startingTime}
             title={title}
             artist={artist}
+            setStartingTime={setStartingTime}
           />
           {title !== null && artist !== null ? (
             <button onClick={handleNext}>Next</button>

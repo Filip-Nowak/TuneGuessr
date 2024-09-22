@@ -3,7 +3,9 @@ package com.example.tuneguessrserver.game;
 import com.example.tuneguessrserver.challenge.ChallengeService;
 import com.example.tuneguessrserver.challenge.SongModel;
 import com.example.tuneguessrserver.game.classic.*;
+import com.example.tuneguessrserver.response.websocket.MessageModel;
 import com.example.tuneguessrserver.session.RedisService;
+import com.example.tuneguessrserver.session.room.Player;
 import com.example.tuneguessrserver.session.room.Room;
 import com.example.tuneguessrserver.session.room.RoomService;
 import com.example.tuneguessrserver.session.user.UserSessionService;
@@ -25,7 +27,7 @@ public class GameService {
         Room room = roomService.getRoom(roomId);
         GameMode mode = room.getMode();
         if (mode == GameMode.CLASSIC) {
-            List<SongModel> songs = challengeService.getRandomSongs(room.getChallengeId(), 20);
+            List<SongModel> songs = challengeService.getRandomSongs(room.getChallengeId(), 3);
             ClassicGame classicGame = ClassicGame.builder()
                     .id(roomId)
                     .challengeId(room.getChallengeId())
@@ -90,8 +92,23 @@ public class GameService {
         return true;
     }
 
-    public void endGame(String id) {
+    public GameLog endGame(String id) {
         //todo end game
+        Game game = getGame(id);
+        redisService.delete("g-"+id);
+        for(GamePlayer player:game.getPlayers()){
+            redisService.delete("g-"+player.getId());
+        }
+        Room room = roomService.getRoom(id);
+        for(String player:room.getPlayers()){
+            Player player1 = (Player) redisService.find(player);
+            player1.setReady(false);
+            redisService.save(player1);
+        }
+        return GameLog.builder()
+                .message(MessageModel.createEndInfo())
+                .privateMessage(false)
+                .build();
     }
 
     public GameLog startGame(String roomId) {

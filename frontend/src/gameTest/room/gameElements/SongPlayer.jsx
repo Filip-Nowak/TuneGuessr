@@ -10,6 +10,7 @@ export default function SongPlayer({
   artist,
   time,
   setTime,
+  setStartingTime,
 }) {
   const [playing, setPlaying] = useState(false);
   const playerRef = useRef(null);
@@ -18,6 +19,23 @@ export default function SongPlayer({
   const [loadingVideo, setLoadingVideo] = useState(true);
   const guessArtistRef = useRef(null);
   const guessTitleRef = useRef(null);
+  useEffect(() => {
+    window.addEventListener("keydown", (e) => {
+      setLoadingVideo((prevState) => {
+        if (!prevState && e.key === " ") {
+          setPlaying((playing) => {
+            if (playing) {
+              pauseVideo();
+            } else {
+              playVideo();
+            }
+            return !playing;
+          });
+        }
+        return prevState;
+      });
+    });
+  }, []);
   const opts = {
     height: "390",
     width: "640",
@@ -45,19 +63,25 @@ export default function SongPlayer({
   const playVideo = () => {
     setPlaying(true);
     const videoLength = playerRef.current.getDuration();
-    let start = startingTime * videoLength;
+    let start;
+    setStartingTime((prev) => {
+      start = prev * videoLength;
+      return prev;
+    });
     if (videoLength - videoLength * startingTime < 30) {
       start = videoLength - 30;
     }
     playerRef.current.seekTo(start, true);
     playerRef.current.playVideo();
-    if (!firstTry) {
-      timer.current = setInterval(() => {
-        setTime((prev) => {
-          return prev + 1;
-        });
-      }, 100);
-    }
+    setFirstTry((prev1) => {
+      if (!prev1) {
+        timer.current = setInterval(() => {
+          setTime((prev) => {
+            return prev + 1;
+          });
+        }, 100);
+      }
+    });
   };
 
   const pauseVideo = () => {
@@ -79,7 +103,7 @@ export default function SongPlayer({
 
   return (
     <div>
-      <div style={{ display: "none" }}>
+      <div style={{ display: "" }}>
         {url ? (
           <YouTube
             key={url}
