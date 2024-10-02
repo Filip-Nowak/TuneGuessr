@@ -7,25 +7,23 @@ import { LoginPage } from './views/LoginPage.jsx';
 import { RegisterPage } from './views/RegisterPage.jsx';
 import { ErrorPage } from './views/ErrorPage.jsx';
 import { SettingsPage } from './components/SettingsPage.jsx';
-import { Play } from './views/Play.jsx';
-import { GamePanel } from './views/GamePanel.jsx';
 
 const router = createBrowserRouter([
-	{
-		path: '/',
-		element: <App />,
-		errorElement: <ErrorPage />,
-		children: [
-			{
-				path: '/',
-				element: <Play />,
-			},
-			{
-				path: '/settings',
-				element: <SettingsPage />,
-			},
-		],
-	},
+    {
+        path: '/',
+        element: <App />,
+        errorElement: <ErrorPage />,
+        children: [
+            {
+                path: '/',
+                element: <Play />,
+            },
+            {
+                path: '/settings',
+                element: <SettingsPage />,
+            },
+        ],
+    },
 	{
 		path: '/login',
 		element: <LoginPage />,
@@ -38,10 +36,24 @@ const router = createBrowserRouter([
 		path: '/success',
 		element: <SuccessPage />,
 	},
-	{
-		path: '/challange',
-		element: <GamePanel />,
-	},
+    {
+        path: "/test",
+        element: <TestPage />,
+        children: [
+            {
+                path: "/test/game",
+                element: <GamePage />,
+            },
+            {
+                path: "/test/pick",
+                element: <PickPage />,
+            },
+            {
+                path: "/test/room",
+                element: <RoomPage />,
+            },
+        ],
+    },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(<RouterProvider router={router} />);

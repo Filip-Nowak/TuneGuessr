@@ -35,6 +35,7 @@ public class ChallengeController {
         try {
             List<String> showParams = getParams(request);
             Challenge challenge = challengeService.getChallengeById(id);
+            System.out.println(challenge.getSongs().size());
             Map<String, Object> model = ModelConverter.convertChallengeToMap(showParams, challenge);
             return ResponseEntity.ok(ResponseModel.builder()
                     .data(model)
