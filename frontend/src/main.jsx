@@ -8,10 +8,11 @@ import { RegisterPage } from "./views/RegisterPage.jsx";
 import { ErrorPage } from "./views/ErrorPage.jsx";
 import { SettingsPage } from "./components/SettingsPage.jsx";
 import { Play } from "./views/Play.jsx";
-import RoomPage from "./gameTest/room/RoomPage.jsx";
+import TestRoomPage from "./gameTest/room/TestRoomPage.jsx";
 import TestPage from "./gameTest/TestPage.jsx";
 import GamePage from "./gameTest/GamePage.jsx";
 import PickPage from "./gameTest/PickPage.jsx";
+import JoinRoomPage from "./views/JoinRoomPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
     element: <SuccessPage />,
   },
   {
+    path: "/joinroom",
+    element: <JoinRoomPage />,
+  },
+  {
     path: "/test",
     element: <TestPage />,
     children: [
@@ -55,7 +60,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/test/room",
-        element: <RoomPage />,
+        element: <TestRoomPage />,
       },
     ],
   },
