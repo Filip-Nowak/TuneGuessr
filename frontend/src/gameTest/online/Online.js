@@ -146,6 +146,10 @@ class Online {
         player.ready = false;
       }
     });
+    this.#messageHandler.addHandler("ROOM_OPTIONS_CHANGED", (message) => {
+      this.#room.setMode(message.gameMode);
+      this.#room.setChallengeId(message.challengeId);
+    });
   }
 
   setSessionUpdateHandler(handler) {
@@ -189,6 +193,9 @@ class Online {
   }
   setGameEndHandler(handler) {
     this.#messageHandler.addHandler("END_GAME", handler);
+  }
+  setRoomChangeHandler(handler) {
+    this.#messageHandler.addHandler("ROOM_OPTIONS_CHANGED", handler);
   }
   getUserId() {
     return this.#userId;
@@ -277,6 +284,22 @@ class Online {
   }
   endGame() {
     this.#sendMessage("/app/game/end", "");
+  }
+  changeMode(mode) {
+    this.#sendMessage("/app/room/change-mode", mode);
+  }
+  changeChallenge(challengeId) {
+    this.#sendMessage("/app/room/change-challenge", challengeId);
+  }
+  disconnect(){
+    this.#stompClient.deactivate();
+    this.#nickname = null;
+    this.#userId = null;
+    this.#room = null;
+    this.#ready = false;
+    this.#messageHandler.clearHandlers();
+    this.#stompClient = null;
+  
   }
 }
 export default new Online();

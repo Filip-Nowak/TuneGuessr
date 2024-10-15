@@ -1,7 +1,9 @@
 package com.example.tuneguessrserver.session.room;
 
+import com.example.tuneguessrserver.challenge.Challenge;
 import com.example.tuneguessrserver.challenge.ChallengeService;
 import com.example.tuneguessrserver.game.Game;
+import com.example.tuneguessrserver.game.GameMode;
 import com.example.tuneguessrserver.game.GameService;
 import com.example.tuneguessrserver.response.websocket.CreateRoomMessage;
 import com.example.tuneguessrserver.response.websocket.MessageModel;
@@ -160,5 +162,53 @@ public class RoomController {
             messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", MessageModel.createGameErrorInfo(e.getMessage()));
         }
 
+    }
+    @MessageMapping("/room/change-mode")
+    public void changeMode(@Payload String mode) {
+        try {
+            Log.info("Changing mode to: " + mode + "\n\tby user: " + playerSession.getUserId() + " with nickname: " + playerSession.getNickname());
+            Room room = roomService.getRoom(playerSession.getRoomId());
+            if(!room.getHostId().equals(playerSession.getUserId())) {
+                throw new RoomException("Only host can change the mode");
+            }
+            room = roomService.changeMode(playerSession.getRoomId(), mode);
+            RoomModel roomModel = RoomModel.builder()
+                    .id(room.getId())
+                    .hostId(room.getHostId())
+                    .players(roomService.getPlayerModels(room.getId()))
+                    .challengeId(room.getChallengeId())
+                    .gameMode(room.getMode())
+                    .build();
+            MessageModel message = MessageModel.createRoomOptionsChanged(roomModel);
+            Log.info("Mode changed to: " + mode);
+            messagingTemplate.convertAndSend("/room/" + room.getId(), message);
+        } catch (RoomException e) {
+            Log.info("Mode changing failed: " + e.getMessage());
+            messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", MessageModel.createRoomErrorInfo(e.getMessage()));
+        }
+    }
+    @MessageMapping("/room/change-challenge")
+    public void changeChallenge(@Payload String challengeId) {
+        try {
+            Log.info("Changing challenge to: " + challengeId + "\n\tby user: " + playerSession.getUserId() + " with nickname: " + playerSession.getNickname());
+            Room room = roomService.getRoom(playerSession.getRoomId());
+            if(!room.getHostId().equals(playerSession.getUserId())) {
+                throw new RoomException("Only host can change the challenge");
+            }
+            room = roomService.changeChallenge(playerSession.getRoomId(), challengeId);
+            RoomModel roomModel = RoomModel.builder()
+                    .id(room.getId())
+                    .hostId(room.getHostId())
+                    .players(roomService.getPlayerModels(room.getId()))
+                    .challengeId(room.getChallengeId())
+                    .gameMode(room.getMode())
+                    .build();
+            MessageModel message = MessageModel.createRoomOptionsChanged(roomModel);
+            Log.info("Challenge changed to: " + challengeId);
+            messagingTemplate.convertAndSend("/room/" + room.getId(), message);
+        } catch (RoomException e) {
+            Log.info("Challenge changing failed: " + e.getMessage());
+            messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", MessageModel.createRoomErrorInfo(e.getMessage()));
+        }
     }
 }

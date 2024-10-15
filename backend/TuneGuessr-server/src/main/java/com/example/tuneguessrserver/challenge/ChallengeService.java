@@ -100,4 +100,8 @@ public class ChallengeService {
     public boolean challengeExists(long challengeId) {
         return challengeRepository.existsById(challengeId);
     }
+
+    public Challenge getChallenge(long l) {
+        return challengeRepository.findById(l).orElse(null);
+    }
 }

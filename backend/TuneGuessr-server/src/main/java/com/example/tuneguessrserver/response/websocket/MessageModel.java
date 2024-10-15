@@ -1,6 +1,7 @@
 package com.example.tuneguessrserver.response.websocket;
 
 import com.example.tuneguessrserver.game.GameSongModel;
+import com.example.tuneguessrserver.session.room.RoomModel;
 import lombok.Builder;
 import lombok.Data;
 
@@ -85,5 +86,9 @@ public class MessageModel {
 
     public static MessageModel createEndInfo() {
         return MessageModel.builder().info(MessageInfo.END_GAME).message(null).build();
+    }
+
+    public static MessageModel createRoomOptionsChanged(RoomModel roomModel) {
+        return MessageModel.builder().info(MessageInfo.ROOM_OPTIONS_CHANGED).message(roomModel).build();
     }
 }
