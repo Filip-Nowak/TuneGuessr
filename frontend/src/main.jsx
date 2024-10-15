@@ -13,6 +13,10 @@ import TestPage from "./gameTest/TestPage.jsx";
 import GamePage from "./gameTest/GamePage.jsx";
 import PickPage from "./gameTest/PickPage.jsx";
 import JoinRoomPage from "./views/JoinRoomPage.jsx";
+import JoinContent from "./components/joinRoom/JoinContent.jsx";
+import CreateContent from "./components/joinRoom/CreateContent.jsx";
+import RoomPage from "./views/RoomPage.jsx";
+import { loadRoom } from "./utils/loaders.js";
 
 const router = createBrowserRouter([
   {
@@ -43,8 +47,22 @@ const router = createBrowserRouter([
     element: <SuccessPage />,
   },
   {
-    path: "/joinroom",
+    path: "/loadroom",
     element: <JoinRoomPage />,
+    children: [
+      {
+        path: "/loadroom/join",
+        element: <JoinContent/>,
+      },
+      {
+        path: "/loadroom/create",
+        element: <CreateContent/>,
+      }]
+  },
+  {
+    loader: loadRoom, 
+    path: "/room",
+    element: <RoomPage />,
   },
   {
     path: "/test",

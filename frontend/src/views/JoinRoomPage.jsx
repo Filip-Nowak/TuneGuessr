@@ -3,8 +3,10 @@ import styles from "../components/joinRoom/joinRoomStyles.module.css";
 import PickButton from "../components/joinRoom/PickButton";
 import JoinContent from "../components/joinRoom/JoinContent";
 import CreateContent from "../components/joinRoom/CreateContent";
+import { Outlet, useNavigate } from "react-router-dom";
 export default function JoinRoomPage() {
-  const [join, setJoin] = useState(true);
+  // const [join, setJoin] = useState(true);
+  const navigate = useNavigate();
   return (
     <div>
       <div
@@ -18,21 +20,28 @@ export default function JoinRoomPage() {
       >
         <PickButton
           name="Join Room"
-          selected={join}
+          selected={
+            window.location.pathname === "/loadroom/join" 
+          }
           setSelected={() => {
-            setJoin(true);
+            navigate("/loadroom/join"); 
+            // setJoin(true);
           }}
         />
         <PickButton
           name="Create Room"
-          selected={!join}
+          selected={
+            window.location.pathname === "/loadroom/create"
+          }
           setSelected={() => {
-            setJoin(false);
+            navigate("/loadroom/create");
+            // setJoin(false);
           }}
         />
       </div>
 
-      {join ? <JoinContent /> : <CreateContent />}
+      {/* {join ? <JoinContent /> : <CreateContent />} */}
+      <Outlet />
     </div>
   );
 }

@@ -29,7 +29,7 @@ export default function CommandsContainer({ setConnected, setUpdated }) {
     });
   };
   const handleQuickConnect = () => {
-    Online.quickConnect(nicknameInput.current.value,() => {
+    Online.connect(nicknameInput.current.value,() => {
       setUpdated(false);
       setConnected(true);
     });

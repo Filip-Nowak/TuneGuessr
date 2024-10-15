@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import Online from "../online/Online";
-import SongPlayer from "./gameElements/SongPlayer";
-import { set } from "react-hook-form";
-import FinishedView from "./gameElements/FinishedView";
+import React, { useEffect, useRef, useState } from "react";
+import Online from "../../gameTest/online/Online";
+import FinishedView from "../../gameTest/room/gameElements/FinishedView";
+import CustomPlayer from "./CustomPlayer";
 
-export default function GameLayout() {
+
+export default function GameContent() {
   const [url, setUrl] = useState(null);
   const [startingTime, setStartingTime] = useState(null);
   const [title, setTitle] = useState(null);
@@ -13,6 +13,7 @@ export default function GameLayout() {
   const [finished, setFinished] = useState(false);
   const [points, setPoints] = useState(0);
   const [time, setTime] = useState(0);
+  const playerRef = useRef(null);
 
   useEffect(() => {
     Online.setNextSongHandler((msg) => {
@@ -84,21 +85,8 @@ export default function GameLayout() {
         />
       ) : (
         <div>
-          <br /> points: {points}
-          <SongPlayer
-            time={time}
-            setTime={setTime}
-            url={url}
-            startingTime={startingTime}
-            title={title}
-            artist={artist}
-            setStartingTime={setStartingTime}
-          />
-          {title !== null && artist !== null ? (
-            <button onClick={handleNext}>Next</button>
-          ) : (
-            <div>lives: {lives}</div>
-          )}
+          <CustomPlayer url={url} ref={playerRef}/>
+
         </div>
       )}
     </div>

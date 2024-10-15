@@ -41,12 +41,13 @@ class Online {
     }
   }
   handleSessionChange;
-  async quickConnect(nickname, onConnect) {
+  async connect(nickname, onConnect) {
     await this.createUser();
     const socket = new SockJS("https://localhost:8080/ws");
     const client = new Client({
       webSocketFactory: () => socket,
       onConnect: () => {
+        this.#messageHandler = new MessageHandler();
         this.setHandlers();
         this.#userSubscription = client.subscribe(
           "/user/" + this.#userId + "/info",
@@ -268,8 +269,11 @@ class Online {
       })
     );
   }
-  removeHandler(info, handler) {
-    this.#messageHandler.removeHandler(info, handler);
+  removeHandler(info) {
+    this.#messageHandler.removeHandler(info);
+  }
+  clearHandlers() {
+    this.#messageHandler.clearHandlers();
   }
   endGame() {
     this.#sendMessage("/app/game/end", "");
