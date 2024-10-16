@@ -52,7 +52,16 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/loadroom/join",
-        element: <JoinContent/>,
+        children:[
+          {
+            path:"/loadroom/join",
+            element:<JoinContent/>
+          },
+          {
+            path:"/loadroom/join/:id",
+            element:<JoinContent/>
+          }
+        ]
       },
       {
         path: "/loadroom/create",

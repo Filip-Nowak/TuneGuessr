@@ -31,7 +31,7 @@ function CustomPlayer({url},playerRef) {
         setPlaying(false)
     }
   return (
-   <div>
+   <div style={{display:"none"}}>
     {url?<YouTube
             key={url}
             videoId={url.split("v=")[1]}

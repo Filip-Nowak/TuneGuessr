@@ -22,7 +22,7 @@ export default function RoomContent({setInRoom,setInGame,room,setRoom}) {
         Online.setPlayerLeftHandler(onLeave);
         Online.setNewPlayerJoinedHandler(onJoin);
         Online.setRoomChangeHandler(onRoomChange);
-        
+        Online.setGameStartedHandler(onStart);
 
     }, []);
     const handleReady = () => {
@@ -35,7 +35,7 @@ export default function RoomContent({setInRoom,setInGame,room,setRoom}) {
         Online.leaveRoom();
     }
     const handleStart = () => {
-        // Online.startGame();
+        Online.startGame();
     }
     const onReady = (data) => {
         setRoom(Online.getRoom().clone());
@@ -60,6 +60,9 @@ export default function RoomContent({setInRoom,setInGame,room,setRoom}) {
             setChallengeName(data.data.name);
         })
     }
+    const onStart=()=>{
+        setInGame(true);
+    }
     const openOptions = () => {
         setShowOptions(true);
     }
@@ -77,6 +80,7 @@ export default function RoomContent({setInRoom,setInGame,room,setRoom}) {
         <div className={styles.codeContainer}>code:<span className={styles.code}>
             {room.getId()}
             </span></div>
+            <div style={{textAlign:"center",fontSize:"0.8rem"}}>invite via link: <br/><code>https://localhost:5173/loadroom/join/{room.getId()}</code></div>
             <div className={styles.border}>
             <div className={styles.playerCount}><i className="fa-solid fa-user"></i>{room.getPlayers().length}/10</div>
         <div className={styles.playersContainer}>

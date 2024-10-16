@@ -1,0 +1,68 @@
+.background {
+  background-color: rgb(148, 148, 247);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: -1;
+  color: rgb(119, 104, 186);
+  height: 100vh;
+  width: 100vw;
+  font-size: 15rem;
+}
+.challTitle {
+  font-size: 2.5rem;
+  text-align: center;
+}
+.timer {
+  margin-top: 1rem;
+  color: white;
+  font-size: 8rem;
+  text-align: center;
+  margin-top: 15vh;
+}
+
+.answerBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.lives {
+  text-align: center;
+  font-size: 2rem;
+  color: red;
+  margin-top: 1rem;
+  letter-spacing: 0.5rem;
+  padding-bottom: 1rem;
+}
+.score {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 1rem;
+  font-size: 1.5rem;
+}
+.inputName {
+  font-size: 1.5rem;
+  text-align: center;
+}
+.inputContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.input {
+  width: 30vw;
+  height: 5vh;
+  border-radius: 5px;
+}
+.checkButton {
+  width: 10vw;
+  height: 5vh;
+  border-radius: 5px;
+  background-color: rgb(119, 104, 186);
+  color: white;
+  font-size: 1.5rem;
+  margin-left: 1rem;
+}

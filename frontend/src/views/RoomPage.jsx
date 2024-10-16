@@ -43,7 +43,7 @@ const handleStartGame = () => {
               {!inGame ? (
                 <RoomContent room={room} setInGame={setInGame} setRoom={setRoom} />
               ) : (
-                <GameContent  setInGame={setInGame} />
+                <GameContent room={room} setRoom={setRoom} setInGame={setInGame} />
               )}
             </div>
   )
