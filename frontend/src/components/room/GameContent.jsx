@@ -15,8 +15,11 @@ export default function GameContent({ room, setRoom }) {
   const [time, setTime] = useState(0);
   const [challTitle, setChallTitle] = useState(null);
   const [playing, setPlaying] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const artistInput = useRef(null);
+  const titleInput = useRef(null);
   const playerRef = useRef(null);
-
+  const timeout = useRef(null);
   useEffect(() => {
     Online.setNextSongHandler((msg) => {
       console.log("next song", msg);
@@ -33,6 +36,7 @@ export default function GameContent({ room, setRoom }) {
       } else {
         setArtist(answer.guess);
       }
+
       setPoints((prev) => prev + answer.points);
     });
     Online.setWrongGuessHandler(() => {
@@ -63,6 +67,11 @@ export default function GameContent({ room, setRoom }) {
       Online.removeHandler("FINISHED");
     };
   }, []);
+  useEffect(() => {
+    if (title && artist) {
+      setLives(0);
+    }
+  }, [title, artist]);
   const handleFinished = (msg) => {
     const players = Online.getRoom().getPlayers();
     console.log(msg);
@@ -81,10 +90,45 @@ export default function GameContent({ room, setRoom }) {
   const returnToLobby = () => {
     Online.endGame();
   };
-  let timeLabel =
-    Math.floor(time / 60) +
-    ":" +
-    (time % 60 < 10 ? "0" + (time % 60) : time % 60);
+
+  const handleTimerClick = () => {
+    if(artist&&title)
+      return
+    if(!videoLoaded)
+      return
+    if (playing) {
+      onPause();
+    } else {
+      playerRef.current.playVideo();
+      timeout.current = setInterval(() => {
+        setTime((prev) => prev + 1);
+      }, 10);
+      setPlaying(true);
+    }
+  };
+  const onPause = () => {
+    setPlaying(false);
+    playerRef.current.pauseVideo();
+    clearInterval(timeout.current);
+  };
+  const handleArtistGuess = () => {
+    const guess = artistInput.current.value;
+    Online.guessArtist(guess);
+  };
+  const handleTitleGuess = () => {
+    const guess = titleInput.current.value;
+    Online.guessTitle(guess);
+  };
+  const handleForfeit = () => {
+    console.log("forfeit");
+    Online.forfeit();
+  };
+  let minutes = Math.floor(time / 6000);
+  let seconds = Math.floor((time % 6000) / 100);
+  let miliseconds = time % 100;
+  let timeLabel = `${minutes === 0 ? "" : minutes + ":"}${
+    seconds < 10 ? "0" + seconds : seconds
+  }:${miliseconds < 10 ? "0" + miliseconds : miliseconds}`;
 
   return (
     <div>
@@ -97,43 +141,107 @@ export default function GameContent({ room, setRoom }) {
         />
       ) : (
         <div>
-          <div className={styles.background}>
-            <i style={{ opacity: "1" }} className="fa-solid fa-play"></i>
+          <div
+            className={styles.background}
+            style={{ backgroundColor: playing ? "rgb(129, 9, 9)" : "" }}
+          >
+            <i
+              style={{ opacity: "1", color: playing ? "rgb(100, 9, 9)" : "" }}
+              className={playing ? "fa-solid fa-pause" : "fa-solid fa-play"}
+            ></i>
           </div>
-          <CustomPlayer url={url} ref={playerRef} />
           <div style={{ height: "1rem" }}></div>
           <div className={styles.challTitle}>{challTitle}</div>
           <div className={styles.gameContainer}>
             <div className={styles.score}>score: {points}</div>
-            <div className={styles.timer}> {timeLabel}</div>
-            <div className={styles.answerBox}>
-              <div>click timer to {playing ? "pause " : "play "} song</div>
-              <div className={styles.lives}>
-                {" "}
-                {lives > 0
-                  ? Array.from({ length: lives }).map((_, i) => (
-                      <i className="fa-solid fa-heart"></i>
-                    ))
-                  : ""}
-              </div>
-
-              <div>
-                <div className={styles.inputName}>title</div>
-                <div className={styles.inputContainer}>
-                  {" "}
-                  <input className={styles.input} />{" "}
-                  <button className={styles.checkButton}>check</button>
-                </div>
-              </div>
-              <div>
-                <div className={styles.inputName}>artist</div>
-                <div className={styles.inputContainer}>
-                  {" "}
-                  <input className={styles.input} />{" "}
-                  <button className={styles.checkButton}>check</button>
-                </div>
-              </div>
+            <div className={styles.timer +" "+ (title&&artist?styles.smallTimer:"")} onClick={handleTimerClick}>
+              {" "}
+              {timeLabel}
             </div>
+            <div className={styles.lives} style={{display
+            :lives>0?"block":"none"
+            }}>
+              {" "}
+              {lives > 0
+                ? Array.from({ length: lives }).map((_, i) => (
+                  <i className="fa-solid fa-heart"></i>
+                ))
+                : ""}
+            </div>
+            <div style={{position:"relative",display:"flex",justifyContent:"center",alignItems:"center"}}>
+                <div className={styles.nextButton} style={{display:artist&&title?"flex":"none",}} onClick={handleNext}>
+                <i className="fa-solid fa-angles-right"></i>
+                </div>
+
+            <CustomPlayer
+              url={url}
+              ref={playerRef}
+              startingTime={0.99}
+              handlePause={onPause}
+              show={artist&&title}
+              loaded={videoLoaded}
+              setLoaded={setVideoLoaded}
+            /></div>
+            {
+              title&&artist?
+              <div className={styles.answerBox} style={{width:"90vw"}}>
+                <div className={styles.answerLabel}>answer:</div>
+                <div className={styles.answer}>{artist} - {title}</div>
+              </div>
+            :
+            playing ? (
+              <div className={styles.playingInfo}>click timer to stop</div>
+            ) : (
+              <div className={styles.answerBox}>
+                <div className={styles.forfeitButton} onClick={handleForfeit}>
+                  <i className="fa-regular fa-flag"></i>
+                  </div>
+                <div>
+                {videoLoaded
+                ?
+                "click timer to "+ (playing ? "pause " : "play ")+" song":"loading video..."
+                }
+                   </div>
+
+                <div>
+                  <div className={styles.inputName}>title</div>
+                  {
+                    title?
+                    <div className={styles.inputContainer} >
+                      <div className={styles.correctAnswer}>{title} <i style={{color:"green"}} class="fa-solid fa-circle-check"></i></div>
+
+                      </div>:<div className={styles.inputContainer}>
+                    {" "}
+                    <input className={styles.input} ref={titleInput} />{" "}
+                    <button
+                      className={styles.checkButton}
+                      onClick={handleTitleGuess}
+                    >
+                      check
+                    </button>
+                  </div>}
+                </div>
+                <div>
+                  <div className={styles.inputName}>artist</div>
+                  {
+                    artist?
+                    <div className={styles.inputContainer} >
+                      <div className={styles.correctAnswer}>{artist} <i style={{color:"green"}} class="fa-solid fa-circle-check"></i></div>
+
+                      </div>
+                    :<div className={styles.inputContainer}>
+                    
+                    <input className={styles.input} ref={artistInput} />{" "}
+                    <button
+                      className={styles.checkButton}
+                      onClick={handleArtistGuess}
+                    >
+                      check
+                    </button>
+                  </div>}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

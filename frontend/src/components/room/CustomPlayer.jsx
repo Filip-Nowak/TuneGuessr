@@ -1,9 +1,8 @@
 import React, { forwardRef, useEffect, useState } from 'react'
 import YouTube from 'react-youtube';
 
-function CustomPlayer({url},playerRef) {
+function CustomPlayer({url, startingTime,handlePause,show,loaded,setLoaded},playerRef) {
   const [playing, setPlaying] = useState(false);
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setPlaying(false);
@@ -21,6 +20,7 @@ function CustomPlayer({url},playerRef) {
     playerRef.current.playVideo();
   };
     const onPlay = () => {
+      console.log("playing");
         if (!loaded) {
             playerRef.current.pauseVideo();
             playerRef.current.unMute();
@@ -28,23 +28,36 @@ function CustomPlayer({url},playerRef) {
           }
     }
     const onPause = () => {
+      handlePause();
         setPlaying(false)
+        const videoLength = playerRef.current.getDuration();
+    let start = startingTime * videoLength;
+    if (videoLength - videoLength * startingTime < 30) {
+      start = videoLength - 30;
+    }
+        playerRef.current.seekTo(start, true);
     }
   return (
-   <div style={{display:"none"}}>
+   <div style={{display:show?"flex":"none",justifyContent:"center"}}>
     {url?<YouTube
             key={url}
             videoId={url.split("v=")[1]}
             opts={{
-                height: "390",
-                 width: "640",
+                height: "293",
+                 width: "480",
                 playerVars: {
                   autoplay: 0,
                 },
             }}
             onReady={onPlayerReady}
-            onPlay={onPlay}
-            onPause={onPause}
+            onPlay={()=>{
+              if(!show)onPlay()}}
+            onPause={
+              ()=>{if(!show)onPause()}}
+            onEnd={()=>{
+              playerRef.current.pauseVideo();
+              onPause();
+            }}
           />:""}
    </div>
   )

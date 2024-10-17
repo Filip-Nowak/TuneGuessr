@@ -301,5 +301,8 @@ class Online {
     this.#stompClient = null;
   
   }
+  forfeit() {
+    this.#sendMessage("/app/game/forfeit", "");
+  }
 }
 export default new Online();

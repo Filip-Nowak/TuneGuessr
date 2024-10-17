@@ -23,10 +23,14 @@
 }
 
 .answerBox {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  width: 70vw;
+  margin-left: auto;
+  margin-right: auto;
 }
 .lives {
   text-align: center;
@@ -35,6 +39,7 @@
   margin-top: 1rem;
   letter-spacing: 0.5rem;
   padding-bottom: 1rem;
+  height: 6vh;
 }
 .score {
   position: absolute;
@@ -65,4 +70,58 @@
   color: white;
   font-size: 1.5rem;
   margin-left: 1rem;
+}
+.playingInfo{
+  font-size: 3rem;
+  text-align: center;
+  color: red;
+}
+.forfeitButton {
+  width: 8vh;
+  height: 8vh;
+  border-radius: 100%;
+  background-color: red;
+  color: white;
+  font-size: 1.5rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.answerLabel{
+  font-size: 2rem;
+  text-align: center;
+  margin-top: 1rem;
+  color: white;
+}
+.answer{
+  font-size: 3rem;
+  text-align: center;
+  color: white;
+}
+.smallTimer{
+  font-size: 2rem;
+  text-align: center;
+  color: white;
+  margin-top: 1rem;
+}
+.nextButton{
+  width:10vh;
+  height: 15vh;
+  border-radius: 10%;
+  background-color: rgb(119, 104, 186);
+  color: white;
+  font-size: 1.5rem;
+  position: absolute;
+  right: 20vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.correctAnswer{
+  font-size: 2rem;
+  
 }

@@ -132,4 +132,11 @@ public class GameService {
         saveGame(game);
         return log;
     }
+
+    public GameLog forfeit(String userId, String roomId) {
+        Game game = getGame(roomId);
+        GameLog log=game.forfeit(userId);
+        saveGame(game);
+        return log;
+    }
 }
