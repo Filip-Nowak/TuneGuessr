@@ -24,11 +24,14 @@ export function LoginPage() {
 					email,
 				}),
 			});
+			// const { token } = await response.json();
+			const data = await response.json();
 
-			if (!response.ok) {
-				throw new Error('Network response was not ok ' + response.statusText);
+			if (data.status % 10 !== 0) {
+				throw new Error('Network response was not ok ' + data.message);
 			}
-			const { data } = await response.json();
+
+			console.log(data);
 
 			localStorage.setItem('token', data.token);
 			navigate('/');
