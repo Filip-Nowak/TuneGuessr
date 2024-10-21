@@ -150,6 +150,15 @@ class Online {
       this.#room.setMode(message.gameMode);
       this.#room.setChallengeId(message.challengeId);
     });
+    this.#messageHandler.addHandler("END_GAME", (message) => {
+      this.#room.setInGame(false);
+      for (let player of this.#room.getPlayers()) {
+        player.finished = false;
+        player.score = 0;
+        player.time = 0;
+        player.ready = false;
+      }
+    });
   }
 
   setSessionUpdateHandler(handler) {
@@ -257,6 +266,8 @@ class Online {
     }
   }
   guessArtist(artist, time) {
+    console.log("chujow sto");
+    console.log(time);
     this.#sendMessage(
       "/app/game/guess",
       JSON.stringify({
@@ -291,7 +302,7 @@ class Online {
   changeChallenge(challengeId) {
     this.#sendMessage("/app/room/change-challenge", challengeId);
   }
-  disconnect(){
+  disconnect() {
     this.#stompClient.deactivate();
     this.#nickname = null;
     this.#userId = null;
@@ -299,7 +310,6 @@ class Online {
     this.#ready = false;
     this.#messageHandler.clearHandlers();
     this.#stompClient = null;
-  
   }
   forfeit() {
     this.#sendMessage("/app/game/forfeit", "");

@@ -3,6 +3,7 @@ import Online from "../../gameTest/online/Online";
 import FinishedView from "../../gameTest/room/gameElements/FinishedView";
 import CustomPlayer from "./CustomPlayer";
 import styles from "./gameStyles.module.css";
+import FinishedContent from "./FinishedContent";
 
 export default function GameContent({ room, setRoom }) {
   const [url, setUrl] = useState(null);
@@ -92,10 +93,8 @@ export default function GameContent({ room, setRoom }) {
   };
 
   const handleTimerClick = () => {
-    if(artist&&title)
-      return
-    if(!videoLoaded)
-      return
+    if (artist && title) return;
+    if (!videoLoaded) return;
     if (playing) {
       onPause();
     } else {
@@ -113,11 +112,11 @@ export default function GameContent({ room, setRoom }) {
   };
   const handleArtistGuess = () => {
     const guess = artistInput.current.value;
-    Online.guessArtist(guess);
+    Online.guessArtist(guess, time);
   };
   const handleTitleGuess = () => {
     const guess = titleInput.current.value;
-    Online.guessTitle(guess);
+    Online.guessTitle(guess, time);
   };
   const handleForfeit = () => {
     console.log("forfeit");
@@ -133,11 +132,13 @@ export default function GameContent({ room, setRoom }) {
   return (
     <div>
       {finished ? (
-        <FinishedView
+        <FinishedContent
           points={points}
           time={time}
           handleFinished={handleFinished}
           returnToLobby={returnToLobby}
+          room={room}
+          setRoom={setRoom}
         />
       ) : (
         <div>
@@ -154,91 +155,122 @@ export default function GameContent({ room, setRoom }) {
           <div className={styles.challTitle}>{challTitle}</div>
           <div className={styles.gameContainer}>
             <div className={styles.score}>score: {points}</div>
-            <div className={styles.timer +" "+ (title&&artist?styles.smallTimer:"")} onClick={handleTimerClick}>
+            <div
+              className={
+                styles.timer + " " + (title && artist ? styles.smallTimer : "")
+              }
+              onClick={handleTimerClick}
+            >
               {" "}
               {timeLabel}
             </div>
-            <div className={styles.lives} style={{display
-            :lives>0?"block":"none"
-            }}>
+            <div
+              className={styles.lives}
+              style={{ display: lives > 0 ? "block" : "none" }}
+            >
               {" "}
               {lives > 0
                 ? Array.from({ length: lives }).map((_, i) => (
-                  <i className="fa-solid fa-heart"></i>
-                ))
+                    <i className="fa-solid fa-heart"></i>
+                  ))
                 : ""}
             </div>
-            <div style={{position:"relative",display:"flex",justifyContent:"center",alignItems:"center"}}>
-                <div className={styles.nextButton} style={{display:artist&&title?"flex":"none",}} onClick={handleNext}>
+            <div
+              style={{
+                position: "relative",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <div
+                className={styles.nextButton}
+                style={{ display: artist && title ? "flex" : "none" }}
+                onClick={handleNext}
+              >
                 <i className="fa-solid fa-angles-right"></i>
-                </div>
-
-            <CustomPlayer
-              url={url}
-              ref={playerRef}
-              startingTime={0.99}
-              handlePause={onPause}
-              show={artist&&title}
-              loaded={videoLoaded}
-              setLoaded={setVideoLoaded}
-            /></div>
-            {
-              title&&artist?
-              <div className={styles.answerBox} style={{width:"90vw"}}>
-                <div className={styles.answerLabel}>answer:</div>
-                <div className={styles.answer}>{artist} - {title}</div>
               </div>
-            :
-            playing ? (
+
+              <CustomPlayer
+                url={url}
+                ref={playerRef}
+                startingTime={0.99}
+                handlePause={onPause}
+                show={artist && title}
+                loaded={videoLoaded}
+                setLoaded={setVideoLoaded}
+              />
+            </div>
+            {title && artist ? (
+              <div className={styles.answerBox} style={{ width: "90vw" }}>
+                <div className={styles.answerLabel}>answer:</div>
+                <div className={styles.answer}>
+                  {artist} - {title}
+                </div>
+              </div>
+            ) : playing ? (
               <div className={styles.playingInfo}>click timer to stop</div>
             ) : (
               <div className={styles.answerBox}>
                 <div className={styles.forfeitButton} onClick={handleForfeit}>
                   <i className="fa-regular fa-flag"></i>
-                  </div>
+                </div>
                 <div>
-                {videoLoaded
-                ?
-                "click timer to "+ (playing ? "pause " : "play ")+" song":"loading video..."
-                }
-                   </div>
+                  {videoLoaded
+                    ? "click timer to " +
+                      (playing ? "pause " : "play ") +
+                      " song"
+                    : "loading video..."}
+                </div>
 
                 <div>
                   <div className={styles.inputName}>title</div>
-                  {
-                    title?
-                    <div className={styles.inputContainer} >
-                      <div className={styles.correctAnswer}>{title} <i style={{color:"green"}} class="fa-solid fa-circle-check"></i></div>
-
-                      </div>:<div className={styles.inputContainer}>
-                    {" "}
-                    <input className={styles.input} ref={titleInput} />{" "}
-                    <button
-                      className={styles.checkButton}
-                      onClick={handleTitleGuess}
-                    >
-                      check
-                    </button>
-                  </div>}
+                  {title ? (
+                    <div className={styles.inputContainer}>
+                      <div className={styles.correctAnswer}>
+                        {title}{" "}
+                        <i
+                          style={{ color: "green" }}
+                          class="fa-solid fa-circle-check"
+                        ></i>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={styles.inputContainer}>
+                      {" "}
+                      <input className={styles.input} ref={titleInput} />{" "}
+                      <button
+                        className={styles.checkButton}
+                        onClick={handleTitleGuess}
+                      >
+                        check
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <div>
                   <div className={styles.inputName}>artist</div>
-                  {
-                    artist?
-                    <div className={styles.inputContainer} >
-                      <div className={styles.correctAnswer}>{artist} <i style={{color:"green"}} class="fa-solid fa-circle-check"></i></div>
-
+                  {artist ? (
+                    <div className={styles.inputContainer}>
+                      <div className={styles.correctAnswer}>
+                        {artist}{" "}
+                        <i
+                          style={{ color: "green" }}
+                          class="fa-solid fa-circle-check"
+                        ></i>
                       </div>
-                    :<div className={styles.inputContainer}>
-                    
-                    <input className={styles.input} ref={artistInput} />{" "}
-                    <button
-                      className={styles.checkButton}
-                      onClick={handleArtistGuess}
-                    >
-                      check
-                    </button>
-                  </div>}
+                    </div>
+                  ) : (
+                    <div className={styles.inputContainer}>
+                      <input className={styles.input} ref={artistInput} />{" "}
+                      <button
+                        className={styles.checkButton}
+                        onClick={handleArtistGuess}
+                      >
+                        check
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
