@@ -14,6 +14,7 @@ import { LoginPage } from './views/LoginPage.jsx';
 import { Play } from './views/Play.jsx';
 import { RegisterPage } from './views/RegisterPage.jsx';
 import { CustomPlaylist } from './components/CustomPlaylist.jsx';
+import { EditMode } from './views/EditMode.jsx';
 
 const router = createBrowserRouter([
 	{
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
 			{
 				path: '/challange/:challangeId',
 				element: <ChallangeView />,
+			},
+			{
+				path: '/challange/edit-mode/:challangeId',
+				element: <EditMode />,
 			},
 		],
 	},

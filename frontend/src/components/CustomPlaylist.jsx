@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Challange } from './Challange';
 import { createPortal } from 'react-dom';
 import { Modal } from './Modal';
+import { LuPlus } from 'react-icons/lu';
 
 const customPlaylist = [
 	{
@@ -40,8 +41,9 @@ export function CustomPlaylist() {
 				{!isModalShown ? (
 					<button
 						onClick={() => setIsModalShown(true)}
-						className='px-20 py-6 rounded-xl bg-black text-white hover:cursor-pointer'
+						className='flex justify-between items-center gap-6 px-10 py-6 rounded-xl bg-black text-white hover:cursor-pointer'
 					>
+						<LuPlus className='color-white' />
 						Add new challange
 					</button>
 				) : (
@@ -53,7 +55,12 @@ export function CustomPlaylist() {
 				{customPlaylist.length > 0 ? (
 					<div className='grid grid-cols-1 mt-10 md:overflow-y-scroll max-h-[90svh] md:grid-cols-2 xl:grid-cols-4 gap-5 px-8 py-10'>
 						{customPlaylist.map(({ name, description }) => (
-							<Challange key={name} name={name} description={description} />
+							<Challange
+								key={name}
+								name={name}
+								description={description}
+								customChallange={true}
+							/>
 						))}
 					</div>
 				) : (
