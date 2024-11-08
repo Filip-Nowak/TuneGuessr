@@ -6,21 +6,25 @@ import { LuPlus } from 'react-icons/lu';
 
 const customPlaylist = [
 	{
+		id: 1,
 		name: 'Title',
 		description:
 			'Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam repellat voluptatibus numquam nesciunt rem corporis voluptate explicabo. Rem facere fugit nostrum! Accusamus explicabo quas, nam hic in vel numquam cumque.',
 	},
 	{
+		id: 2,
 		name: 'Title',
 		description:
 			'Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam repellat voluptatibus numquam nesciunt rem corporis voluptate explicabo. Rem facere fugit nostrum! Accusamus explicabo quas, nam hic in vel numquam cumque.',
 	},
 	{
+		id: 3,
 		name: 'Title',
 		description:
 			'Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam repellat voluptatibus numquam nesciunt rem corporis voluptate explicabo. Rem facere fugit nostrum! Accusamus explicabo quas, nam hic in vel numquam cumque.',
 	},
 	{
+		id: 33,
 		name: 'Title',
 		description:
 			'Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam repellat voluptatibus numquam nesciunt rem corporis voluptate explicabo. Rem facere fugit nostrum! Accusamus explicabo quas, nam hic in vel numquam cumque.',
@@ -54,8 +58,9 @@ export function CustomPlaylist() {
 			<div>
 				{customPlaylist.length > 0 ? (
 					<div className='grid grid-cols-1 mt-10 md:overflow-y-scroll max-h-[90svh] md:grid-cols-2 xl:grid-cols-4 gap-5 px-8 py-10'>
-						{customPlaylist.map(({ name, description }) => (
+						{customPlaylist.map(({ id, name, description }) => (
 							<Challange
+								challangeId={id}
 								key={name}
 								name={name}
 								description={description}

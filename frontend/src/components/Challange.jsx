@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-const CHALLANGE_URL = 'https://localhost:5173/challange';
+export const CHALLANGE_URL = 'https://localhost:5173/challenge';
 
 export function Challange({
 	name = 'Challange Title',

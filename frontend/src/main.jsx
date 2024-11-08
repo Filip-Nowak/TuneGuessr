@@ -35,11 +35,11 @@ const router = createBrowserRouter([
 				element: <CustomPlaylist />,
 			},
 			{
-				path: '/challange/:challangeId',
+				path: '/challenge/:challengeId',
 				element: <ChallangeView />,
 			},
 			{
-				path: '/challange/edit-mode/:challangeId',
+				path: '/challenge/edit-mode/:challengeId',
 				element: <EditMode />,
 			},
 		],

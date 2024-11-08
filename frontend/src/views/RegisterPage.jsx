@@ -30,7 +30,9 @@ export function RegisterPage() {
 				throw new Error('Network response was not ok ' + response.statusText);
 			}
 
-			const { data } = await response.json();
+			const data = response.json();
+
+			console.log(data);
 
 			localStorage.setItem('token', data.token);
 			navigate('/');

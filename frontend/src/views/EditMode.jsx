@@ -1,18 +1,86 @@
-import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { BACKEND_URL } from '../constants/API_END-POINT';
+import { getUserToken } from '../utils/getUserToken';
+import { useForm } from 'react-hook-form';
 
 export function EditMode() {
 	const [isAddNewSong, setIsAddNewSong] = useState(false);
 
-	const { challangeId } = useParams();
+	const { challengeId } = useParams();
+	const navigate = useNavigate();
+	const token = getUserToken();
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors },
+	} = useForm();
 
 	const ytRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/[^\s]+/;
-	const challangeSongsList = [
-		{ title: 'title', link: 'https://youtube.com/muzyka$2918234' },
-		{ title: 'title', link: 'https://youtube.com/muzyka$29182342233' },
-		{ title: 'title', link: 'https://www.youtube.com/watch?v=10swJdKcHNQ' },
-		{ title: 'title', link: 'https://www.youtube.com/watch?v=KGFAVVAu5rg' },
-	];
+	const [challengeSongsList, setChallengeSongsList] = useState([]);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await fetch(`${BACKEND_URL}/challenge/${challengeId}`);
+
+				const { data } = await response.json();
+
+				setChallengeSongsList(data.songs);
+			} catch (error) {
+				console.log('Error fetching data:', error);
+			}
+		};
+
+		fetchData();
+	}, []);
+
+	const handleDeleteSong = async () => {
+		try {
+			const response = await fetch(`${BACKEND_URL}/challenge/${challengeId}`, {
+				method: 'DELETE',
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			if (!response.ok) {
+				console.log('DELETE challenge error');
+				return;
+			}
+
+			console.log('DELETE challenge successful!');
+			navigate('/custom-playlist', { replace: true });
+		} catch (error) {
+			console.log('DELETE challenge error:', error);
+		}
+	};
+
+	const onSubmit = e => {
+		try {
+			const { title, url } = e;
+			console.log(title);
+			console.log(url);
+
+			fetch(`${BACKEND_URL}/challenge/${challengeId}/song`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({
+					title,
+					artist: 'test',
+					url,
+				}),
+			});
+
+			reset();
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<>
@@ -21,12 +89,12 @@ export function EditMode() {
 					<h1 className='text-6xl font-bold'>Challange Name</h1>
 				</div>
 
-				<Link
-					to={`https://localhost:5137/${challangeId}`}
+				<button
+					onClick={handleDeleteSong}
 					className='px-20 py-6 rounded-xl bg-black text-white hover:cursor-pointer'
 				>
 					Delete
-				</Link>
+				</button>
 			</div>
 
 			<div className='grid grid-cols-4 mt-10'>
@@ -39,27 +107,53 @@ export function EditMode() {
 					</button>
 
 					{isAddNewSong && (
-						<form className='my-5 space-x-3'>
+						<form onSubmit={handleSubmit(onSubmit)} className='my-5 space-x-3'>
 							<label htmlFor='title'>Title</label>
-							<input className='p-1 border' type='text' id='title' />
-							<label htmlFor='link'>Link</label>
-							<input className='p-1 border' type='text' id='link' />
+							<input
+								className='p-1 border'
+								type='text'
+								id='title'
+								{...register('title', {
+									required: 'The entered name must not be empty',
+								})}
+							/>
+							<label htmlFor='url'>URL</label>
+							<input
+								className='p-1 border'
+								type='text'
+								id='url'
+								{...register('url', {
+									required: 'The entered name must not be empty',
+									validate: link =>
+										ytRegex.test(link) ||
+										'The link must be a valid YouTube URL',
+								})}
+							/>
 							<button className='px-4 py-2 rounded-xl bg-black text-white'>
 								Add Song
 							</button>
 						</form>
 					)}
+					{errors.text && <p className='text-md text-red-600'>{errors.text.message}</p>}
+					{errors.url && <p className='text-md text-red-600'>{errors.url.message}</p>}
 
 					<ul className='mt-8 space-y-6'>
-						{challangeSongsList.map(({ title, link }) => (
-							<li key={link} className='flex justify-between gap-5 max-w-[500px]'>
+						{challengeSongsList.map(({ title, url }) => (
+							<li key={url} className='flex justify-between gap-5 max-w-[500px]'>
 								<div>
 									<h3 className='font-bold'>{title}</h3>
-									<Link to={link} className='text-blue-600'>
-										{link}
+									<Link target='_blank' to={url} className='text-blue-600'>
+										{url}
 									</Link>
 								</div>
-								<button className='px-4 py-2 rounded-xl bg-black text-white'>
+								<button
+									onClick={() =>
+										setChallengeSongsList(prevList =>
+											prevList.filter(song => song.url !== url)
+										)
+									}
+									className='px-4 py-2 rounded-xl bg-black text-white'
+								>
 									remove
 								</button>
 							</li>
