@@ -130,6 +130,14 @@ public class GameService {
         Game game = getGame(roomId);
         GameLog log=game.handleGuess(userId,guess,title,time);
         saveGame(game);
+        Log.info("saving game after guess "+ game);
+        return log;
+    }
+
+    public GameLog forfeit(String userId, String roomId) {
+        Game game = getGame(roomId);
+        GameLog log=game.forfeit(userId);
+        saveGame(game);
         return log;
     }
 }

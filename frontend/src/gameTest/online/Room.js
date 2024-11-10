@@ -9,7 +9,7 @@ export default class Room {
     this.#roomId = room.id;
     this.#players = room.players;
     this.#hostId = room.hostId;
-    this.#mode = room.mode;
+    this.#mode = room.gameMode;
     this.#challengeId = room.challengeId;
     if (room.inGame !== undefined) {
       this.#inGame = room.inGame;
@@ -58,14 +58,19 @@ export default class Room {
     return this.#challengeId;
   }
   clone() {
-    return new Room({
+    const room=new Room({
       id: this.#roomId,
       players: this.#players,
       hostId: this.#hostId,
-      mode: this.#mode,
+      gameMode: this.#mode,
       challengeId: this.#challengeId,
       inGame: this.#inGame,
     });
+    return room;
+  }
+  setMode(mode){
+
+    this.#mode = mode;
   }
   setHostId(hostId) {
     this.#hostId = hostId;
@@ -79,5 +84,8 @@ export default class Room {
         break;
       }
     }
+  }
+  setChallengeId(challengeId) {
+    this.#challengeId = challengeId;
   }
 }

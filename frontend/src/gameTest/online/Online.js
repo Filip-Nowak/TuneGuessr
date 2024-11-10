@@ -41,12 +41,13 @@ class Online {
     }
   }
   handleSessionChange;
-  async quickConnect(nickname, onConnect) {
+  async connect(nickname, onConnect) {
     await this.createUser();
     const socket = new SockJS("https://localhost:8080/ws");
     const client = new Client({
       webSocketFactory: () => socket,
       onConnect: () => {
+        this.#messageHandler = new MessageHandler();
         this.setHandlers();
         this.#userSubscription = client.subscribe(
           "/user/" + this.#userId + "/info",
@@ -145,6 +146,19 @@ class Online {
         player.ready = false;
       }
     });
+    this.#messageHandler.addHandler("ROOM_OPTIONS_CHANGED", (message) => {
+      this.#room.setMode(message.gameMode);
+      this.#room.setChallengeId(message.challengeId);
+    });
+    this.#messageHandler.addHandler("END_GAME", (message) => {
+      this.#room.setInGame(false);
+      for (let player of this.#room.getPlayers()) {
+        player.finished = false;
+        player.score = 0;
+        player.time = 0;
+        player.ready = false;
+      }
+    });
   }
 
   setSessionUpdateHandler(handler) {
@@ -188,6 +202,9 @@ class Online {
   }
   setGameEndHandler(handler) {
     this.#messageHandler.addHandler("END_GAME", handler);
+  }
+  setRoomChangeHandler(handler) {
+    this.#messageHandler.addHandler("ROOM_OPTIONS_CHANGED", handler);
   }
   getUserId() {
     return this.#userId;
@@ -249,6 +266,8 @@ class Online {
     }
   }
   guessArtist(artist, time) {
+    console.log("chujow sto");
+    console.log(time);
     this.#sendMessage(
       "/app/game/guess",
       JSON.stringify({
@@ -268,11 +287,32 @@ class Online {
       })
     );
   }
-  removeHandler(info, handler) {
-    this.#messageHandler.removeHandler(info, handler);
+  removeHandler(info) {
+    this.#messageHandler.removeHandler(info);
+  }
+  clearHandlers() {
+    this.#messageHandler.clearHandlers();
   }
   endGame() {
     this.#sendMessage("/app/game/end", "");
+  }
+  changeMode(mode) {
+    this.#sendMessage("/app/room/change-mode", mode);
+  }
+  changeChallenge(challengeId) {
+    this.#sendMessage("/app/room/change-challenge", challengeId);
+  }
+  disconnect() {
+    this.#stompClient.deactivate();
+    this.#nickname = null;
+    this.#userId = null;
+    this.#room = null;
+    this.#ready = false;
+    this.#messageHandler.clearHandlers();
+    this.#stompClient = null;
+  }
+  forfeit() {
+    this.#sendMessage("/app/game/forfeit", "");
   }
 }
 export default new Online();

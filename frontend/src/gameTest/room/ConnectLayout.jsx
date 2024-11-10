@@ -4,7 +4,7 @@ import Online from "../online/Online";
 export default function ConnectLayout({ setConnected }) {
   const nicknameInput = useRef(null);
   const handleConnect = () => {
-    Online.quickConnect(nicknameInput.current.value, () => {
+    Online.connect(nicknameInput.current.value, () => {
       setConnected(true);
       Online.setRoomErrorHandler((error) => {
         console.log("room error:", error);

@@ -126,4 +126,24 @@ public class RoomService {
         player.setReady(ready);
         userSessionService.saveUser(player);
     }
+
+    public Room changeMode(String roomId, String mode) throws RoomException{
+        Room room = getRoom(roomId);
+        try{room.setMode(GameMode.valueOf(mode));}
+        catch (IllegalArgumentException e) {
+            throw new RoomException("Invalid game mode");
+        }
+        saveRoom(room);
+        return room;
+    }
+
+    public Room changeChallenge(String roomId, String challengeId) throws RoomException{
+        Room room = getRoom(roomId);
+        if(!challengeService.challengeExists(Long.parseLong(challengeId))) {
+            throw new RoomException("Challenge does not exist");
+        }
+        room.setChallengeId(Long.parseLong(challengeId));
+        saveRoom(room);
+        return room;
+    }
 }

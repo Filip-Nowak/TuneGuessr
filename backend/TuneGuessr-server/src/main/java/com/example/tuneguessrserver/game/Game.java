@@ -18,4 +18,7 @@ public abstract class Game {
     public abstract GameTemplate getTemplate();
 
     public abstract GameLog handleNext(String playerId, String roomId);
+
+    public abstract GameLog forfeit(String userId);
+
 }

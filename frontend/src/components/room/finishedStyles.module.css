@@ -1,0 +1,135 @@
+.title {
+  font-size: 4rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+  padding-top: 2rem;
+}
+.background {
+  background-color: #332991;
+  height: 100vh;
+  color: white;
+}
+.challTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: rgb(182, 182, 182);
+}
+.playerScore {
+  text-align: center;
+}
+.playerResults {
+  font-size: 2rem;
+}
+.score {
+  font-size: 5rem;
+  font-weight: 600;
+  text-align: center;
+}
+.time {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  color: rgb(219, 219, 219);
+}
+.otherLabel {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  color: rgb(182, 182, 182);
+  margin-top: 2rem;
+}
+.otherPlayersContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  flex-direction: column;
+  border: 5px solid rgb(221, 241, 39);
+  border-radius: 10px;
+}
+.leaderboardHeader {
+  font-size: 2.2rem;
+  font-weight: 600;
+  text-align: center;
+  color: rgb(182, 182, 182);
+
+  display: flex;
+  background-color: #7a6bff;
+  padding: 1rem 0;
+}
+.leaderboardPlace {
+  width: 10%;
+}
+.leaderboardName {
+  width: 60%;
+}
+.leaderboardScore {
+  width: 20%;
+}
+.leaderboardTime {
+  width: 10%;
+}
+.leaderboardHeader > div {
+  border-right: 1px solid rgb(182, 182, 182);
+}
+.leaderboardHeader > div:last-child {
+  border-right: none;
+}
+.leaderboardPlayer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  flex-direction: row;
+  text-align: center;
+  padding: 0.5rem 0;
+}
+.leaderboardPlayerPlace {
+  width: 10%;
+}
+.leaderboardPlayerName {
+  width: 60%;
+}
+.leaderboardPlayerScore {
+  width: 20%;
+}
+.leaderboardPlayerTime {
+  width: 10%;
+}
+.leaderboardPlayer > div {
+  border-right: 1px solid rgb(182, 182, 182);
+  font-size: 1.5rem;
+}
+.leaderboardPlayer > div:last-child {
+  border-right: none;
+}
+.stillPlaying {
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  color: rgb(182, 182, 182);
+  margin-top: 2rem;
+}
+.returnButton {
+  display: block;
+  margin: 0 auto;
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  background-color: #7a6bff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  position: absolute;
+  left: 2rem;
+  top: 2rem;
+}

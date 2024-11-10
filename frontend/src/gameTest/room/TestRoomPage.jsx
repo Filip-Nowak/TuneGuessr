@@ -7,7 +7,7 @@ import RoomLayout from "./RoomLayout";
 import GameLayout from "./GameLayout";
 import { set } from "react-hook-form";
 
-export default function RoomPage() {
+export default function TestRoomPage() {
   const [connected, setConnected] = useState(false);
   const [inRoom, setInRoom] = useState(false);
   const [inGame, setInGame] = useState(false);

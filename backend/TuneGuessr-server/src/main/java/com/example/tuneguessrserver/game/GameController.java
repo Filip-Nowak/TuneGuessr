@@ -67,4 +67,14 @@ public class GameController {
             messagingTemplate.convertAndSend("/room/" + roomId, (log.getMessage()));
         }
     }
+    @MessageMapping("/game/forfeit")
+    public void forfeit() {
+        String roomId = playerSession.getRoomId();
+        GameLog log = gameService.forfeit(playerSession.getUserId(),roomId);
+        if (log.isPrivateMessage()) {
+            messagingTemplate.convertAndSendToUser(playerSession.getUserId(), "/info", (log.getMessage()));
+        } else {
+            messagingTemplate.convertAndSend("/room/" + roomId, (log.getMessage()));
+        }
+    }
 }

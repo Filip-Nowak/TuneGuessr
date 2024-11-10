@@ -67,6 +67,7 @@ public class ClassicGame extends Game {
                 .build();
     }
 
+
     @Override
     public GameLog start() {
         double randomSongStart = Math.floor(Math.random() * 100) / 100;
@@ -150,5 +151,20 @@ public class ClassicGame extends Game {
             }
 
         }
+    }
+    @Override
+    public GameLog forfeit(String userId) {
+        GamePlayer player = players.stream()
+                .filter(p -> p.getId().equals(userId))
+                .findFirst()
+                .orElseThrow();
+        player.setTries(3);
+        Log.info("Player forfeited, score: "+player.getScore());
+
+        return GameLog.builder()
+                .message(MessageModel.createAnswerInfo(songs.get(player.getCurrentSongIndex()).getTitle(),songs.get(player.getCurrentSongIndex()).getArtist()))
+                .privateMessage(true)
+                .build();
+
     }
 }

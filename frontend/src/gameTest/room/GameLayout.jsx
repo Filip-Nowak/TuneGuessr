@@ -45,6 +45,14 @@ export default function GameLayout() {
     Online.setFinishedHandler(handleFinished);
 
     Online.readyToStart();
+    return () => {
+      Online.removeHandler("NEXT_SONG");
+      Online.removeHandler("CORRECT_GUESS");
+      Online.removeHandler("WRONG_GUESS");
+      Online.removeHandler("ANSWER");
+      Online.removeHandler("FINISHED");
+
+    }
   }, []);
   const handleFinished = (msg) => {
     const players = Online.getRoom().getPlayers();

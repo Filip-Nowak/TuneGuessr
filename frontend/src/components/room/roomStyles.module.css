@@ -1,0 +1,178 @@
+.title{
+    font-size: 3rem;
+    font-weight: bold;
+    width: fit-content;
+    margin-top: 1rem;
+}
+.codeContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.code{
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 0.5rem;
+}
+.mode{
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 0.5rem;
+    margin-left: 1rem;
+    text-align: center;
+}
+.playersContainer{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+    height: 15rem;
+    width: 70vw;
+}
+.playerCount{
+    text-align: right;
+    margin-right: auto;
+    margin-left: auto;
+    width: 90%
+}
+.border{
+    border: 1px solid black;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 1rem;
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;margin-right: auto;
+}
+.player{
+    border-radius: 100%;
+    width: 5rem;
+    height: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid black;  
+    font-size: 0.8rem  ;
+
+}
+.player i{
+    font-size: 2rem;
+}
+.crown{
+    color: gold;
+    text-align: center;
+    width: 100%;
+    /* font-size: 1.5rem; */
+    height: 1rem;
+}
+.ready{
+    text-align: center;
+    height: 1rem;
+}
+.playerContainer{
+    width: 14vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.button{
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 10rem;
+    height: 3rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 1rem;
+    background-color: #f0f0f0;
+    border: 1px solid black;
+    cursor: pointer;
+}
+.button:hover{
+    background-color: #e0e0e0;
+}
+.buttonsContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+.button:disabled{
+    background-color: #f0f0f0;
+    color: grey;
+    cursor: default;
+}
+
+.challengeOptions{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    background-color: gray;
+    border: 1px solid black;
+    border-radius: 1rem;   
+    width: 20rem;
+    height: 20rem; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+}
+.optionsHeader{
+    font-size: 2rem;
+    padding: 1rem;
+    font-weight: bold;
+}
+.optionName{
+    font-size: 1.5rem;
+    text-align: center;
+}
+.optionContent{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.optionContent input {
+    width: 2.5rem;
+    height: 2rem;
+    margin: 1rem;
+}
+.optionContent button{
+    width: 4rem;
+    height: 2rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 1rem;
+    background-color: #f0f0f0;
+    border: 1px solid black;
+    cursor: pointer;
+}
+.optionContent button:hover{
+    background-color: #e0e0e0;
+}
+.optionContent button:disabled{
+    background-color: #f0f0f0;
+    color: grey;
+    cursor: default;
+}
+.closeBtn{
+    position: absolute;
+    bottom: 0;
+    font-size: 1.2rem;
+
+    cursor: pointer;
+    padding: 0.5rem;
+    background-color: #f0f0f0;
+    border: 1px solid black;
+    border-radius: 1rem;
+    margin: 1rem;
+    width: 8rem;
+    height: 3rem;
+}
