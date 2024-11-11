@@ -104,4 +104,10 @@ public class ChallengeService {
     public Challenge getChallenge(long l) {
         return challengeRepository.findById(l).orElse(null);
     }
+
+    public List<Challenge> getHomeChallenges() {
+        //todo recommended challenges
+//        return challengeRepository.findTop10ByOrderByIdDesc();
+        return challengeRepository.findAll();
+    }
 }

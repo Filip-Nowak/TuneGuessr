@@ -165,6 +165,15 @@ public class ChallengeController {
         }
         return showParams;
     }
+    @GetMapping("/home-challenges")
+    public ResponseEntity<ResponseModel> getHomeChallenges() {
+        List<Challenge> challenges = challengeService.getHomeChallenges();
+        List<Map<String, Object>> models = ModelConverter.convertChallengesToMap(
+                List.of("name", "description", "author","id"), challenges);
+        return ResponseEntity.ok(ResponseModel.builder()
+                .data(models)
+                .build());
+    }
 
 
 }

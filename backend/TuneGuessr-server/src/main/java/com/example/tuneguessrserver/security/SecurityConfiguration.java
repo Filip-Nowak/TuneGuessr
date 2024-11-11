@@ -59,6 +59,7 @@ public class SecurityConfiguration {
                             auth.requestMatchers("api/test/**").permitAll();
                             auth.requestMatchers("ws/**").permitAll();
                             auth.requestMatchers("create-user").permitAll();
+                            auth.requestMatchers("/api/home-challenges").permitAll();
                             auth.anyRequest().authenticated();
                         }
                 )

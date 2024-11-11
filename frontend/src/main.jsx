@@ -8,7 +8,6 @@ import { RegisterPage } from "./views/RegisterPage.jsx";
 import { ErrorPage } from "./views/ErrorPage.jsx";
 import { SettingsPage } from "./components/SettingsPage.jsx";
 import { Play } from "./views/Play.jsx";
-import RoomPage from "./gameTest/room/RoomPage.jsx";
 import TestPage from "./gameTest/TestPage.jsx";
 import GamePage from "./gameTest/GamePage.jsx";
 import PickPage from "./gameTest/PickPage.jsx";
@@ -17,8 +16,9 @@ import JoinContent from "./components/joinRoom/JoinContent.jsx";
 import CreateContent from "./components/joinRoom/CreateContent.jsx";
 import RoomPage from "./views/RoomPage.jsx";
 import { loadRoom } from "./utils/loaders.js";
-import { CustomPlaylist } from './components/CustomPlaylist.jsx';
-import { EditMode } from './views/EditMode.jsx';
+import { CustomPlaylist } from "./components/CustomPlaylist.jsx";
+import { EditMode } from "./views/EditMode.jsx";
+import { ChallangeView } from "./components/ChallangeView.jsx";
 
 const router = createBrowserRouter([
   {
@@ -35,15 +35,15 @@ const router = createBrowserRouter([
         element: <SettingsPage />,
       },
       {
-        path: '/custom-playlist',
+        path: "/custom-playlist",
         element: <CustomPlaylist />,
       },
       {
-        path: '/challenge/:challengeId',
+        path: "/challenge/:challengeId",
         element: <ChallangeView />,
       },
       {
-        path: '/challenge/edit-mode/:challengeId',
+        path: "/challenge/edit-mode/:challengeId",
         element: <EditMode />,
       },
     ],
@@ -66,21 +66,31 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/loadroom/join",
-        children:[
+        children: [
           {
-            path:"/loadroom/join",
-            element:<JoinContent/>
+            path: "/loadroom/join",
+            element: <JoinContent />,
           },
           {
-            path:"/loadroom/join/:id",
-            element:<JoinContent/>
-          }
-        ]
+            path: "/loadroom/join/:id",
+            element: <JoinContent />,
+          },
+        ],
       },
       {
         path: "/loadroom/create",
-        element: <CreateContent/>,
-      }]
+        children: [
+          {
+            path: "/loadroom/create",
+            element: <CreateContent />,
+          },
+          {
+            path: "/loadroom/create/:id",
+            element: <CreateContent />,
+          },
+        ],
+      },
+    ],
   },
   {
     loader: loadRoom,

@@ -1,18 +1,18 @@
 import React, { useRef, useState } from "react";
 import styles from "./joinRoomStyles.module.css";
 import Online from "../../gameTest/online/Online";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 export default function CreateContent() {
   const modes = ["CLASSIC", "SURVIVAL", "RUSH", "MULTIPLAYER"];
   const [modeSelected, setModeSelected] = useState(0);
   // const [challengeId, setChallengeId] = useState(null);
   const challengeInput = useRef(null);
   const navigate = useNavigate();
-  const onCreate = (data)=>{
-    console.log("created room",data);
+  const { id } = useParams();
+  const onCreate = (data) => {
+    console.log("created room", data);
     navigate("/room");
-
-  }
+  };
   const handleCreate = async () => {
     console.log("create room");
     const nickname = prompt("Enter your nickname");
@@ -20,19 +20,19 @@ export default function CreateContent() {
       console.log("nickname", nickname);
     }
     // await Online.createUser(nickname);
-    await Online.connect(nickname,()=>{console.log("dupa")
+    await Online.connect(nickname, () => {
+      console.log("dupa");
       Online.setCreateRoomHandler(onCreate);
-      Online.createRoom(challengeInput.current.value,modes[modeSelected]);
-
+      Online.createRoom(challengeInput.current.value, modes[modeSelected]);
     });
-   
   };
   return (
     <div className={styles.container}>
       <div style={{ display: "flex", fontSize: "1.5rem" }}>
         <div>challenge id: </div>
         <input
-        ref={challengeInput}
+          ref={challengeInput}
+          defaultValue={id ? id : ""}
           type="text"
           style={{
             width: "70%",

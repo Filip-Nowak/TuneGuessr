@@ -28,7 +28,7 @@ export function ChallangeView() {
         </div>
 
         <Link
-          to={`https://localhost:5137/${challengeId}`}
+          to={`https://localhost:5173/loadroom/create/${challengeId}`}
           className="px-20 py-6 rounded-xl bg-black text-white hover:cursor-pointer"
         >
           Play
