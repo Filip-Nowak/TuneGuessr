@@ -1,0 +1,81 @@
+.title{
+    letter-spacing: 0.2rem;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+.startContainer{
+    font-family: "Zen Dots";
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    right: 50%;
+    bottom: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 5rem;
+}
+.subtitle{
+    font-size: 1rem;
+    color: #555;
+    white-space: nowrap;
+}
+@keyframes hideStartContainer{
+    0%{
+        top: 40%;
+        font-size: 5rem;
+        position: absolute;
+    }
+    30%{
+        top: 40%;
+        font-size: 2rem;
+        position: absolute;
+
+    }
+    70%{
+        top: 40%;
+        font-size: 2rem;
+        position: absolute;
+
+    }
+    99%{
+        top:8vh;
+        font-size: 2rem;
+        position: absolute;
+    }
+    100%{
+        position: inherit;
+    }
+}
+.hideStartContainer{
+    animation: hideStartContainer 1s;
+    position: inherit;
+    font-size: 2rem;
+
+}
+.hideSubtitle{
+    display: none;
+}
+.hideStartButton{
+    display: none;
+}
+.startButton{
+    font-size: 2rem;
+}
+.homePageBackground{
+    width: 100%;
+    height: 92vh;
+    position: absolute;
+    background:none;
+    transition: 3s;
+    background: radial-gradient(#92023e, #6a0490, black);
+    background-size: 100% 200%;
+    opacity: 0;
+    z-index: -5;
+
+}
+.showBackground{
+    
+    opacity: 1;
+}
