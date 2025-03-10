@@ -1,0 +1,92 @@
+.userPanel {
+  width: 30vw;
+  height: 10vh;
+  display: flex;
+}
+.friendsContainer {
+  width: 12vw;
+  height: 50vh;
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+  font-family: "Zen Dots";
+  padding: 1rem;
+}
+.friendsTitle {
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  color: #fff;
+}
+.friends {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  background-color: red;
+  height: 43vh;
+}
+.notLoggedIn {
+  height: 43vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #777474;
+}
+.notLoggedIn span {
+  color: #6663ff;
+  transition: 1s;
+}
+.notLoggedIn span:hover {
+  cursor: pointer;
+  color: #28a8fd;
+  transition: 0.5s;
+}
+.userInfoContainer {
+  width: 18vw;
+  display: flex;
+  flex-direction: column;
+}
+.userInfo {
+  display: flex;
+  padding: 0.5rem;
+  height: 43vh;
+  width: 15vw;
+  flex-direction: row;
+  justify-content: start;
+  gap: 1rem;
+  font-family: "Zen Dots";
+}
+.userImage {
+  width: 3vw;
+  height: 3vw;
+  border-radius: 50%;
+  background-color: #fff;
+  margin-right: 1rem;
+}
+.username {
+  display: flex;
+  justify-content: left;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: end;
+  width: 70%;
+}
+.goToProfile {
+  font-size: 0.8rem;
+  color: #6663ff;
+  transition: 0.5s;
+  width: fit-content;
+}
+.goToProfile:hover {
+  cursor: pointer;
+  color: #28a8fd;
+  transition: 0.5s;
+}

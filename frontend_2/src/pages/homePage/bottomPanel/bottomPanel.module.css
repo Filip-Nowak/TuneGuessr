@@ -1,0 +1,88 @@
+.container {
+  width: 100%;
+  height: 90vh;
+  /* background-color: #f0f0f0; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Zen Dots";
+  margin-top: 3rem;
+}
+.scrollInfo {
+  font-size: 2rem;
+  color: #776f6f;
+  white-space: nowrap;
+}
+.scrollInfo:hover {
+  color: #555;
+  cursor: pointer;
+}
+.infoContainer {
+  display: flex;
+  width: 90%;
+  height: 60vh;
+  justify-content: space-evenly;
+  flex-direction: row;
+  margin-top: 5rem;
+}
+.boxContainer {
+  opacity: 0;
+  width: 25%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0.5rem 0.5rem #555;
+  padding: 2rem;
+  transition: 1s;
+  transform: translateY(-20rem);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+  z-index: -10;
+}
+.icon {
+  font-size: 9rem;
+  text-shadow: 0 0 0.7rem white;
+}
+.number {
+  font-size: 3rem;
+  color: black;
+  background-color: rgb(186, 186, 186);
+  border-radius: 100%;
+  width: 5rem;
+  height: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+.title {
+  font-size: 2rem;
+  color: white;
+  text-align: center;
+  margin-top: 1rem;
+  height: 5rem;
+}
+.text {
+  font-size: 1.5rem;
+  color: #555;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.showBox {
+  opacity: 1;
+  transform: translateY(0);
+}
+.seeMore {
+  font-size: 2rem;
+  color: #6663ff;
+  margin-top: 5rem;
+  transition: 0.5s;
+}
+.seeMore:hover {
+  color: #28a8fd;
+  cursor: pointer;
+  transition: 0.5s;
+}

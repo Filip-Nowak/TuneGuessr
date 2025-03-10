@@ -1,138 +1,263 @@
-.title{
-    letter-spacing: 0.2rem;
-    text-align: center;
-    font-weight: bold;
-    margin-bottom: 1rem;
+.homePageContainer {
+  opacity: 1;
 }
-.mainPanel{
-    display: flex;
-    justify-content: center;
+.homePage {
+  margin-top: 3vh;
 }
-.startContainer{
-    font-family: "Zen Dots";
-    position: absolute;
+.invisibleBlock {
+  height: 5vh;
+  /* background-color: red; */
+}
+.hideInvisibleBlock {
+  display: none;
+  animation: hideInvisibleBlock 1s;
+}
+@keyframes hideInvisibleBlock {
+  0% {
+    display: block;
+  }
+  100% {
+    display: none;
+  }
+}
+
+.title {
+  letter-spacing: 0.2rem;
+  text-align: center;
+  font-weight: bold;
+  height: 5vh;
+}
+.mainPanel {
+  display: flex;
+  justify-content: center;
+}
+.startContainer {
+  font-family: "Zen Dots";
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  right: 50%;
+  bottom: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 5rem;
+  z-index: 20;
+}
+.subtitle {
+  margin-top: 5vh;
+  font-size: 1rem;
+  color: #555;
+  white-space: nowrap;
+}
+@keyframes hideStartContainer {
+  0% {
     top: 40%;
-    left: 50%;
-    right: 50%;
-    bottom: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     font-size: 5rem;
-}
-.subtitle{
-    font-size: 1rem;
-    color: #555;
-    white-space: nowrap;
-}
-@keyframes hideStartContainer{
-    0%{
-        top: 40%;
-        font-size: 5rem;
-        position: absolute;
-    }
-    30%{
-        top: 40%;
-        font-size: 2rem;
-        position: absolute;
-
-    }
-    70%{
-        top: 40%;
-        font-size: 2rem;
-        position: absolute;
-
-    }
-    99%{
-        top:8vh;
-        font-size: 2rem;
-        position: absolute;
-    }
-    100%{
-        position: inherit;
-    }
-}
-.hideStartContainer{
-    animation: hideStartContainer 1s;
-    position: inherit;
-    font-size: 2rem;
-
-}
-.hideSubtitle{
-    display: none;
-}
-.hideStartButton{
-    display: none;
-}
-.startButton{
-    font-size: 2rem;
-}
-.homePageBackground{
-    width: 100%;
-    height: 92vh;
     position: absolute;
-    background:none;
-    transition: 3s;
-    background: radial-gradient(#92023e, #6a0490, black);
-    background-size: 100% 200%;
+  }
+  30% {
+    top: 40%;
+    font-size: 2rem;
+    position: absolute;
+  }
+  70% {
+    top: 40%;
+    font-size: 2rem;
+    position: absolute;
+  }
+  99% {
+    top: 8vh;
+    font-size: 2rem;
+    position: absolute;
+  }
+  100% {
+    position: inherit;
+  }
+}
+.hideStartContainer {
+  animation: hideStartContainer 1s;
+  position: inherit;
+  font-size: 2rem;
+}
+.hideSubtitle {
+  display: none;
+}
+.hideStartButton {
+  display: none;
+}
+.startButton {
+  font-size: 2rem;
+}
+.homePageBackground {
+  width: 150vw;
+  height: 200vh;
+  position: absolute;
+  background: none;
+  transition: 3s;
+  background: radial-gradient(#92023e, #6a0490, black, black);
+  /* background: radial-gradient(yellow, #6a0490, black, black); */
+  background-size: 100% 100%;
+  top: -100vh;
+  left: -25vw;
+  opacity: 0;
+  z-index: -5;
+}
+.showBackground {
+  opacity: 1;
+}
+.homeMenuBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 50, 0.5);
+  backdrop-filter: blur(5px);
+  border-radius: 10px;
+  width: fit-content;
+  height: fit-content;
+  border: 4px solid #7800b0;
+  transition: 1s;
+  transform: translateY(-20vh);
+  opacity: 0;
+}
+
+.centerBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 20vw;
+}
+.playButton {
+  font-family: "Zen Dots";
+  width: 40%;
+  height: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: rgb(227, 179, 36); */
+  border-radius: 1rem;
+  font-size: 2rem;
+  letter-spacing: 0.3rem;
+  margin-top: 20vh;
+  position: relative;
+  box-shadow: 0 0 1rem 0.5rem #000;
+  transition: 1s;
+  overflow: hidden;
+  opacity: 0;
+}
+.showPlayButton {
+  opacity: 1;
+  animation: showPlayButton 3s;
+  transition: 1s;
+  width: 80%;
+  height: 3rem;
+}
+@keyframes showPlayButton {
+  0% {
     opacity: 0;
-    z-index: -5;
-
-}
-.showBackground{    
+    width: 40%;
+    height: 1.5rem;
+  }
+  70% {
+    opacity: 0;
+    width: 40%;
+    height: 1.5rem;
+  }
+  90% {
     opacity: 1;
-}
-.homeMenuBox{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 50, 0.5);
-    backdrop-filter: blur(5px);
-    border-radius: 10px;
-    padding: 1rem;
-    /* margin: 1rem; */
-    width: fit-content;
-    height: fit-content;
-    border: 4px solid #7800b0;
-}
-
-.centerBox{
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    width:20vw;
-}
-.playButton{
-    font-family: "Zen Dots";
+    width: 85%;
+  }
+  100% {
+    opacity: 1;
     width: 80%;
-height: 3rem;
-display: flex;
-justify-content: center;
-align-items: center;
-/* background-color: rgb(227, 179, 36); */
-background-color: #2b8700;
-border-radius: 1rem;
-font-size: 2rem;
-letter-spacing: 0.3rem;
-margin-top: 20vh;
-
+  }
 }
-.userPanel{
-    width: 30vw;
-    height: 10vh;
-    background-color: #555;
-    padding: 1rem;
+.playButtonContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 20vw;
+  height: 25vh;
 }
-.searchChallenges{
-background-color: rgb(227, 179, 36);
-    font-family: "Zen Dots";
-    width: 50%;
-    height: 5vh;
-    margin-top: 1rem;   
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 1rem;
 
+.challengeBrowserPadding {
+  padding: 1rem 0.5rem;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 50% 0%;
+  }
+  50% {
+    background-position: 50% 200%;
+  }
+  100% {
+    background-position: 50% 400%;
+  }
+}
+.playButton:hover {
+  font-size: 2.2rem;
+  transition: 1s;
+
+  cursor: pointer;
+}
+
+.blueBackground {
+  background: linear-gradient(0deg, #ff0000, #0000ff, #ff0000);
+  background-size: 100% 400%;
+  animation: gradientMove 15s linear infinite;
+  width: 100%;
+  z-index: -1;
+  height: 100%;
+  opacity: 1;
+  position: absolute;
+  transition: 1s;
+}
+.goldBackground {
+  opacity: 0;
+  background: linear-gradient(0deg, gold, rgb(255, 145, 0), gold);
+  animation: gradientMove 5s linear infinite;
+  background-size: 100% 400%;
+  width: 100%;
+  z-index: -1;
+  height: 100%;
+  opacity: 0;
+  position: absolute;
+  transition: 1s;
+}
+.playTitle {
+  z-index: 1;
+}
+
+.playButton:hover .blueBackground {
+  opacity: 0;
+  transition: 1s;
+}
+.playButton:hover .goldBackground {
+  opacity: 1;
+  transition: 1s;
+}
+.challengesButton {
+  font-family: "Zen Dots";
+  font-size: 1.5rem;
+  padding: 0 0.5rem;
+  height: 5vh;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 15rem;
+  flex-direction: row;
+  margin-top: 3rem;
+  transition: 0.5s;
+}
+.challengesButton:hover {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.5);
+  transition: 0.5s;
+}
+.showBox {
+  opacity: 1;
+  transform: translateY(0);
+  transition: 1s;
 }
