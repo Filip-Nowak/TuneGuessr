@@ -5,12 +5,16 @@ import ChallengeBrowser from "./challengeBrowser/ChallengeBrowser";
 import { getPopularChallenges } from "../../utils/http/publicData";
 import UserPanel from "./userPanel/UserPanel";
 import BottomPanel from "./bottomPanel/BottomPanel";
+import PlayButton from "../../siteElements/playButton/PlayButton";
 export default function HomePage() {
   const [welcome, setWelcome] = useState(true);
   const [publicChallenges, setPublicChallenges] = useState([]);
   const [privateChallenges, setPrivateChallenges] = useState([]);
   useEffect(() => {
     getChallenges();
+    setTimeout(() => {
+      setWelcome(false);
+    }, 1000);
   }, []);
   const getChallenges = async () => {
     const challenges = await getPopularChallenges();
@@ -70,18 +74,6 @@ export default function HomePage() {
         >
           The Best way to test your music knowledge
         </div>
-        <div
-          className={
-            styles.startButton + " " + (welcome ? "" : styles.hideStartButton)
-          }
-          onClick={() => {
-            setWelcome(false);
-            console.log("xd");
-            console.log(welcome);
-          }}
-        >
-          start
-        </div>
       </div>
       <div
         className={
@@ -103,9 +95,20 @@ export default function HomePage() {
           </HomeMenuBox>
           <div className={styles.centerBox}>
             <div className={styles.playButtonContainer}>
+              <PlayButton
+                className={
+                  styles.homePlayButton +
+                  " " +
+                  (welcome ? "" : styles.showPlayButton)
+                }
+                style={welcome ? { opacity: 0 } : {}}
+              />
+            </div>
+
+            {/* <div className={styles.playButtonContainer}>
               <div
                 className={
-                  styles.playButton +
+                  styles.homePlayButton +
                   " " +
                   (welcome ? "" : styles.showPlayButton)
                 }
@@ -114,7 +117,8 @@ export default function HomePage() {
                 <div className={styles.playTitle}>PLAY</div>
                 <div className={styles.goldBackground}></div>
               </div>
-            </div>
+            </div> */}
+
             <HomeMenuBox
               className={styles.challengesButton}
               visible={!welcome}
@@ -123,6 +127,7 @@ export default function HomePage() {
               <i class="fa-solid fa-magnifying-glass"></i>
               <span>challenges</span>
             </HomeMenuBox>
+            <div className={styles.playButtonContainer}></div>
           </div>
           <UserPanel visible={!welcome} />
         </div>

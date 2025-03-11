@@ -128,7 +128,7 @@
   align-items: center;
   width: 20vw;
 }
-.playButton {
+.homePlayButton {
   font-family: "Zen Dots";
   width: 40%;
   height: 1.5rem;
@@ -196,12 +196,6 @@
     background-position: 50% 400%;
   }
 }
-.playButton:hover {
-  font-size: 2.2rem;
-  transition: 1s;
-
-  cursor: pointer;
-}
 
 .blueBackground {
   background: linear-gradient(0deg, #ff0000, #0000ff, #ff0000);
@@ -230,14 +224,6 @@
   z-index: 1;
 }
 
-.playButton:hover .blueBackground {
-  opacity: 0;
-  transition: 1s;
-}
-.playButton:hover .goldBackground {
-  opacity: 1;
-  transition: 1s;
-}
 .challengesButton {
   font-family: "Zen Dots";
   font-size: 1.5rem;

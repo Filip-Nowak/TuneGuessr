@@ -4,5 +4,9 @@ async function getPopularChallenges() {
 
     return await response.json();
 }
-
-export {getPopularChallenges};
+async function getChallengeById(id){
+    const response = await fetch('https://localhost:8080/api/challenge/'+id);
+    const xd =await response.json();
+    return xd.data;
+}
+export {getPopularChallenges, getChallengeById};

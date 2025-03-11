@@ -1,0 +1,181 @@
+.container {
+  width: 90%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.topPanel {
+  width: 100%;
+  justify-content: end;
+  display: flex;
+  height: 30vh;
+  margin-top: 3vh;
+}
+.challengeInfo {
+  display: flex;
+  font-family: "Zen Dots";
+  height: 100%;
+  width: 70%;
+}
+.challengeInfo .image {
+  width: 25vh;
+  height: 25vh;
+  background-color: rgb(75, 72, 91);
+}
+.data {
+  margin-left: 3vw;
+}
+.challengeTitle {
+  font-size: 4rem;
+  font-weight: bold;
+}
+.challengeAuthor span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #6663ff;
+}
+.description {
+  margin-top: 1vh;
+  color: #777474;
+  height: 15vh;
+}
+.length {
+  color: #c2c1c1;
+}
+.buttonPanel {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  gap: 3vh;
+  justify-content: center;
+}
+.bottomButtons {
+  position: relative;
+  height: 5vh;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+}
+.topButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1vh;
+  gap: 1vw;
+}
+.shareButton {
+  font-family: "Zen Dots";
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  background-color: #4c1999;
+  color: white;
+  transition: 0.5s;
+  border: 3px solid #270065;
+  width: 50%;
+  height: 5vh;
+  font-size: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.favoriteButton {
+  font-family: "Zen Dots";
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  color: white;
+  transition: 0.5s;
+  border: 1px solid #fbff20;
+  width: 50%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.favoriteButton i {
+  font-size: 2rem;
+  /* width: 50%; */
+  text-align: center;
+}
+/* .favoriteButton:hover {
+  background-color: #fbff20;
+  color: #4c1999;
+} */
+.favoriteButtonSelected {
+  background-color: #fbff20;
+  color: #4c1999;
+}
+.background {
+  width: 200vw;
+  height: 200vh;
+  position: absolute;
+  background: radial-gradient(#92023e, #6a0490, black, black);
+  background-size: 100% 100%;
+  top: 0vh;
+  left: -100vw;
+  z-index: -5;
+}
+.backgroundContainer {
+  z-index: -5;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 92.5vh;
+  overflow: hidden;
+  /* background-color: #270065; */
+}
+.bottomPanel {
+  margin-top: 10vh;
+  display: flex;
+  justify-content: space-between;
+}
+.challenges {
+  padding: 1rem;
+  font-family: "Zen Dots";
+}
+.otherChallengesTitle {
+  font-size: 1.5rem;
+  color: #fff;
+}
+.challenges span {
+  font-weight: bold;
+  color: #6663ff;
+}
+.songs {
+  width: 65%;
+  font-family: "Zen Dots";
+}
+.songsTitle {
+  font-size: 2rem;
+  color: #fff;
+  text-align: center;
+}
+.showSongsButton {
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  background-color: #270065;
+  color: white;
+  border: 3px solid #000000;
+  width: 25%;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 15vh;
+  height: 5vh;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.5s;
+}
+.showSongsButton:hover {
+  background-color: #000000;
+  color: #4100ab;
+  transition: 0.5s;
+}
+.songsList {
+}
+.song {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #6663ff;
+}
