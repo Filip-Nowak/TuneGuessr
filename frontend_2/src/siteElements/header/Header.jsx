@@ -3,6 +3,7 @@ import styles from "./header.module.css";
 import LogInBtn from "./LogInBtn";
 import NavLink from "./NavLink";
 import ChallengeSearch from "./ChallengeSearch";
+import UserInfo from "./UserInfo";
 export default function Header() {
   return (
     <div>
@@ -36,10 +37,7 @@ export default function Header() {
               icon={<i className="fas fa-info-circle"></i>}
             />
           </div>
-          <div className={styles.userInfo}>
-            <LogInBtn text="sign in" />
-            <LogInBtn text="sign up" className={styles.signupBtn} />
-          </div>
+          <UserInfo />
         </div>
         <div className={styles.movingBorder}></div>
       </div>

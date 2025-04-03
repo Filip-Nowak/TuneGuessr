@@ -157,3 +157,18 @@
 .purpleNavLink:hover {
   color: purple;
 }
+.userDataContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: fit-content;
+  height: 100%;
+  transition: 1s;
+  font-family: "Zen Dots";
+}
+.userDataContainer:hover {
+  cursor: pointer;
+  color: #ff0000;
+  transition: 1s;
+}

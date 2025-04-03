@@ -37,15 +37,15 @@ export default function BottomPanel({ show }) {
           window.scroll({ top: "1000", left: 0, behavior: "smooth" });
         }}
       >
-        <i class="fa-solid fa-down-long"></i> how to play
-        <i class="fa-solid fa-down-long"></i>
+        <i className="fa-solid fa-down-long"></i> how to play
+        <i className="fa-solid fa-down-long"></i>
       </div>
       <div className={styles.infoContainer} ref={elementRef}>
         <InfoBox
           visible={isVisible}
           number="1"
           title={"Find or create a challenge"}
-          icon={<i class="fa-solid fa-search"></i>}
+          icon={<i className="fa-solid fa-search"></i>}
           text={
             "Search for a challenge or create your own. Challenge is a set of songs that you need to guess. "
           }
@@ -54,7 +54,7 @@ export default function BottomPanel({ show }) {
           visible={isVisible}
           number="2"
           title={"Select game mode"}
-          icon={<i class="fa-solid fa-gamepad"></i>}
+          icon={<i className="fa-solid fa-gamepad"></i>}
           text={
             "Choose between 3 game modes: classic, time attack or survival. You can also play with friends."
           }
@@ -63,7 +63,7 @@ export default function BottomPanel({ show }) {
           visible={isVisible}
           number="3"
           title={"Play and enjoy"}
-          icon={<i class="fa-solid fa-music"></i>}
+          icon={<i className="fa-solid fa-music"></i>}
           text={
             "Listen to the music and try to guess the song. The faster you guess, the more points you get."
           }

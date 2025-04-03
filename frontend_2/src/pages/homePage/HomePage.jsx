@@ -124,7 +124,7 @@ export default function HomePage() {
               visible={!welcome}
               displayDelay={4}
             >
-              <i class="fa-solid fa-magnifying-glass"></i>
+              <i className="fa-solid fa-magnifying-glass"></i>
               <span>challenges</span>
             </HomeMenuBox>
             <div className={styles.playButtonContainer}></div>

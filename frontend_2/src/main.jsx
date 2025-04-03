@@ -5,6 +5,7 @@ import "./index.css";
 import HomePage from "./pages/homePage/HomePage.jsx";
 import SiteContainer from "./siteElements/siteContainer/SiteContainer.jsx";
 import ChallengeViewPage from "./pages/challengeView/ChallengeViewPage.jsx";
+import AuthenticationPage from "./pages/authenticationPage/AuthenticationPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
             element: <ChallengeViewPage />,
           },
         ],
+      },
+      {
+        path: "/authenticate",
+        element: <AuthenticationPage />,
       },
     ],
   },

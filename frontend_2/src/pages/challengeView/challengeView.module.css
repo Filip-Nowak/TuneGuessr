@@ -172,10 +172,53 @@
   transition: 0.5s;
 }
 .songsList {
+  overflow: auto;
+  height: 40vh;
+  padding: 0.5rem;
+  border: 1px solid #6663ff;
+  border-radius: 1rem;
 }
 .song {
   display: flex;
   justify-content: space-between;
   padding: 1rem;
   border-bottom: 1px solid #6663ff;
+  align-items: center;
+}
+.songTitle {
+  width: 50%;
+  text-align: center;
+}
+.songAuthor {
+  width: 50%;
+  text-align: center;
+}
+.goToYoutube {
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  position: relative;
+  transition: 0.5s;
+}
+.goToYoutube:hover {
+  color: red;
+}
+.goToYoutube:hover .iconBackground {
+  background-color: white;
+}
+.iconBackground {
+  position: absolute;
+  width: 0.7rem;
+  height: 0.7rem;
+  /* background-color: red; */
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  top: 0;
+  bottom: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+  z-index: -1;
+  transition: 0.5s;
 }

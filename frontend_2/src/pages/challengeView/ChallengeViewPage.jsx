@@ -72,7 +72,11 @@ export default function ChallengeViewPage() {
                   <div className={styles.songNumber}>{index + 1}</div>
                   <div className={styles.songTitle}>{song.title}</div>
                   <div className={styles.songAuthor}>{song.artist}</div>
-                  <div className={styles.goToYoutube}>
+                  <div
+                    className={styles.goToYoutube}
+                    onClick={() => window.open(song.url)}
+                  >
+                    <div className={styles.iconBackground}></div>
                     <i className="fab fa-youtube"></i>
                   </div>
                 </div>

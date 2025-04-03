@@ -1,0 +1,225 @@
+.authenticationMenuContainer {
+  width: 90vw;
+  height: 70vh;
+  perspective: 7000px;
+  margin-right: auto;
+  margin-left: auto;
+  position: relative;
+}
+.authMenu {
+  display: flex;
+  height: 70vh;
+  width: 70vh;
+  background: rgba(0, 0, 50, 0.5);
+  backdrop-filter: blur(5px);
+  border: 1px solid #fff;
+  border-radius: 4rem;
+  margin-left: auto;
+  margin-right: auto;
+  right: 0;
+  left: 0;
+  padding-top: 5vh;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Zen Dots";
+  transition: 1s;
+  transform-origin: right center;
+  transform-style: preserve-3d;
+  position: absolute;
+  justify-content: space-between;
+  padding-bottom: 3vh;
+}
+.topBanner {
+  height: 10vh;
+}
+.home {
+  font-family: "Zen Dots";
+  font-size: 2rem;
+  width: fit-content;
+  padding: 0.2rem;
+}
+.menuTitle {
+  font-family: "Zen Dots";
+  font-size: 3rem;
+  color: #060fff;
+  margin-left: 1rem;
+  text-align: left;
+  width: 80%;
+}
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: top;
+  gap: 1rem;
+  width: 70%;
+  height: 60%;
+}
+.formKey {
+  color: #a373f4;
+}
+.formItem {
+  margin-top: 1rem;
+}
+.formInput {
+  width: 80%;
+  padding: 0.5rem;
+  border-radius: 1rem;
+  border: 1px solid #000000;
+  background-color: #2a2d8e;
+  font-family: "Zen Dots";
+  margin-top: 0.5rem;
+}
+.submitButton {
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  background-color: #8129eb;
+  color: white;
+  border: 3px solid #000000;
+  width: 50%;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 5vh;
+  height: 5vh;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.5s;
+}
+.submitButton:hover {
+  background-color: #4c1999;
+  color: #ffffff;
+}
+.error {
+  border: 1px solid #ff0000;
+}
+.hiddenAnimation {
+  z-index: -10;
+  animation: hideMenu 1s;
+  right: 70vh;
+  left: -70vh;
+  transform: rotateY(-180deg);
+  margin-right: auto;
+  margin-left: auto;
+  opacity: 0;
+}
+
+@keyframes hideMenu {
+  0% {
+    left: 0;
+    right: 0;
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+  30% {
+    transform: rotateY(0deg);
+    left: -70vh;
+    right: 0;
+    opacity: 1;
+  }
+  60% {
+    opacity: 0;
+  }
+  70% {
+    transform: rotateY(180deg);
+    left: -70vh;
+    right: 0;
+    opacity: 0;
+  }
+  100% {
+    right: 70vh;
+    left: -70vh;
+    transform: rotateY(180deg);
+    opacity: 0;
+  }
+}
+
+.visibleAnimation {
+  z-index: 10;
+  right: 0vh;
+  left: 0vh;
+  transform: rotateY(0deg);
+  margin-right: auto;
+  margin-left: auto;
+  animation: showMenu 1s;
+  opacity: 1;
+}
+
+@keyframes showMenu {
+  0% {
+    transform-origin: left center;
+    right: -70vh;
+    left: 70vh;
+    transform: rotateY(-180deg);
+    margin-right: auto;
+    margin-left: auto;
+    opacity: 0;
+  }
+  30% {
+    transform-origin: left center;
+    right: 0vh;
+    left: 70vh;
+    transform: rotateY(-180deg);
+    margin-right: auto;
+    margin-left: auto;
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  70% {
+    transform-origin: left center;
+    right: 0vh;
+    left: 70vh;
+    transform: rotateY(0deg);
+    margin-right: auto;
+    margin-left: auto;
+    opacity: 1;
+  }
+  100% {
+    transform-origin: left center;
+    right: 0vh;
+    left: 0vh;
+    transform: rotateY(0deg);
+    margin-right: auto;
+    margin-left: auto;
+    opacity: 1;
+  }
+}
+.visible {
+  right: 0vh;
+  left: 0vh;
+  transform: rotateY(0deg);
+  margin-right: auto;
+  margin-left: auto;
+  opacity: 1;
+  z-index: 10;
+}
+.hidden {
+  right: 70vh;
+  left: -70vh;
+  transform: rotateY(-180deg);
+  margin-right: auto;
+  margin-left: auto;
+  opacity: 0;
+  z-index: -10;
+}
+.alreadyInfo {
+  font-family: "Zen Dots";
+  font-size: 1rem;
+  color: #ffffff;
+  margin-top: 2vh;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  color: #a373f4;
+  cursor: pointer;
+  transition: 0.5s;
+}
+.alreadyInfo:hover {
+  color: #ffffff;
+  text-decoration: underline;
+  transition: 0.5s;
+}
