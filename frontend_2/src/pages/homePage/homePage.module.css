@@ -95,8 +95,13 @@
   position: absolute;
   background: none;
   transition: 3s;
-  background: radial-gradient(#92023e, #6a0490, black, black);
-  /* background: radial-gradient(yellow, #6a0490, black, black); */
+  /* background: radial-gradient(#92023e, #6a0490, black, black); */
+  background: radial-gradient(
+    /* red, */ /* #6a0490,  */ rgb(76, 224, 230),
+    rgb(18, 52, 53),
+    black,
+    black
+  );
   background-size: 100% 100%;
   top: -100vh;
   left: -25vw;
