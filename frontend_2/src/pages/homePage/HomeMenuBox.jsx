@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "./homePage.module.css";
+import styles from "./homePage.module.scss";
 export default function HomeMenuBox({
   children,
   className = "",
@@ -9,9 +9,12 @@ export default function HomeMenuBox({
 }) {
   const [show, setShow] = useState();
   useEffect(() => {
-    setTimeout(() => {
-      setShow(visible);
-    }, 500 + displayDelay * 200);
+    setTimeout(
+      () => {
+        setShow(visible);
+      },
+      500 + displayDelay * 200,
+    );
   }, [visible]);
   return (
     <div

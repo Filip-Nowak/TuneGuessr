@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
-import styles from "./homePage.module.css";
+import styles from "./homePage.module.scss";
 import HomeMenuBox from "./HomeMenuBox";
 import ChallengeBrowser from "./challengeBrowser/ChallengeBrowser";
 import { getPopularChallenges } from "../../utils/http/publicData";
 import UserPanel from "./userPanel/UserPanel";
 import BottomPanel from "./bottomPanel/BottomPanel";
 import PlayButton from "../../siteElements/playButton/PlayButton";
+import Modal from "../../siteElements/modal/Modal";
 export default function HomePage() {
   const [welcome, setWelcome] = useState(true);
   const [publicChallenges, setPublicChallenges] = useState([]);
   const [privateChallenges, setPrivateChallenges] = useState([]);
+  const [showPlayModal, setShowPlayModal] = useState(false);
   useEffect(() => {
     getChallenges();
     setTimeout(() => {
@@ -39,6 +41,9 @@ export default function HomePage() {
       ...challenges.data,
       ...challenges.data,
     ]);
+  };
+  const handlePlayClick = () => {
+    setShowPlayModal(true);
   };
   return (
     <div className={styles.homePage}>
@@ -96,6 +101,7 @@ export default function HomePage() {
           <div className={styles.centerBox}>
             <div className={styles.playButtonContainer}>
               <PlayButton
+                handleClick={handlePlayClick}
                 className={
                   styles.homePlayButton +
                   " " +
@@ -133,6 +139,14 @@ export default function HomePage() {
         </div>
         <BottomPanel show={!welcome} />
       </div>
+      <Modal visible={showPlayModal} setVisible={setShowPlayModal}>
+        <div className={styles.choosePlayersModeModal}>
+          <div className={styles.btn}>solo</div>
+          <div className={styles.btn} style={{ fontSize: "60%" }}>
+            multiplayer
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

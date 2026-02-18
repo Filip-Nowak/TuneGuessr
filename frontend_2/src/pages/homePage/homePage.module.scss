@@ -252,3 +252,29 @@
   transform: translateY(0);
   transition: 1s;
 }
+
+.choosePlayersModeModal {
+  width: 40rem;
+  height: 15rem;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-family: "Zen Dots";
+  font-size: 2rem;
+
+  .btn {
+    width: 30%;
+    aspect-ratio: 1.7;
+    border-radius: 15px;
+    border: #1f0042 3px solid;
+    background-color: rgb(44, 5, 136);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 1s;
+    &:hover {
+      opacity: 0.8;
+      cursor: pointer;
+    }
+  }
+}

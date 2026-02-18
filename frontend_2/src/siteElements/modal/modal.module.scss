@@ -1,0 +1,45 @@
+.modal {
+  .unclickableBg {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+    top: 0rem;
+    left: 0;
+    // display: none;
+    z-index: 5000;
+    opacity: 0;
+    transition: 0.5s;
+    z-index: -100;
+    &.visible {
+      display: block;
+      opacity: 0.7;
+      z-index: 1000;
+    }
+  }
+  .modalAlign {
+    position: fixed;
+    z-index: 1000;
+    top: -100vh;
+    left: 50%;
+    top: -100vh;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s;
+    &.visible {
+      top: 50%;
+    }
+    .modalContainer {
+      background-color: white;
+      width: fit-content;
+      height: fit-content;
+      justify-content: center;
+      background: rgba(0, 0, 30);
+      backdrop-filter: blur(5px);
+      border-radius: 10px;
+      border: 5px solid #4e0072;
+    }
+  }
+}
