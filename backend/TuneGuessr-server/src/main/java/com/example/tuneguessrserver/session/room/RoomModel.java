@@ -14,4 +14,5 @@ public class RoomModel {
     private String hostId;
     private long challengeId;
     private GameMode gameMode;
+    private boolean multiplayerEnabled;
 }

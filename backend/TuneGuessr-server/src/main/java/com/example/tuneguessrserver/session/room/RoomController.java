@@ -37,7 +37,7 @@ public class RoomController {
     public void createRoom(@Payload CreateRoomMessage createRoomMessage) {
         try {
         Log.info("Creating room with: \n\tchallenge id: " + createRoomMessage.getChallengeId() + "\n\tgame mode: " + createRoomMessage.getGameMode() +" \n\tby user: " + playerSession.getUserId() + " with nickname: " + playerSession.getNickname());
-            Room room = roomService.createRoom(playerSession.getUserId(), createRoomMessage.getChallengeId(), createRoomMessage.getGameMode());
+            Room room = roomService.createRoom(playerSession.getUserId(), createRoomMessage.getChallengeId(), createRoomMessage.getGameMode(),createRoomMessage.isMultiplayerEnabled());
             playerSession.setRoomId(room.getId());
             List<PlayerModel> players = roomService.getPlayerModels(room.getId());
             RoomModel model = RoomModel.builder()
@@ -46,6 +46,7 @@ public class RoomController {
                     .players(players)
                     .challengeId(room.getChallengeId())
                     .gameMode(room.getMode())
+                    .multiplayerEnabled(room.isMultiplayerEnabled())
                     .build();
             MessageModel message = MessageModel.createRoomCreationInfo(model);
             Log.info("Room created with id: " + room.getId());
@@ -86,6 +87,7 @@ public class RoomController {
                     .players(roomService.getPlayerModels(room.getId()))
                     .challengeId(room.getChallengeId())
                     .gameMode(room.getMode())
+                    .multiplayerEnabled(room.isMultiplayerEnabled())
                     .build();
             MessageModel joinedRoomMessage = MessageModel.createJoinedRoomInfo(roomModel);
             Log.info("Room joined with id: " + roomId);
@@ -178,6 +180,7 @@ public class RoomController {
                     .players(roomService.getPlayerModels(room.getId()))
                     .challengeId(room.getChallengeId())
                     .gameMode(room.getMode())
+                    .multiplayerEnabled(room.isMultiplayerEnabled())
                     .build();
             MessageModel message = MessageModel.createRoomOptionsChanged(roomModel);
             Log.info("Mode changed to: " + mode);
@@ -202,6 +205,7 @@ public class RoomController {
                     .players(roomService.getPlayerModels(room.getId()))
                     .challengeId(room.getChallengeId())
                     .gameMode(room.getMode())
+                    .multiplayerEnabled(room.isMultiplayerEnabled())
                     .build();
             MessageModel message = MessageModel.createRoomOptionsChanged(roomModel);
             Log.info("Challenge changed to: " + challengeId);

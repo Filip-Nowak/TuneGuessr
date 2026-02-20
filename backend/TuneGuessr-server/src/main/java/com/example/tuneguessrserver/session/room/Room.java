@@ -17,7 +17,11 @@ public class Room implements SessionData{
     private int maxPlayers=10;
     private String hostId;
     private long challengeId;
+    private boolean multiplayerEnabled;
     public void addPlayer(String playerId){
+        if(!multiplayerEnabled){
+            throw new RuntimeException("Multiplayer disabled");
+        }
         if(players.size()>=maxPlayers){
             throw new RuntimeException("Room is full");
         }

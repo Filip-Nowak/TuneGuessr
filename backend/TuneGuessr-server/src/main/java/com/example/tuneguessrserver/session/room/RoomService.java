@@ -16,7 +16,7 @@ public class RoomService {
     private final RedisService redisService;
     private final UserSessionService userSessionService;
     private final ChallengeService challengeService;
-    public Room createRoom(String hostId, long challengeId, String modeName) throws RoomException {
+    public Room createRoom(String hostId, long challengeId, String modeName,boolean multiplayerEnabled) throws RoomException {
         GameMode mode;
         try {
             mode = GameMode.valueOf(modeName);
@@ -27,7 +27,7 @@ public class RoomService {
         if (player.getRoomId() != null) {
             throw new RoomException("Player is already in a room");
         }
-        if(!challengeService.challengeExists(challengeId)) {
+        if(challengeId!=0&&!challengeService.challengeExists(challengeId)) {
             throw new RoomException("Challenge does not exist");
         }
         String roomId = redisService.generateRoomId();
@@ -39,6 +39,7 @@ public class RoomService {
                 .players(list)
                 .challengeId(challengeId)
                 .mode(mode)
+                .multiplayerEnabled(multiplayerEnabled)
                 .build();
         saveRoom(room);
         player.setRoomId(roomId);
@@ -62,6 +63,9 @@ public class RoomService {
         Room room = getRoom(roomId);
         if(room == null) {
             throw new RoomException("Room does not exist");
+        }
+        if(!room.isMultiplayerEnabled()){
+            throw new RoomException("Room's multiplayer disabled");
         }
         if (room.getPlayers().size() >= room.getMaxPlayers()) {
             throw new RoomException("Room is full");

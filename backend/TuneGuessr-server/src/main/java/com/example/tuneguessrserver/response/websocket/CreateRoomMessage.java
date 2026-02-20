@@ -9,4 +9,5 @@ import lombok.Data;
 public class CreateRoomMessage {
     private long challengeId;
     private String gameMode;
+    private boolean multiplayerEnabled;
 }

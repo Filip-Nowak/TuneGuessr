@@ -27,7 +27,6 @@ public class RedisService {
     public Object find(String key) {
         return redisRepository.opsForValue().get(key);
     }
-
     public String generateRoomId() {
         while(true) {
             String id = UUID.randomUUID().toString().substring(0, 8);
