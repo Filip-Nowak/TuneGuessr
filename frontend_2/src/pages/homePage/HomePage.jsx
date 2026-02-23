@@ -7,6 +7,7 @@ import UserPanel from "./userPanel/UserPanel";
 import BottomPanel from "./bottomPanel/BottomPanel";
 import PlayButton from "../../siteElements/playButton/PlayButton";
 import Modal from "../../siteElements/modal/Modal";
+import { hello } from "../../utils/services/network/HTTPManager";
 export default function HomePage() {
   const [welcome, setWelcome] = useState(true);
   const [publicChallenges, setPublicChallenges] = useState([]);
@@ -45,6 +46,14 @@ export default function HomePage() {
   const handlePlayClick = () => {
     setShowPlayModal(true);
   };
+  const openSoloRoom = () => {
+    openRoom(false);
+  };
+  const openMultiRoom = () => {
+    openRoom(true);
+    hello();
+  };
+  const openRoom = (multiplayerEnabled) => {};
   return (
     <div className={styles.homePage}>
       <div
@@ -141,8 +150,14 @@ export default function HomePage() {
       </div>
       <Modal visible={showPlayModal} setVisible={setShowPlayModal}>
         <div className={styles.choosePlayersModeModal}>
-          <div className={styles.btn}>solo</div>
-          <div className={styles.btn} style={{ fontSize: "60%" }}>
+          <div className={styles.btn} onClick={openSoloRoom}>
+            solo
+          </div>
+          <div
+            className={styles.btn}
+            onClick={openMultiRoom}
+            style={{ fontSize: "60%" }}
+          >
             multiplayer
           </div>
         </div>

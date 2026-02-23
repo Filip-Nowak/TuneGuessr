@@ -4,6 +4,8 @@ import AuthMenu from "./AuthMenu";
 import { logIn } from "../../utils/http/auth";
 import { useNavigate } from "react-router-dom";
 import { UserDataContext } from "../../utils/contexts";
+import { authService } from "../../utils/services/auth/AuthService";
+import { checkHandlable } from "../../utils/services/ApiErrors";
 export default function AuthenticationPage() {
   const navigate = useNavigate();
   const register =
@@ -71,9 +73,12 @@ export default function AuthenticationPage() {
       email: loginData.email.value,
       password: loginData.password.value,
     };
-    const response = await logIn(body.email, body.password);
-    if (response.errors.length > 0) {
-      if (response.errors[0].status === 31) {
+    // const response = await logIn(body.email, body.password);
+    try {
+      await authService.authenticate(body.email, body.password);
+    } catch (e) {
+      checkHandlable(e);
+      if (e.errors[0].status === 31) {
         alert("Invalid credentials. Please try again.");
       } else alert("An error occurred. Please try again later.");
       return;
