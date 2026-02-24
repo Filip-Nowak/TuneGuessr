@@ -8,3 +8,7 @@ export interface ErrorBody {
   status: number;
   message: string;
 }
+export interface ApiDataResponse<T> {
+  data: T;
+  errors: ErrorBody[] | null;
+}

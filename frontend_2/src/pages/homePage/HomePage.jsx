@@ -7,7 +7,6 @@ import UserPanel from "./userPanel/UserPanel";
 import BottomPanel from "./bottomPanel/BottomPanel";
 import PlayButton from "../../siteElements/playButton/PlayButton";
 import Modal from "../../siteElements/modal/Modal";
-import { hello } from "../../utils/services/network/HTTPManager";
 export default function HomePage() {
   const [welcome, setWelcome] = useState(true);
   const [publicChallenges, setPublicChallenges] = useState([]);
@@ -51,7 +50,6 @@ export default function HomePage() {
   };
   const openMultiRoom = () => {
     openRoom(true);
-    hello();
   };
   const openRoom = (multiplayerEnabled) => {};
   return (

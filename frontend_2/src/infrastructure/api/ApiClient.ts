@@ -1,10 +1,7 @@
-export function hello() {
-  console.log("hello");
-}
 type ApiRequest =
   | { url: string; method: "GET"; auth: boolean }
   | { url: string; method: "POST"; body: unknown; auth: boolean };
-export class HTTPManager {
+class ApiClient {
   async sendRequest<T>(request: ApiRequest): Promise<T> {
     const API_URL = "https://localhost:8080/";
     const headers: HeadersInit = {
@@ -33,3 +30,4 @@ export class HTTPManager {
     return response.json();
   }
 }
+export const apiClient = new ApiClient();

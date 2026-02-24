@@ -6,6 +6,7 @@ import com.example.tuneguessrserver.response.websocket.MessageModel;
 import com.example.tuneguessrserver.session.PlayerSession;
 import com.example.tuneguessrserver.session.SessionModel;
 import com.example.tuneguessrserver.session.room.Player;
+import com.example.tuneguessrserver.utils.Log;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
@@ -63,6 +64,7 @@ public class UserSessionController {
 
     @MessageMapping("/user/session")
     public void session() {
+        Log.info("recieved");
         if (playerSession.getUserId() == null) {
             return;
         }

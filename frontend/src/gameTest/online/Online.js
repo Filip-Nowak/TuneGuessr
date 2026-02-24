@@ -55,7 +55,7 @@ class Online {
             const body = JSON.parse(message.body);
             console.log("got USER message:", body);
             this.#messageHandler.handle(body.info, body.message);
-          }
+          },
         );
         this.setSession(nickname);
 
@@ -82,7 +82,7 @@ class Online {
   createRoom(challengeId, gamemode) {
     this.#sendMessage(
       "/app/room/create",
-      JSON.stringify({ challengeId: challengeId, gameMode: gamemode })
+      JSON.stringify({ challengeId: challengeId, gameMode: gamemode }),
     );
   }
 
@@ -95,7 +95,7 @@ class Online {
           const body = JSON.parse(message.body);
           console.log("got ROOM message:", body);
           this.#messageHandler.handle(body.info, body.message);
-        }
+        },
       );
     });
     this.#messageHandler.addHandler("JOINED_ROOM", (message) => {
@@ -106,7 +106,7 @@ class Online {
           const body = JSON.parse(message.body);
           console.log("got ROOM message:", body);
           this.#messageHandler.handle(body.info, body.message);
-        }
+        },
       );
     });
     this.#messageHandler.addHandler("NEW_PLAYER_JOINED", (message) => {
@@ -274,7 +274,7 @@ class Online {
         guess: artist,
         title: false,
         time: time,
-      })
+      }),
     );
   }
   guessTitle(title, time) {
@@ -284,7 +284,7 @@ class Online {
         guess: title,
         title: true,
         time: time,
-      })
+      }),
     );
   }
   removeHandler(info) {

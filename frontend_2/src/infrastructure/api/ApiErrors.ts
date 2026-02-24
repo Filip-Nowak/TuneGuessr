@@ -1,4 +1,4 @@
-import { AuthResponse, ErrorBody } from "./network/responses/Responses";
+import { AuthResponse, ErrorBody } from "./Responses";
 export function checkHandlable(error: Error) {
   if (error instanceof ServerError) {
     throw new Error(error.message);

@@ -4,8 +4,8 @@ import AuthMenu from "./AuthMenu";
 import { logIn } from "../../utils/http/auth";
 import { useNavigate } from "react-router-dom";
 import { UserDataContext } from "../../utils/contexts";
-import { authService } from "../../utils/services/auth/AuthService";
-import { checkHandlable } from "../../utils/services/ApiErrors";
+import { authService } from "../../domain/AuthService";
+import { checkHandlable } from "../../infrastructure/api/ApiErrors";
 export default function AuthenticationPage() {
   const navigate = useNavigate();
   const register =
